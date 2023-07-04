@@ -1,5 +1,12 @@
 import * as React from "react";
-import { View, StyleSheet, Text, Image, BackHandler } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Image,
+  BackHandler,
+  SafeAreaView,
+} from "react-native";
 
 /*
     TODO:
@@ -13,7 +20,7 @@ import { View, StyleSheet, Text, Image, BackHandler } from "react-native";
 const AppHeader = () => {
   return (
     // overall container view and split into 3 seperate views
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.profileDivider}>
         <Image
           style={styles.profileIcon}
@@ -25,7 +32,7 @@ const AppHeader = () => {
       </View>
       {/* button would go inside this <View> */}
       <View style={styles.buttonDivider}></View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -34,9 +41,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
-    borderColor: "black",
-    borderBottomWidth: 2,
-    marginTop: 50,
+    borderColor: "#2d2e2e",
+    borderBottomWidth: 1,
   },
   username: {
     marginTop: 10,
