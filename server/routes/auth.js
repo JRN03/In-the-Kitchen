@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs'
 
 const router = express.Router()
 
+router.get("/", (req,res) => res.send("In top-level auth route"))
 router.post('/register', async (req,res) => {
     
     //validation
@@ -13,7 +14,7 @@ router.post('/register', async (req,res) => {
     */
 
     //check user in database
-    const userExists = await User.find({email:req.body.username});
+    const userExists = await User.findOne({username:req.body.username});
     if(userExists) return res.status(404).send("Username is Taken");
 
     //Password Hashing
@@ -47,4 +48,5 @@ router.post('/login',async (req,res) => {
     res.status(200).send("Login Successful");
 
 });
+
 export default router
