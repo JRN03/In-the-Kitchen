@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const userSchema = new mongoose.Schema({
+const courtsSchema = new mongoose.Schema({
     name: {     // name of location -- type string & required
         type: String,
         required: true,
@@ -14,10 +14,13 @@ const userSchema = new mongoose.Schema({
         default: 0
     },
     times: {    // meeting times for events -- type string & will just default to "N/A"
+        type: String
+    },
+    placesID: {
         type: String,
-        default: "N/A"
+        required: true
     }
 
 });
 
-export default mongoose.model('User',userSchema);
+export default mongoose.model('Court',courtsSchema);
