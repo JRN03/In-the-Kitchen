@@ -1,12 +1,5 @@
 import * as React from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-  Image,
-  BackHandler,
-  SafeAreaView,
-} from "react-native";
+import { View, StyleSheet, Text, Image, SafeAreaView } from "react-native";
 
 /*
     TODO:
