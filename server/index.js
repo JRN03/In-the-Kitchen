@@ -4,7 +4,8 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import cors from 'cors';
 
-import auth from './routes/auth.js'
+import auth from './routes/auth.js';
+import courts from './routes/courts.js';
 
 const PORT = process.env.PORT || 5000;
 
@@ -25,6 +26,7 @@ app.get('/', (req,res) => {
 });
 
 app.use('/auth',auth);
+app.use('/courts',courts);
 
 const server = app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
