@@ -4,6 +4,20 @@
 
 ## Server
 
+### Dependencies
+
+- npm i mongoose
+
+- npm i dotenv
+
+- npm i cors
+
+- npm i bodyparser
+
+- npm i express
+
+- npm i bcryptjs
+
 ### Running the Server
 
 For development testing, run _npm run devStart_ in a terminal. This will start the server on localhost:5000 since we have not yet deployed. GET requests can be made in the browser by visiting the url _http://localhost:5000_ followed by any appropiate routing for testing purposes. Any other form of requests should be made in postman or another third-party app.
