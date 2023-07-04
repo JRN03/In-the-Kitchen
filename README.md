@@ -4,6 +4,13 @@
 
 ## Server
 
+### Running the Server
+
+For development testing, run _npm run devStart_ in a terminal. This will start the server on localhost:5000 since we have not yet deployed. GET requests can be made in the browser by visiting the url _http://localhost:5000_ followed by any appropiate routing for testing purposes. Any other form of requests should be made in postman or another third-party app.
+
+For PUT/POST requests for users – fName, lName, username, and password are all required.
+For PUT/POST requests for courts – name, location, Google Places ID, are all required.
+
 ### Models
 
 The models for data that is stored in our MongoDB are created here. That is, the information needed for relevant collections in our Database. For example, users will need a first name, last name, username, password, profile picture, and bio. Likewise, courts need to have a location, an associated name, the current rating, a unique Google Places ID, and the times people meet there.
