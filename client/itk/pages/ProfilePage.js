@@ -1,8 +1,9 @@
 import * as React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import AppHeader from "../components/AppHeader";
 import AddFriendButton from "../components/AddFriendButton";
 import SendMessageButton from "../components/SendMessageButton";
+import BioText from "../components/BioText";
 
 /*
     temp profile page still need to finish everything
@@ -13,6 +14,7 @@ const ProfilePage = () => {
   return (
     <View style={styles.container}>
       <AppHeader></AppHeader>
+      <BioText></BioText>
       <AddFriendButton></AddFriendButton>
       <SendMessageButton></SendMessageButton>
     </View>
