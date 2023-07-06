@@ -25,7 +25,8 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
-    flex: 1,
+    flex: 0.5,
+    maxHeight: 60,
   },
   button: {
     backgroundColor: "#1E94D7",

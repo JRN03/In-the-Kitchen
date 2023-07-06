@@ -1,5 +1,12 @@
 import * as React from "react";
-import { View, StyleSheet, Text, Image, SafeAreaView, TouchableOpacity } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Image,
+  SafeAreaView,
+  TouchableOpacity,
+} from "react-native";
 import {
   useFonts,
   RobotoSlab_100Thin,
@@ -11,8 +18,9 @@ import {
   RobotoSlab_700Bold,
   RobotoSlab_800ExtraBold,
   RobotoSlab_900Black,
-} from '@expo-google-fonts/roboto-slab';
+} from "@expo-google-fonts/roboto-slab";
 import light from "../assets/themes/light";
+import { useNavigation } from "@react-navigation/native";
 /*
     TODO:
         decide font
@@ -23,7 +31,7 @@ import light from "../assets/themes/light";
 */
 
 const AppHeader = () => {
-
+  const navigation = useNavigation();
   let [fontsLoaded] = useFonts({
     RobotoSlab_100Thin,
     RobotoSlab_200ExtraLight,
@@ -43,51 +51,60 @@ const AppHeader = () => {
   return (
     // overall container view and split into 3 seperate views
     <SafeAreaView style={styles.main}>
-      <TouchableOpacity style={styles.imgWrap}><Image style={[styles.img,styles.profile]} source={require("../assets/TempProfilePic.jpeg")}/></TouchableOpacity>
+      <TouchableOpacity
+        style={styles.imgWrap}
+        onPress={() => navigation.navigate("profile")}
+      >
+        <Image
+          style={[styles.img, styles.profile]}
+          source={require("../assets/TempProfilePic.jpeg")}
+        />
+      </TouchableOpacity>
       <View style={styles.titleWrap}>
         <Text style={styles.title}>In the Kitchen</Text>
       </View>
-      <TouchableOpacity style={styles.imgWrap}><Image style={[styles.img]} source={require("../assets/add2.png")}/></TouchableOpacity>
+      <TouchableOpacity style={styles.imgWrap}>
+        <Image style={[styles.img]} source={require("../assets/add2.png")} />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  main:{
+  main: {
     height: 60,
     width: "100%",
-    flexDirection:"row",
+    flexDirection: "row",
     backgroundColor: light.primary,
     alignItems: "center",
     shadowColor: light.shadow,
-    shadowOffset: {width: 0, height: 4},
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: "25%",
-    shadowRadius:4,
+    shadowRadius: 4,
   },
-  img:{
+  img: {
     height: "100%",
     aspectRatio: 1,
   },
-  profile:{
+  profile: {
     flex: 1,
     borderRadius: 360,
   },
-  imgWrap:{
+  imgWrap: {
     height: "70%",
-    alignItems:"center",
-    justifyContent:"center",
-    paddingHorizontal: 10
-
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 10,
   },
   titleWrap: {
     flex: 3,
-    paddingHorizontal: 5
+    paddingHorizontal: 5,
   },
-  title:{
+  title: {
     fontFamily: "RobotoSlab_400Regular",
     fontSize: 28,
     color: "white",
-  }
+  },
 });
 
 export default AppHeader;
