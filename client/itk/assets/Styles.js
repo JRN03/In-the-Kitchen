@@ -1,6 +1,6 @@
 import light from "./themes/light"
 
-export default {
+export const PageStyles = {
     main: {
         width: "100%",
         height: "100%",
