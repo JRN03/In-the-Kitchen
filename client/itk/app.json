@@ -14,7 +14,18 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ]
+    ],
     "ios": {
+      "config": {
+        "googleMapsApiKey": "AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk"
+      },
       "supportsTablet": true
     },
     "android": {
