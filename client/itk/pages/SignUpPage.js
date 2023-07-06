@@ -22,7 +22,18 @@ const SignUpPage = () => {
 		}),
 		headers: {'Content-Type': 'application/json'}
 	})
-	.then(res => {console.log(res.json())})
+	.then(res => res.json())
+	.then(data => {
+		console.log(data);
+		if (data.user) {
+			navigation.navigate('Home');
+		} else {
+			Alert.alert('Sign Up Failed!');
+		}
+	})
+	.catch(error => {
+		console.error('Error:', error);
+	});
 }
 
 	return (

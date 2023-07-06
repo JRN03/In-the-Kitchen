@@ -6,6 +6,8 @@ import ParkTab from "../components/ParkTab";
 import light from "../assets/themes/light.js";
 import AppHeader from "../components/AppHeader";
 import Navbar from "../components/Navbar";
+import {PageStyles} from "../assets/Styles";
+
 export default function Courts() {
   
   const [courtData,setCourtData] = useState([]);
@@ -27,9 +29,9 @@ export default function Courts() {
   ));
 
   return (
-    <SafeAreaView style={styles.main}>
+    <SafeAreaView style={PageStyles.main}>
       <AppHeader/>
-      <View style={styles.contentWrap}>
+      <View style={PageStyles.contentWrap}>
         <Searchbar/>
         <MapView style={styles.map}/>
         <Text 

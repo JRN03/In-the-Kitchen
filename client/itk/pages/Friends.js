@@ -3,12 +3,13 @@ import { SafeAreaView, StyleSheet,Text, View } from "react-native";
 import Navbar from "../components/Navbar";
 import light from "../assets/themes/light";
 import AppHeader from "../components/AppHeader";
+import {PageStyles} from "../assets/Styles";
 
 export default function Friends(){
     return (
-        <SafeAreaView style={styles.main}>
+        <SafeAreaView style={PageStyles.main}>
             <AppHeader/>
-            <View style={styles.contentWrap}>
+            <View style={PageStyles.contentWrap}>
                 <Navbar/>
             </View>
         </SafeAreaView>

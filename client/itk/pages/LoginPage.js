@@ -19,7 +19,7 @@ const LoginPage = () => {
 				.then(res => res.json())
 				.then(data => {
 						if (data.message === "login successful") {
-								navigation.navigate('courts');
+								navigation.navigate('Home');
 						} else if (data.message === "Username Not Found") {
 								Alert.alert("Incorrect Username!");
 						} else if (data.message === "Invalid Password") {
