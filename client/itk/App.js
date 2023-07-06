@@ -3,7 +3,9 @@ import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import Courts from "./pages/Courts";
 import React from 'react';
-
+import Home from './pages/Home';
+import Messages from './pages/Messages';
+import Friends from './pages/Friends';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
@@ -26,8 +28,23 @@ export default function App() {
         />
         <Stack.Screen
         options={{headerShown:false}}
-        name="courts" 
+        name="Courts" 
         component={Courts} 
+        />
+        <Stack.Screen
+        options={{headerShown:false}}
+        name="Home" 
+        component={Home}
+        />
+        <Stack.Screen
+        options={{headerShown:false}}
+        name="Friends" 
+        component={Friends}
+        />
+        <Stack.Screen
+        options={{headerShown:false}}
+        name="Messages" 
+        component={Messages}
         />
       </Stack.Navigator>
     </NavigationContainer>
