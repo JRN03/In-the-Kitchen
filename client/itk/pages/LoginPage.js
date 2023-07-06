@@ -7,19 +7,26 @@ const LoginPage = () => {
   const [userpswd, onChangePswd] = React.useState('');
 
 	const submitForm = () => {
-		console.log(usernme, userpswd)
+		console.log(usernme, userpswd);
 		fetch('http://localhost:8080/auth/login', {
-		method: 'POST',
-		body: JSON.stringify({
-			username: usernme,
-			password: userpswd
-		}),
-		headers: {'Content-Type': 'application/json'}
-	})
-	.then(res => (res.json()))
-	.then(data => {console.log(data)})
-	// .then(res => {console.log(res)})
-}
+				method: 'POST',
+				body: JSON.stringify({
+						username: usernme,
+						password: userpswd
+				}),
+				headers: { 'Content-Type': 'application/json' }
+		})
+				.then(res => res.json())
+				.then(data => {
+						if (data.message === "login successful") {
+								navigation.navigate('courts');
+						} else if (data.message === "Username Not Found") {
+								Alert.alert("Incorrect Username!");
+						} else if (data.message === "Invalid Password") {
+								Alert.alert("Incorrect Password!");
+						}
+				});
+};
 
 	return (
 		<SafeAreaView style = {{flex: 16, backgroundColor: "#176089"}}>
