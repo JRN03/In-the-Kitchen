@@ -1,10 +1,17 @@
 import * as React from "react";
 import {View,TextInput, StyleSheet} from 'react-native';
 
-export default function Searchbar(){
+export default function Searchbar({onSubmit}){
+    const [text, onChangeText] = React.useState('');
     return(
     <View style={styles.searchWrap}>
-        <TextInput placeholder="Search Courts"/>
+        <TextInput 
+         placeholder="Search Courts"
+         onSubmitEditing={() => onSubmit(text)}
+         onChangeText={onChangeText}
+         value = {text}
+         />
+
     </View>
     )
 }
