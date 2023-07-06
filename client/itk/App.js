@@ -1,11 +1,8 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import ProfilePage from "./pages/ProfilePage";
-import AppHeader from "./components/AppHeader";
-import MapView from "react-native-maps";
+import { StyleSheet } from "react-native";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
-import React, { Component } from 'react';
+import Courts from "./pages/Courts";
+import React from 'react';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -15,7 +12,7 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   
   return (
-    <NavigationContainer>
+    <NavigationContainer style={styles.container}>
       <Stack.Navigator>
         <Stack.Screen 
           options={{headerShown:false}}
@@ -26,6 +23,11 @@ export default function App() {
         options={{headerShown:false}}
         name="Sign Up" 
         component={SignUpPage} 
+        />
+        <Stack.Screen
+        options={{headerShown:false}}
+        name="courts" 
+        component={Courts} 
         />
       </Stack.Navigator>
     </NavigationContainer>
@@ -47,11 +49,5 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#176089",
-  },
-  map: {
-    width: "100%",
-    height: "100%",
-  },
-});
+  }
+})
