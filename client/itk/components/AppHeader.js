@@ -53,7 +53,7 @@ const AppHeader = () => {
     <SafeAreaView style={styles.main}>
       <TouchableOpacity
         style={styles.imgWrap}
-        onPress={() => navigation.navigate("profile")}
+        onPress={() => navigation.navigate("Profile")}
       >
         <Image
           style={[styles.img, styles.profile]}
