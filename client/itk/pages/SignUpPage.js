@@ -4,13 +4,34 @@ import { useNavigation } from '@react-navigation/native';
 
 const SignUpPage = () => {
 	const navigation = useNavigation();
-  const [fname, onChangeFname] = React.useState('');
-  const [lname, onChangeLname] = React.useState('');
-  const [usrnm, onChangeUsrn] = React.useState('');
-  const [usrpwd, onChangePswd] = React.useState('');
+  const [fname, onChangeFname] = React.useState(null);
+  const [lname, onChangeLname] = React.useState(null);
+  const [usrnm, onChangeUsrn] = React.useState(null);
+  const [usrpwd, onChangePswd] = React.useState(null);
 	
-
+	const validateFields = ()=>{
+		if(fname == null || fname.length == 0){
+			Alert.alert("First name cannot be empty.");
+			return false;
+		}
+		if(lname == null || lname.length == 0){
+			Alert.alert("Last name cannot be empty.");
+			return false;
+		}
+		if(usrnm == null || usrnm.length == 0){
+			Alert.alert("Username cannot be empty.");
+			return false;
+		}
+		if(usrpwd == null || usrpwd.length == 0){
+			Alert.alert("Password cannot be empty.");
+			return false;
+		}
+		return true;
+	}
 	const submitForm = () => {
+		if(!validateFields()){
+			return;
+		}
 		console.log(fname, lname, usrnm, usrpwd)
 		fetch('http://localhost:8080/auth/register', {
 		method: 'POST',
