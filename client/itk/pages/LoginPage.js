@@ -2,12 +2,24 @@ import React, {useState} from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Image, ImageBackground, TextInput, Button, TouchableOpacity, Alert} from "react-native";
 import { useNavigation } from '@react-navigation/native';
 const LoginPage = () => {
-	const navigation = useNavigation();
-  const [usernme, onChangeUsrn] = React.useState('');
-  const [userpswd, onChangePswd] = React.useState('');
-
+  const navigation = useNavigation();
+  const [usernme, onChangeUsrn] = React.useState(null);
+  const [userpswd, onChangePswd] = React.useState(null);
+  const validateFields = ()=>{
+	if(usernme == null || usernme.length == 0){
+		Alert.alert("Username cannot be empty.");
+		return false;
+	}
+	if(userpswd == null || userpswd.length == 0){
+		Alert.alert("Password cannot be empty.");
+		return false;
+	}
+	return true;
+	}
 	const submitForm = () => {
-		console.log(usernme, userpswd);
+		if(!validateFields()){
+			return;
+		}
 		fetch('http://localhost:8080/auth/login', {
 				method: 'POST',
 				body: JSON.stringify({
@@ -26,7 +38,7 @@ const LoginPage = () => {
 								Alert.alert("Incorrect Password!");
 						}
 				});
-};
+	};
 
 	return (
 		<SafeAreaView style = {{flex: 16, backgroundColor: "#176089"}}>
