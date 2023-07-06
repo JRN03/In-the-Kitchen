@@ -8,17 +8,22 @@ const SignUpPage = () => {
   const [lname, onChangeLname] = React.useState('');
   const [usrnm, onChangeUsrn] = React.useState('');
   const [usrpwd, onChangePswd] = React.useState('');
+	
 
-	const submitForm = () => {fetch('http://localhost:5000/auth/register', {
+	const submitForm = () => {
+		console.log(fname, lname, usrnm, usrpwd)
+		fetch('http://localhost:8080/auth/register', {
 		method: 'POST',
 		body: JSON.stringify({
 			fName: fname,
 			lName: lname,
 			username: usrnm,
 			password: usrpwd
-		})
-		.then(res => {console.log(res.json())})
-	})}
+		}),
+		headers: {'Content-Type': 'application/json'}
+	})
+	.then(res => {console.log(res.json())})
+}
 
 	return (
 		<SafeAreaView style = {{flex: 16, backgroundColor: '#176089', alignContent: 'space-between'}}>
@@ -27,7 +32,8 @@ const SignUpPage = () => {
 					placeholder = 'First Name'
 					placeholderTextColor={'maroon'}
 					autoCapitalize='words'
-					onChangeText={onChangeFname}
+					onChangeText={text => onChangeFname(text)}
+					// onChangeText={onChangeFname}
 					value={fname}
 				></TextInput>
 
@@ -35,7 +41,8 @@ const SignUpPage = () => {
 					placeholder = 'Last Name'
 					placeholderTextColor={'maroon'}
 					autoCapitalize='words'
-					onChangeText={onChangeLname}
+					onChangeText={text => onChangeLname(text)}
+					// onChangeText={onChangeLname}
 					value={lname}
 				></TextInput>
 
@@ -43,7 +50,8 @@ const SignUpPage = () => {
 					placeholder = 'Username'
 					placeholderTextColor={'maroon'}
 					autoCapitalize="none"
-					onChangeText={onChangeUsrn}
+					onChangeText={text => onChangeUsrn(text)}
+					// onChangeText={onChangeUsrn}
 					value={usrnm}
 				></TextInput>
 
@@ -52,15 +60,20 @@ const SignUpPage = () => {
 					placeholderTextColor={'maroon'}
 					autoCapitalize="none"
 					secureTextEntry={true}
-					onChangeText={onChangePswd}
+					onChangeText={text => onChangePswd(text)}
+					// onChangeText={onChangePswd}
 					value={usrpwd}
 				></TextInput>
 			</View>
 
 			<TouchableOpacity style={buttonStyle.picklebut}
-				onPress={()=>submitForm}>
+				onPress={submitForm}>
 				<Text>Get to Pickling</Text>
 			</TouchableOpacity>
+			{/* <TouchableOpacity style={buttonStyle.picklebut}
+				onPress={()=>navigation.navigate('courts')}>
+				<Text>Get to Pickling</Text>
+			</TouchableOpacity> */}
 
 			<TouchableOpacity
 				onPress={() => navigation.navigate('Login')}>

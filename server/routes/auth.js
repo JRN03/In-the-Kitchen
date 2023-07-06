@@ -6,7 +6,7 @@ const router = express.Router()
 
 router.get("/", (req,res) => res.send("In top-level auth route"))
 router.post('/register', async (req,res) => {
-    
+console.log(req.body)
     //validation
     /*
     const {error} = registerValidation(req.body);
@@ -38,6 +38,7 @@ router.post('/register', async (req,res) => {
 });
 
 router.post('/login',async (req,res) => {
+    console.log(req.body)
 
     const user = await User.findOne({"username":req.body.username});
     if(!user) return res.status(404).send("Username Not Found");
@@ -45,7 +46,8 @@ router.post('/login',async (req,res) => {
     const validPassword = await bcrypt.compare(req.body.password,user.password);
     if(!validPassword) return res.status(404).send("Invalid Password");
 
-    res.status(200).send("Login Successful");
+    res.status(200).json({ message: "login successful" });
+
 
 });
 

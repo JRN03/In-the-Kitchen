@@ -6,6 +6,21 @@ const LoginPage = () => {
   const [usernme, onChangeUsrn] = React.useState('');
   const [userpswd, onChangePswd] = React.useState('');
 
+	const submitForm = () => {
+		console.log(usernme, userpswd)
+		fetch('http://localhost:8080/auth/login', {
+		method: 'POST',
+		body: JSON.stringify({
+			username: usernme,
+			password: userpswd
+		}),
+		headers: {'Content-Type': 'application/json'}
+	})
+	.then(res => (res.json()))
+	.then(data => {console.log(data)})
+	// .then(res => {console.log(res)})
+}
+
 	return (
 		<SafeAreaView style = {{flex: 16, backgroundColor: "#176089"}}>
 			<Image
@@ -49,13 +64,13 @@ const LoginPage = () => {
 				placeholder = 'Password'
 				placeholderTextColor={'maroon'}
 				autoCapitalize="none"
-				secureTextEntry={true}
+				secureTextEntry={false}
 				onChangeText={onChangePswd}
 				value={userpswd}
 			></TextInput>
 
 			<TouchableOpacity style={buttonStyle.logbut}
-				onPress={()=>Alert.alert("Login button pressed")}>
+				onPress={submitForm}>
 				<Text>LOGIN</Text>
 			</TouchableOpacity>
 
