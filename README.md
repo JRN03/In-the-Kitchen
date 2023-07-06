@@ -9,7 +9,9 @@ The assets folder contains resources for styles and themes. The styles file expo
 The colors can be accessed in assets/themes/... For now we only have a light theme, but this allows for easier implementation of a dark theme later on. The lights file has primary and second key names.
 
 import light from assets/themes
+
 import dark from assets/themes
+
 import {PageStyles} from assets/Styles
 
 ### Dependencies
