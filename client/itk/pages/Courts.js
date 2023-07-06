@@ -61,11 +61,11 @@ const styles = StyleSheet.create({
     height: "100%",
     alignItems: "center",
     backgroundColor: light.primary,
-    position: "relative"
   },
   contentWrap:{
     width: "90%",
-    height: "100%"
+    flex: 1,
+    position: "relative"
   },
   map: {
     height: "35%",
