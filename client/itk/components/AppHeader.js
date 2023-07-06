@@ -1,6 +1,18 @@
 import * as React from "react";
-import { View, StyleSheet, Text, Image, SafeAreaView } from "react-native";
-
+import { View, StyleSheet, Text, Image, SafeAreaView, TouchableOpacity } from "react-native";
+import {
+  useFonts,
+  RobotoSlab_100Thin,
+  RobotoSlab_200ExtraLight,
+  RobotoSlab_300Light,
+  RobotoSlab_400Regular,
+  RobotoSlab_500Medium,
+  RobotoSlab_600SemiBold,
+  RobotoSlab_700Bold,
+  RobotoSlab_800ExtraBold,
+  RobotoSlab_900Black,
+} from '@expo-google-fonts/roboto-slab';
+import light from "../assets/themes/light";
 /*
     TODO:
         decide font
@@ -11,60 +23,71 @@ import { View, StyleSheet, Text, Image, SafeAreaView } from "react-native";
 */
 
 const AppHeader = () => {
+
+  let [fontsLoaded] = useFonts({
+    RobotoSlab_100Thin,
+    RobotoSlab_200ExtraLight,
+    RobotoSlab_300Light,
+    RobotoSlab_400Regular,
+    RobotoSlab_500Medium,
+    RobotoSlab_600SemiBold,
+    RobotoSlab_700Bold,
+    RobotoSlab_800ExtraBold,
+    RobotoSlab_900Black,
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
     // overall container view and split into 3 seperate views
-    <SafeAreaView style={styles.container}>
-      <View style={styles.profileDivider}>
-        <Image
-          style={styles.profileIcon}
-          source={require("../assets/TempProfilePic.jpeg")}
-        ></Image>
+    <SafeAreaView style={styles.main}>
+      <TouchableOpacity style={styles.imgWrap}><Image style={[styles.img,styles.profile]} source={require("../assets/TempProfilePic.jpeg")}/></TouchableOpacity>
+      <View style={styles.titleWrap}>
+        <Text style={styles.title}>In the Kitchen</Text>
       </View>
-      <View style={styles.usernameDivider}>
-        <Text style={styles.usernameText}>This is my username</Text>
-      </View>
-      {/* button would go inside this <View> */}
-      <View style={styles.buttonDivider}></View>
+      <TouchableOpacity style={styles.imgWrap}><Image style={[styles.img]} source={require("../assets/add2.png")}/></TouchableOpacity>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  main:{
+    height: 60,
+    width: "100%",
+    flexDirection:"row",
+    backgroundColor: light.primary,
+    alignItems: "center",
+    shadowColor: light.shadow,
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: "25%",
+    shadowRadius:4,
+  },
+  img:{
+    height: "100%",
+    aspectRatio: 1,
+  },
+  profile:{
     flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    borderColor: "#2d2e2e",
-    borderBottomWidth: 1,
+    borderRadius: 360,
   },
-  username: {
-    marginTop: 10,
+  imgWrap:{
+    height: "70%",
+    alignItems:"center",
+    justifyContent:"center",
+    paddingHorizontal: 10
+
   },
-  profileDivider: {
-    height: 40,
-    marginLeft: 20,
+  titleWrap: {
+    flex: 3,
+    paddingHorizontal: 5
   },
-  usernameDivider: {
-    height: 40,
-  },
-  buttonDivider: {
-    height: 40,
-    // comment out width once we have button component
-    width: 40,
-    marginRight: 20,
-    backgroundColor: "green",
-  },
-  profileIcon: {
-    height: 40,
-    width: 40,
-  },
-  usernameText: {
-    marginTop: 9,
+  title:{
+    fontFamily: "RobotoSlab_400Regular",
+    fontSize: 28,
     color: "white",
-    fontSize: 20,
-    textAlign: "center",
-    fontFamily: "Cochin",
-  },
+  }
 });
 
 export default AppHeader;

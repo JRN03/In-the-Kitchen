@@ -15,28 +15,27 @@ const Navbar = () => {
 
 const styles = StyleSheet.create({
     navWrap: {
-        width: "90%",
+        width: "100%",
         minHeight: 50,
-        maxHeight: 80,
+        maxHeight: 70,
         height: "15%",
         borderRadius: 25,
         padding: 10,
+        marginVertical: 10,
         backgroundColor: "#FFFFFF",
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        position: "absolute",
-        bottom: 30
+        position: "relative",
+        bottom: 0,
     },
     button:{
-        borderColor: "black",
-        borderWidth: 1,
         borderRadius: 10,
         padding: 10
     },
     img: {
-        height: "70%",
+        height: "80%",
         aspectRatio: 1
     }
 })
