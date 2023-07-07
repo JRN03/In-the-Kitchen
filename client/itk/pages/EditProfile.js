@@ -12,9 +12,10 @@ import ImagePickerExample from "../components/ImagePicker";
 import { useNavigation } from "@react-navigation/native";
 import { PageStyles } from "../assets/Styles";
 
-const EditProfile = ({ route }) => {
+const EditProfile = ({ route }, props) => {
   const navigation = useNavigation();
   const [newtext, setNewText] = useState();
+  const [image, setImage] = useState();
 
   const textChangeHandler = (text) => {
     setNewText(text);
@@ -30,11 +31,15 @@ const EditProfile = ({ route }) => {
     text = "";
   }
 
+  const setImagePath = (path) => {
+    setImage(path);
+  };
+
   return (
     <SafeAreaView style={PageStyles.main}>
       <AppHeader />
       <View style={PageStyles.contentWrap}>
-        <ImagePickerExample></ImagePickerExample>
+        <ImagePickerExample imagePath={setImagePath}></ImagePickerExample>
         <View style={styles.container}>
           <TextInput
             style={styles.textBox}
@@ -46,7 +51,12 @@ const EditProfile = ({ route }) => {
           </TextInput>
           <TouchableOpacity
             style={{ marginTop: 10 }}
-            onPress={() => navigation.navigate("Profile", { bioText: newtext })}
+            onPress={() =>
+              navigation.navigate("Profile", {
+                bioText: newtext,
+                imagePath: image,
+              })
+            }
           >
             <Text
               style={{

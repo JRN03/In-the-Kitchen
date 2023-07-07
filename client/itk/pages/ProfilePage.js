@@ -1,8 +1,14 @@
 import * as React from "react";
-import { View, SafeAreaView, TouchableOpacity, Text } from "react-native";
+import {
+  View,
+  SafeAreaView,
+  TouchableOpacity,
+  Text,
+  Image,
+  StyleSheet,
+} from "react-native";
 import AppHeader from "../components/AppHeader";
 import BioText from "../components/BioText";
-import ImagePickerExample from "../components/ImagePicker";
 import MutualFriends from "../components/MutualFriends";
 import Navbar from "../components/Navbar";
 import { PageStyles } from "../assets/Styles";
@@ -12,6 +18,7 @@ import { PageStyles } from "../assets/Styles";
 
 const ProfilePage = ({ navigation, route }) => {
   let showBio;
+  let image;
   if (
     route.params !== undefined &&
     String(route.params.bioText).length > 0 &&
@@ -44,11 +51,26 @@ const ProfilePage = ({ navigation, route }) => {
       </TouchableOpacity>
     );
   }
+  if (route.params !== undefined && route.params.imagePath != undefined) {
+    image = (
+      <Image
+        source={{ uri: route.params.imagePath }}
+        style={{ width: 150, height: 150, borderRadius: 150 / 2 }}
+      />
+    );
+  } else {
+    image = (
+      <Image
+        source={require("../assets/TempProfilePic.jpeg")}
+        style={{ width: 150, height: 150, borderRadius: 150 / 2 }}
+      />
+    );
+  }
   return (
     <SafeAreaView style={PageStyles.main}>
       <AppHeader />
       <View style={PageStyles.contentWrap}>
-        <ImagePickerExample></ImagePickerExample>
+        <View style={styles.container}>{image}</View>
         {showBio}
         <MutualFriends></MutualFriends>
         <Navbar />
@@ -56,5 +78,14 @@ const ProfilePage = ({ navigation, route }) => {
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    paddingTop: 20,
+    maxHeight: 200,
+    minHeight: 180,
+    alignItems: "center",
+  },
+});
 
 export default ProfilePage;
