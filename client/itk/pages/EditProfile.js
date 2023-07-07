@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { View, SafeAreaView } from "react-native";
 import AppHeader from "../components/AppHeader";
 import BioText from "../components/BioText";
@@ -10,7 +10,7 @@ import { PageStyles } from "../assets/Styles";
 //update top left picture to be photo that is choosen
 // seperate page for edit
 
-const ProfilePage = () => {
+const EditProfile = () => {
   return (
     <SafeAreaView style={PageStyles.main}>
       <AppHeader />
@@ -18,10 +18,9 @@ const ProfilePage = () => {
         <ImagePickerExample></ImagePickerExample>
         <BioText></BioText>
         <MutualFriends></MutualFriends>
-        <Navbar />
       </View>
     </SafeAreaView>
   );
 };
 
-export default ProfilePage;
+export default EditProfile;

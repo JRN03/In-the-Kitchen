@@ -16,7 +16,7 @@ export default ImagePickerExample = () => {
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
-    console.log(image);
+    console.log(result.uri);
   };
 
   return (
@@ -27,7 +27,7 @@ export default ImagePickerExample = () => {
         }
         style={{ width: 150, height: 150, borderRadius: 150 / 2 }}
       />
-      <Button title="Edit" onPress={pickImage} />
+      {/* <Button title="Edit" onPress={pickImage} /> */}
     </View>
   );
 };
