@@ -19,6 +19,7 @@ import { PageStyles } from "../assets/Styles";
 const ProfilePage = ({ navigation, route }) => {
   let showBio;
   let image;
+  let path;
   if (
     route.params !== undefined &&
     String(route.params.bioText).length > 0 &&
@@ -52,12 +53,14 @@ const ProfilePage = ({ navigation, route }) => {
     );
   }
   if (route.params !== undefined && route.params.imagePath != undefined) {
+    // send image path to server
     image = (
       <Image
         source={{ uri: route.params.imagePath }}
         style={{ width: 150, height: 150, borderRadius: 150 / 2 }}
       />
     );
+    path = { uri: route.params.imagePath };
   } else {
     image = (
       <Image
@@ -65,10 +68,11 @@ const ProfilePage = ({ navigation, route }) => {
         style={{ width: 150, height: 150, borderRadius: 150 / 2 }}
       />
     );
+    path = require("../assets/TempProfilePic.jpeg");
   }
   return (
     <SafeAreaView style={PageStyles.main}>
-      <AppHeader />
+      <AppHeader profilePic={path} />
       <View style={PageStyles.contentWrap}>
         <View style={styles.container}>{image}</View>
         {showBio}
