@@ -9,6 +9,7 @@ import Friends from "./pages/Friends";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ProfilePage from "./pages/ProfilePage";
+import EditProfile from "./pages/EditProfile";
 
 const Stack = createNativeStackNavigator();
 
@@ -50,6 +51,11 @@ export default function App() {
           options={{ headerShown: false }}
           name="Profile"
           component={ProfilePage}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="EditProfile"
+          component={EditProfile}
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -16,7 +16,6 @@ export default ImagePickerExample = () => {
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
-    console.log(result.uri);
   };
 
   return (

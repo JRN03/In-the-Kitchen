@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import {
   View,
   StyleSheet,
@@ -8,9 +9,10 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-const BioText = () => {
+const BioText = (props) => {
   const [bioText, setBioText] = useState("Write your bio here...");
   const [editButton, setEditButton] = useState(true);
+  const navigation = useNavigation();
 
   let text = <Text style={styles.textBox}>{bioText}</Text>;
 
@@ -20,8 +22,13 @@ const BioText = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.textBox}>{bioText}</Text>
-      <TouchableOpacity style={{ marginTop: 10 }}>
+      <Text style={styles.textBox}>{props.bioText}</Text>
+      <TouchableOpacity
+        style={{ marginTop: 10 }}
+        onPress={() =>
+          navigation.navigate("EditProfile", { oldText: props.bioText })
+        }
+      >
         <Text
           style={{
             fontSize: 15,
