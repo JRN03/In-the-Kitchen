@@ -127,7 +127,6 @@ const styles = StyleSheet.create({
       borderRadius: 5
     },
     listView: {
-      position:"absolute",
       borderRadius:5
     },
 }
