@@ -11,15 +11,36 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 
 
 export default function Courts() {
-  const ref = useRef();
+  // const ref = useRef();
 
-  useEffect(() => {
-    ref.current?.setAddressText('Some Text');
-  }, []);
-
+  // useEffect(() => {
+  //   ref.current?.setAddressText('Some Text');
+  // }, []);
+  const onRegionChange = (region)=>{
+    // console.log(region)
+  }
   const [courtData,setCourtData] = useState([]);
-  const [mapLat,setMapLat] = useState('');
-  const [mapLon,setMapLon] = useState('');
+  const [mapLatDelta,setMapLatDelta] = useState(.1);
+  const [mapLonDelta,setMapLonDelta] = useState(0.12050628662110796);
+  const [mapLat,setMapLat] = useState(36.9741);
+  const [mapLon,setMapLon] = useState(-122.0308);
+  const initialRegion = {latitude:mapLat,longitude:mapLon,longitudeDelta:mapLonDelta, latitudeDelta:mapLatDelta}
+  async function getLatLon(data){
+    var res = await fetch(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${data.place_id}&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`);
+    const latData = await res.json();
+
+    setMapLat(latData.result.geometry.location.lat);
+    setMapLon(latData.result.geometry.location.lng);
+
+    setTimeout(async () => {
+      var secondRes = await fetch(`https://maps.googleapis.com/maps/api/place/textsearch/json?location=${mapLat}%2C${mapLon}&radius=1500&query=pickleball%court&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`)
+      var courtsNearby = await secondRes.json();
+      console.log("NEARBY COURTS",courtsNearby.results[0])
+    }, 3000);
+    //third query https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${mapLat}%2C${mapLon}&radius=1500&type=pickleball&key==AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk
+    
+  }
+
   // console.log(process.env.MAPS_API);
   function onSubmitText(text){
     console.log(text)
@@ -29,11 +50,11 @@ export default function Courts() {
 
   }
   useEffect(() => {
-
     const getCourts = async () => {
       const res = await fetch('http://localhost:8080/courts');
       const data = await res.json();
       setCourtData(data);
+      //once all the placesIds are found, we make markers and display them
     }
     
     getCourts();
@@ -55,11 +76,12 @@ export default function Courts() {
             // 'details' is provided when fetchDetails = true
             console.log("data",data);
             console.log("details",details);
+            getLatLon(data);
             //we get the lat and lon 
             //we use setMapLat and setMapLon
           }}
           // GooglePlacesSearchQuery= {[{ rankby: 'distance', type: 'restaurant' }]}
-          GooglePlacesDetailsQuery = {{type: 'restaurant'}}
+          GooglePlacesDetailsQuery = {{type: 'tennis-courts'}}
           query={{
             key: 'AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk',
             language: 'en',
@@ -68,7 +90,13 @@ export default function Courts() {
 
     />
         {/* set display to be based on state values of Lat and Lon */}
-        <MapView style={styles.map} provider={PROVIDER_GOOGLE}/> 
+        <MapView
+        style={styles.map} 
+        provider={PROVIDER_GOOGLE}
+        onRegionChange = {onRegionChange}
+        initialRegion = {{latitude:mapLat,longitude:mapLon,latitudeDelta:mapLatDelta, longitudeDelta:mapLonDelta}}
+        region= {{latitude:mapLat,longitude:mapLon,latitudeDelta:mapLatDelta, longitudeDelta:mapLonDelta}}
+        /> 
         <Text 
             style={
               {
