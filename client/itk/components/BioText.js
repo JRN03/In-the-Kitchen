@@ -10,15 +10,7 @@ import {
 } from "react-native";
 
 const BioText = (props) => {
-  const [bioText, setBioText] = useState("Write your bio here...");
-  const [editButton, setEditButton] = useState(true);
   const navigation = useNavigation();
-
-  let text = <Text style={styles.textBox}>{bioText}</Text>;
-
-  const bioEditHandler = () => {
-    setEditButton(!editButton);
-  };
 
   return (
     <View style={styles.container}>

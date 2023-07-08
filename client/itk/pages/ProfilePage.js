@@ -20,40 +20,7 @@ const ProfilePage = ({ navigation, route }) => {
   let showBio;
   let image;
   let path;
-  if (
-    route.params !== undefined &&
-    String(route.params.bioText).length > 0 &&
-    route.params.bioText != undefined
-  ) {
-    showBio = <BioText bioText={route.params.bioText} />;
-  } else {
-    showBio = (
-      <TouchableOpacity
-        style={{
-          marginTop: 10,
-          width: "30%",
-          alignSelf: "center",
-          alignItems: "center",
-        }}
-        onPress={() => navigation.navigate("EditProfile")}
-      >
-        <Text
-          style={{
-            fontSize: 15,
-            color: "white",
-            backgroundColor: "#1E94D7",
-            borderWidth: 1,
-            borderColor: "white",
-            borderRadius: 6,
-          }}
-        >
-          Edit Profile
-        </Text>
-      </TouchableOpacity>
-    );
-  }
   if (route.params !== undefined && route.params.imagePath != undefined) {
-    // send image path to server
     image = (
       <Image
         source={{ uri: route.params.imagePath }}
@@ -69,6 +36,38 @@ const ProfilePage = ({ navigation, route }) => {
       />
     );
     path = require("../assets/TempProfilePic.jpeg");
+  }
+  if (
+    route.params !== undefined &&
+    String(route.params.bioText).length > 0 &&
+    route.params.bioText != undefined
+  ) {
+    showBio = <BioText bioText={route.params.bioText} />;
+  } else {
+    showBio = (
+      <TouchableOpacity
+        style={{
+          marginTop: 10,
+          width: "30%",
+          alignSelf: "center",
+          alignItems: "center",
+        }}
+        onPress={() => navigation.navigate("EditProfile", { imgPath: path })}
+      >
+        <Text
+          style={{
+            fontSize: 15,
+            color: "white",
+            backgroundColor: "#1E94D7",
+            borderWidth: 1,
+            borderColor: "white",
+            borderRadius: 6,
+          }}
+        >
+          Edit Profile
+        </Text>
+      </TouchableOpacity>
+    );
   }
   return (
     <SafeAreaView style={PageStyles.main}>

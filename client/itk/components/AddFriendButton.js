@@ -25,7 +25,6 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
-    // flex: 1,
     maxHeight: 80,
     minHeight: 60,
   },

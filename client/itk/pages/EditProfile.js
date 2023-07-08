@@ -8,14 +8,14 @@ import {
   TextInput,
 } from "react-native";
 import AppHeader from "../components/AppHeader";
-import ImagePickerExample from "../components/ImagePicker";
+import PickImage from "../components/ImagePicker";
 import { useNavigation } from "@react-navigation/native";
 import { PageStyles } from "../assets/Styles";
 
 const EditProfile = ({ route }, props) => {
   const navigation = useNavigation();
   const [newtext, setNewText] = useState();
-  const [image, setImage] = useState();
+  const [image, setImage] = useState(route.params.imgPath.uri);
 
   const textChangeHandler = (text) => {
     setNewText(text);
@@ -31,6 +31,13 @@ const EditProfile = ({ route }, props) => {
     text = "";
   }
 
+  function saveButtonHandler() {
+    navigation.navigate("Profile", {
+      bioText: newtext,
+      imagePath: image,
+    });
+  }
+
   const setImagePath = (path) => {
     setImage(path);
   };
@@ -39,24 +46,23 @@ const EditProfile = ({ route }, props) => {
     <SafeAreaView style={PageStyles.main}>
       <AppHeader />
       <View style={PageStyles.contentWrap}>
-        <ImagePickerExample imagePath={setImagePath}></ImagePickerExample>
+        <PickImage
+          imagePath={setImagePath}
+          passPath={route.params.imgPath}
+        ></PickImage>
         <View style={styles.container}>
           <TextInput
             style={styles.textBox}
             multiline
             maxLength={150}
             onChangeText={textChangeHandler}
+            placeholder="Type your bio here..."
           >
             {text}
           </TextInput>
           <TouchableOpacity
             style={{ marginTop: 10 }}
-            onPress={() =>
-              navigation.navigate("Profile", {
-                bioText: newtext,
-                imagePath: image,
-              })
-            }
+            onPress={saveButtonHandler}
           >
             <Text
               style={{
