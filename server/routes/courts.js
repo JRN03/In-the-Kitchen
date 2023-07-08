@@ -1,4 +1,5 @@
 import express from 'express';
+import court from '../models/court.js';
 import Court from "../models/court.js"
 
 const router = express.Router()
@@ -14,6 +15,9 @@ router.post('/', async (req,res) => {
     const name = req.body.name;
     const times = req.body.times ? req.body.times:"N/A";
     const placesID = req.body.placesID;
+    const lat = req.body.lat;
+    const lon = req.body.lon; 
+
 
     const alreadyUploaded = await Court.findOne({placesID: placesID});
     if (alreadyUploaded) return res.status(400).send("Location Already Added");
@@ -22,7 +26,9 @@ router.post('/', async (req,res) => {
         location: location,
         name: name,
         times: times,
-        placesID: placesID
+        placesID: placesID,
+        lat:lat,
+        lon:lon
     });
 
     try {
