@@ -1,6 +1,5 @@
 import { View, StyleSheet, Text, ScrollView, SafeAreaView, Alert, processColor } from "react-native";
 import MapView, {PROVIDER_GOOGLE} from "react-native-maps";
-import Searchbar from "../components/Searchbar";
 import {React, useState, useEffect, useRef} from "react";
 import ParkTab from "../components/ParkTab";
 import light from "../assets/themes/light.js";
@@ -51,6 +50,7 @@ export default function Courts() {
         {/* <Searchbar onSubmit={onSubmitText}/> */}
         <GooglePlacesAutocomplete
           placeholder='Search'
+          styles={styles.searchWrap}
           onPress={(data, details = null) => {
             // 'details' is provided when fetchDetails = true
             console.log("data",data);
@@ -59,7 +59,6 @@ export default function Courts() {
             //we use setMapLat and setMapLon
           }}
           // GooglePlacesSearchQuery= {[{ rankby: 'distance', type: 'restaurant' }]}
-          GooglePlacesDetailsQuery = {{type: 'restaurant'}}
           query={{
             key: 'AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk',
             language: 'en',
@@ -98,21 +97,38 @@ const styles = StyleSheet.create({
     height: "100%",
     alignItems: "center",
     backgroundColor: light.primary,
+    position: "relative"
   },
   contentWrap:{
     width: "90%",
     flex: 1,
-    position: "relative"
+    position: "absolute"
   },
   map: {
     height: "35%",
     width: "100%",
     borderRadius: 10,
+    zIndex: 0
   },
   nearbyContainer:{
     width: "100%",
     flexGrow: 0,
     maxHeight: "32%",
   },
-
+  searchWrap: {
+    container: {
+      flex: 0,
+      marginVertical: 10,
+      maxHeight: "45%",
+      zIndex: 1
+    },
+    textInput: {
+      height: 40,
+      borderRadius: 5
+    },
+    listView: {
+      position:"absolute",
+      borderRadius:5
+    },
+}
 });
