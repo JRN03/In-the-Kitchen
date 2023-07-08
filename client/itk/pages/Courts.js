@@ -1,5 +1,5 @@
 import { View, StyleSheet, Text, ScrollView, SafeAreaView, Alert, processColor } from "react-native";
-import MapView, {PROVIDER_GOOGLE} from "react-native-maps";
+import MapView, {Marker, PROVIDER_GOOGLE} from "react-native-maps";
 import Searchbar from "../components/Searchbar";
 import {React, useState, useEffect, useRef} from "react";
 import ParkTab from "../components/ParkTab";
@@ -20,6 +20,7 @@ export default function Courts() {
   const onRegionChange = (region)=>{
     // console.log(region)
   }
+  const [courtMarkers,setCourtMarkers] = useState(<Marker></Marker>);
   const [courtData,setCourtData] = useState([]);
   const [mapLatDelta,setMapLatDelta] = useState(.1);
   const [mapLonDelta,setMapLonDelta] = useState(0.12050628662110796);
@@ -43,10 +44,24 @@ export default function Courts() {
   }
   async function getCourtsFromSearch(lat,lon){
     // console.log("QUERY", `https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat}%2C${lon}&radius=1500&query=pickleball%court&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`);
-    var secondRes = await fetch(`https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat}%2C${lon}&radius=1500&query=pickleball&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`);
+    var secondRes = await fetch(`https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat}%2C${lon}&radius=1500&query=pickleball+courts&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`);
       var courtsNearby = await secondRes.json();
-      console.log("COURT length", courtsNearby.results[0]);
-      // console.log("COURT 2", courtsNearby.results[1]);
+      // console.log("COURT length", courtsNearby.results[0]);
+      mapMarkers(courtsNearby.results)
+  }
+  function mapMarkers(results){
+    console.log(results)
+     setCourtMarkers(
+        results.map((item,index)=>{
+          return(
+              <Marker
+                key = {index*100}
+                coordinate = {{latitude:item.geometry.location.lat,longitude:item.geometry.location.lng}}
+                title = {item.name}
+                description = {item.formatted_address}
+                />
+          )
+    }))
   }
 
   // console.log(process.env.MAPS_API);
@@ -73,13 +88,12 @@ export default function Courts() {
         {/* <Searchbar onSubmit={onSubmitText}/> */}
         <GooglePlacesAutocomplete
           placeholder='Search'
+          styles={styles.searchWrap}
           onPress={(data, details = null) => {
             // 'details' is provided when fetchDetails = true
             console.log("data",data);
             console.log("details",details);
             getLatLon(data);
-            //we get the lat and lon 
-            //we use setMapLat and setMapLon
           }}
           // GooglePlacesSearchQuery= {[{ rankby: 'distance', type: 'restaurant' }]}
           GooglePlacesDetailsQuery = {{type: 'tennis-courts'}}
@@ -97,7 +111,9 @@ export default function Courts() {
         onRegionChange = {onRegionChange}
         initialRegion = {{latitude:mapLat,longitude:mapLon,latitudeDelta:mapLatDelta, longitudeDelta:mapLonDelta}}
         region= {{latitude:mapLat,longitude:mapLon,latitudeDelta:mapLatDelta, longitudeDelta:mapLonDelta}}
-        /> 
+        > 
+        {courtMarkers}
+        </MapView>
         <Text 
             style={
               {
@@ -143,5 +159,22 @@ const styles = StyleSheet.create({
     flexGrow: 0,
     maxHeight: "32%",
   },
+  searchWrap: {
+    container: {
+      flex: 0,
+      marginVertical: 10,
+      maxHeight: "45%",
+      zIndex: 1
+    },
+    textInput: {
+      height: 40,
+      borderRadius: 5
+    },
+    listView: {
+      borderRadius:5
+    },
+}
+
+
 
 });
