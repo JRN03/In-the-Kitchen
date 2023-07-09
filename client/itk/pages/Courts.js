@@ -64,6 +64,7 @@ export default function Courts() {
             language: 'en',
           }}
           onFail={(error) => console.error(error)}
+          enablePoweredByContainer={false}
 
     />
         {/* set display to be based on state values of Lat and Lon */}
