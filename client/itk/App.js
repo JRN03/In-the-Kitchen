@@ -23,27 +23,27 @@ export default function App() {
           component={LoginPage}
         />
         <Stack.Screen
-          options={{ headerShown: false }}
+          options={{ headerShown: false}}
           name="Sign Up"
           component={SignUpPage}
         />
         <Stack.Screen
-          options={{ headerShown: false }}
+          options={{ headerShown: false, animation: "none" }}
           name="Courts"
           component={Courts}
         />
         <Stack.Screen
-          options={{ headerShown: false }}
+          options={{ headerShown: false, animation: "none" }}
           name="Home"
           component={Home}
         />
         <Stack.Screen
-          options={{ headerShown: false }}
+          options={{ headerShown: false, animation: "none" }}
           name="Friends"
           component={Friends}
         />
         <Stack.Screen
-          options={{ headerShown: false }}
+          options={{ headerShown: false, animation: "none" }}
           name="Messages"
           component={Messages}
         />
