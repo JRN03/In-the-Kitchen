@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     height: "100%",
     alignItems: "center",
     backgroundColor: light.primary,
-    position: "relative"
+    position: "absolute"
   },
   contentWrap:{
     width: "90%",
@@ -109,6 +109,7 @@ const styles = StyleSheet.create({
     height: "35%",
     width: "100%",
     borderRadius: 10,
+    position: "relative",
     zIndex: 0
   },
   nearbyContainer:{
@@ -125,10 +126,14 @@ const styles = StyleSheet.create({
     },
     textInput: {
       height: 40,
-      borderRadius: 5
+      borderRadius: 5,
+      zIndex: 2
     },
     listView: {
-      borderRadius:5
+      borderRadius:5,
+      position: "absolute",
+      top: 42,
+      zIndex: 1
     },
 }
 });
