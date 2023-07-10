@@ -19,6 +19,14 @@ const courtsSchema = new mongoose.Schema({
     placesID: {
         type: String,
         required: true
+    },
+    lat:{
+        type:Number,
+        required:true
+    },
+    lon:{
+        type:Number,
+        required:true
     }
 
 });

@@ -1,5 +1,6 @@
 import { View, StyleSheet, Text, ScrollView, SafeAreaView, Alert, processColor } from "react-native";
-import MapView, {PROVIDER_GOOGLE} from "react-native-maps";
+import MapView, {Marker, PROVIDER_GOOGLE} from "react-native-maps";
+import Searchbar from "../components/Searchbar";
 import {React, useState, useEffect, useRef} from "react";
 import ParkTab from "../components/ParkTab";
 import light from "../assets/themes/light.js";
@@ -7,32 +8,69 @@ import AppHeader from "../components/AppHeader";
 import Navbar from "../components/Navbar";
 import {PageStyles} from "../assets/Styles";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import axios from 'axios';
 
 
 export default function Courts() {
-  const ref = useRef();
+  // const ref = useRef();
 
-  useEffect(() => {
-    ref.current?.setAddressText('Some Text');
-  }, []);
-
-  const [courtData,setCourtData] = useState([]);
-  const [mapLat,setMapLat] = useState('');
-  const [mapLon,setMapLon] = useState('');
-  // console.log(process.env.MAPS_API);
-  function onSubmitText(text){
-    console.log(text)
-    Alert.alert(`${text} has been passed through!`)
-    //add the actual api calls
-    //user types in a city, we want to fetch the city pickleball courts
-
+  // useEffect(() => {
+  //   ref.current?.setAddressText('Some Text');
+  // }, []);
+  const onRegionChange = (region)=>{
+    // console.log(region)
   }
-  useEffect(() => {
+  const [courtMarkers,setCourtMarkers] = useState(<Marker></Marker>);
+  const [courtData,setCourtData] = useState([]);
+  const [mapLatDelta,setMapLatDelta] = useState(.1);
+  const [mapLonDelta,setMapLonDelta] = useState(0.12050628662110796);
+  const [mapLat,setMapLat] = useState(36.9741);
+  const [mapLon,setMapLon] = useState(-122.0308);
+  const initialRegion = {latitude:mapLat,longitude:mapLon,longitudeDelta:mapLonDelta, latitudeDelta:mapLatDelta}
+  async function getLatLon(data){
+    console.log("PASSED THROUGH DATA ",data);
+    axios({
+      method: 'get',
+      url: `https://maps.googleapis.com/maps/api/place/details/json?placeid=${data.place_id}&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`,
+    }).then((response) => {
+      // console.log("location",response.data.result.geometry.location);  //just to see what the location was
+      //gotta set the map here
+      setMapLat(response.data.result.geometry.location.lat);
+      setMapLon(response.data.result.geometry.location.lng);
+      getCourtsFromSearch(response.data.result.geometry.location.lat,response.data.result.geometry.location.lng) //next function
+      
+    });
+    
+  }
+  async function getCourtsFromSearch(lat,lon){
+    // console.log("QUERY", `https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat}%2C${lon}&radius=1500&query=pickleball%court&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`);
+    var secondRes = await fetch(`https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat}%2C${lon}&radius=1500&query=pickleball+courts&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`);
+      var courtsNearby = await secondRes.json();
+      // console.log("COURT length", courtsNearby.results[0]);
+      mapMarkers(courtsNearby.results)
+  }
+  function mapMarkers(results){
+    console.log(results)
+     setCourtMarkers(
+        results.map((item,index)=>{
+          return(
+              <Marker
+                key = {index*100}
+                coordinate = {{latitude:item.geometry.location.lat,longitude:item.geometry.location.lng}}
+                title = {item.name}
+                description = {item.formatted_address}
+                />
+          )
+    }))
+  }
 
+  // console.log(process.env.MAPS_API);
+  useEffect(() => {
     const getCourts = async () => {
       const res = await fetch('http://localhost:8080/courts');
       const data = await res.json();
       setCourtData(data);
+      //once all the placesIds are found, we make markers and display them
     }
     
     getCourts();
@@ -55,8 +93,7 @@ export default function Courts() {
             // 'details' is provided when fetchDetails = true
             console.log("data",data);
             console.log("details",details);
-            //we get the lat and lon 
-            //we use setMapLat and setMapLon
+            getLatLon(data);
           }}
           // GooglePlacesSearchQuery= {[{ rankby: 'distance', type: 'restaurant' }]}
           query={{
@@ -68,7 +105,15 @@ export default function Courts() {
 
     />
         {/* set display to be based on state values of Lat and Lon */}
-        <MapView style={styles.map} provider={PROVIDER_GOOGLE}/> 
+        <MapView
+        style={styles.map} 
+        provider={PROVIDER_GOOGLE}
+        onRegionChange = {onRegionChange}
+        initialRegion = {{latitude:mapLat,longitude:mapLon,latitudeDelta:mapLatDelta, longitudeDelta:mapLonDelta}}
+        region= {{latitude:mapLat,longitude:mapLon,latitudeDelta:mapLatDelta, longitudeDelta:mapLonDelta}}
+        > 
+        {courtMarkers}
+        </MapView>
         <Text 
             style={
               {
