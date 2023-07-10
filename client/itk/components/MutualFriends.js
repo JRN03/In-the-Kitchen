@@ -24,8 +24,6 @@ const MutualFriends = () => {
     { id: "2", image: tmp_images.image2 },
   ]);
 
-  console.log(selectedId);
-
   return (
     <View style={styles.container}>
       <View>
@@ -71,6 +69,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     color: "white",
+    marginBottom: 10,
   },
 });
 
