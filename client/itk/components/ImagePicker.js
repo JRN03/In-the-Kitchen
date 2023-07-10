@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Button, Image, View, StyleSheet } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
-export default ImagePickerExample = () => {
-  const [image, setImage] = useState(null);
-
+export default PickImage = (props) => {
+  const [image, setImage] = useState();
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -16,15 +15,13 @@ export default ImagePickerExample = () => {
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
-    console.log(image);
+    props.imagePath(result.assets[0].uri);
   };
 
   return (
     <View style={styles.container}>
       <Image
-        source={
-          !image ? require("../assets/TempProfilePic.jpeg") : { uri: image }
-        }
+        source={!image ? props.passPath : { uri: image }}
         style={{ width: 150, height: 150, borderRadius: 150 / 2 }}
       />
       <Button title="Edit" onPress={pickImage} />

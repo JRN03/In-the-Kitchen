@@ -96,12 +96,12 @@ export default function Courts() {
             getLatLon(data);
           }}
           // GooglePlacesSearchQuery= {[{ rankby: 'distance', type: 'restaurant' }]}
-          GooglePlacesDetailsQuery = {{type: 'tennis-courts'}}
           query={{
             key: 'AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk',
             language: 'en',
           }}
           onFail={(error) => console.error(error)}
+          enablePoweredByContainer={false}
 
     />
         {/* set display to be based on state values of Lat and Lon */}
@@ -143,16 +143,19 @@ const styles = StyleSheet.create({
     height: "100%",
     alignItems: "center",
     backgroundColor: light.primary,
+    position: "absolute"
   },
   contentWrap:{
     width: "90%",
     flex: 1,
-    position: "relative"
+    position: "absolute"
   },
   map: {
     height: "35%",
     width: "100%",
     borderRadius: 10,
+    position: "relative",
+    zIndex: 0
   },
   nearbyContainer:{
     width: "100%",
@@ -168,13 +171,14 @@ const styles = StyleSheet.create({
     },
     textInput: {
       height: 40,
-      borderRadius: 5
+      borderRadius: 5,
+      zIndex: 2
     },
     listView: {
-      borderRadius:5
+      borderRadius:5,
+      position: "absolute",
+      top: 42,
+      zIndex: 1
     },
 }
-
-
-
 });

@@ -1,43 +1,39 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Text, Button, TextInput } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Button,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 
-const BioText = () => {
-  const [bioText, setBioText] = useState("Write your bio here...");
-  const [editButton, setEditButton] = useState(true);
-
-  let text = <Text style={styles.textBox}>{bioText}</Text>;
-
-  const bioEditHandler = () => {
-    setEditButton(!editButton);
-  };
+const BioText = (props) => {
+  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
-      {editButton ? (
-        <Text style={styles.textBox}>{bioText}</Text>
-      ) : (
-        <TextInput
-          style={styles.writeableTextBox}
-          placeholder="Please type your bio here..."
-          maxLength={90}
-          numberOfLines={4}
-          multiline
-          onChangeText={(text) => setBioText(text)}
-        ></TextInput>
-      )}
-      {editButton ? (
-        <Button
-          title="Edit"
-          onPress={bioEditHandler}
-          style={{ margin: 10 }}
-        ></Button>
-      ) : (
-        <Button
-          title="Done"
-          onPress={bioEditHandler}
-          style={{ margin: 10 }}
-        ></Button>
-      )}
+      <Text style={styles.textBox}>{props.bioText}</Text>
+      <TouchableOpacity
+        style={{ marginTop: 10 }}
+        onPress={() =>
+          navigation.navigate("EditProfile", { oldText: props.bioText })
+        }
+      >
+        <Text
+          style={{
+            fontSize: 15,
+            color: "white",
+            backgroundColor: "#1E94D7",
+            borderWidth: 1,
+            borderColor: "white",
+            borderRadius: 6,
+          }}
+        >
+          Edit Profile
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -47,7 +43,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#176089",
     alignItems: "center",
-    maxHeight: 135,
+    maxHeight: 140,
   },
   textBox: {
     color: "black",
@@ -60,20 +56,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     marginTop: 15,
     padding: 10,
-    textAlign: "center",
     textAlignVertical: "center",
-  },
-  writeableTextBox: {
-    color: "black",
-    backgroundColor: "white",
-    borderColor: "white",
-    fontSize: 16,
-    overflow: "hidden",
-    height: 100,
-    width: 250,
-    borderRadius: 15,
-    marginTop: 15,
-    padding: 10,
   },
 });
 
