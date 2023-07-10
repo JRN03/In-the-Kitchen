@@ -28,7 +28,7 @@ export default function Courts() {
   const [mapLon,setMapLon] = useState(-122.0308);
   const initialRegion = {latitude:mapLat,longitude:mapLon,longitudeDelta:mapLonDelta, latitudeDelta:mapLatDelta}
   async function getLatLon(data){
-    console.log("PASSED THROUGH DATA ",data);
+    // console.log("PASSED THROUGH DATA ",data);
     axios({
       method: 'get',
       url: `https://maps.googleapis.com/maps/api/place/details/json?placeid=${data.place_id}&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`,
@@ -45,12 +45,12 @@ export default function Courts() {
   async function getCourtsFromSearch(lat,lon){
     // console.log("QUERY", `https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat}%2C${lon}&radius=1500&query=pickleball%court&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`);
     var secondRes = await fetch(`https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat}%2C${lon}&radius=1500&query=pickleball+courts&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`);
-      var courtsNearby = await secondRes.json();
+    var courtsNearby = await secondRes.json();
       // console.log("COURT length", courtsNearby.results[0]);
       mapMarkers(courtsNearby.results)
   }
   function mapMarkers(results){
-    console.log(results)
+    // console.log(results)
      setCourtMarkers(
         results.map((item,index)=>{
           return(
@@ -91,8 +91,8 @@ export default function Courts() {
           styles={styles.searchWrap}
           onPress={(data, details = null) => {
             // 'details' is provided when fetchDetails = true
-            console.log("data",data);
-            console.log("details",details);
+            // console.log("data",data);
+            // console.log("details",details);
             getLatLon(data);
           }}
           // GooglePlacesSearchQuery= {[{ rankby: 'distance', type: 'restaurant' }]}
