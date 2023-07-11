@@ -68,7 +68,7 @@ const LoginPage = () => {
 			></Image>
 
 			<View style = {styles.login}>
-				<Text style = {{fontSize: 30, color: 'white'}}>Login</Text>
+			<Text style = {{fontSize: 30, color: 'white', }}>Login</Text>
 			</View>
 
 			<TextInput style = {textboxStyle.user}
@@ -101,7 +101,6 @@ const LoginPage = () => {
 				onPress={() => navigation.navigate('Sign Up')}>
 				<Text style={{color: 'white', fontSize: 17, textDecorationLine: 'underline'}}>Sign Up!</Text>
 			</TouchableOpacity>
-
 		</SafeAreaView>
 	);
 };
@@ -114,9 +113,9 @@ const buttonStyle = StyleSheet.create({
 		width: 78,
 		backgroundColor: 'white',
 		position: 'absolute',
-		top: 530,
+		top: 510,
 		bottom: 0,
-		left: 54,
+		left: 73,
 		right: 0,
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -147,9 +146,9 @@ const textboxStyle = StyleSheet.create({
 		padding: 10,
 		width: 250,
 		position: 'absolute',
-		top: 390,
+		top: 360,
 		bottom: 0,
-		left: 40,
+		left: 58,
 		right: 0,
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -164,9 +163,9 @@ const textboxStyle = StyleSheet.create({
 		padding: 10,
 		width: 250,
 		position: 'absolute',
-		top: 450,
+		top: 430,
 		bottom: 0,
-		left: 40,
+		left: 58,
 		right: 0,
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -190,9 +189,9 @@ const styles = StyleSheet.create({
 	},
 	login: {
 		position: 'absolute',
-		top: 180,
+		top: 130,
 		bottom: 320,
-		left: 0,
+		left: 19,
 		right: 200,
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -217,6 +216,7 @@ const styles = StyleSheet.create({
 	ball3: {
 		justifyContent: 'center',
 		right: 0,
+		left: 20,
 		top: -1250,
 		height: '70%',
 		width: '70%',

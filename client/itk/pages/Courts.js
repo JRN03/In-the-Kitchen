@@ -52,13 +52,12 @@ export default function Courts() {
   async function getCourtsFromSearch(lat,lon){
     // console.log("QUERY", `https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat}%2C${lon}&radius=1500&query=pickleball%court&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`);
     var secondRes = await fetch(`https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat}%2C${lon}&radius=1500&query=pickleball+courts&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`);
-      var courtsNearby = await secondRes.json();
+    var courtsNearby = await secondRes.json();
       // console.log("COURT length", courtsNearby.results[0]);
       mapMarkers(courtsNearby.results)
   }
   function mapMarkers(results){
-    // console.log("CURRENT MARKER",results)
-    var currentCourtObject = courtObject;
+    // console.log(results)
      setCourtMarkers(
         results.map((item,index)=>{
           //using item.placeId
@@ -139,6 +138,9 @@ export default function Courts() {
           styles={styles.searchWrap}
           //onChangeText( maybe find out results from the auto fill)
           onPress={(data, details = null) => {
+            // 'details' is provided when fetchDetails = true
+            // console.log("data",data);
+            // console.log("details",details);
             getLatLon(data);
           }}
           // GooglePlacesSearchQuery= {[{ rankby: 'distance', type: 'restaurant' }]}
