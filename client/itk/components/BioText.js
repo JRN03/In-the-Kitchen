@@ -4,8 +4,6 @@ import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 
 const BioText = (props) => {
   const navigation = useNavigation();
-  console.log("in bio text");
-  console.log(props.imagePath);
 
   return (
     <View style={styles.container}>

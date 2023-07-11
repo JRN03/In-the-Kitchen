@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   SafeAreaView,
@@ -12,19 +12,57 @@ import BioText from "../components/BioText";
 import MutualFriends from "../components/MutualFriends";
 import Navbar from "../components/Navbar";
 import { PageStyles } from "../assets/Styles";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BIO_KEY } from "../AsyncKeys";
+import { PROFILE_PIC_KEY } from "../AsyncKeys";
 
 const ProfilePage = ({ navigation, route }) => {
-  let showBio;
+  const [bio, setBio] = useState();
+  const [profilePic, setProfilePic] = useState();
+  const readData = async () => {
+    try {
+      bioTemp = await AsyncStorage.getItem(BIO_KEY);
+      picTemp = await AsyncStorage.getItem(PROFILE_PIC_KEY);
+
+      if (picTemp !== null) {
+        console.log("fetched");
+        setBio(bioTemp);
+        setProfilePic(picTemp);
+      }
+    } catch (e) {
+      alert("error");
+    }
+  };
+  useEffect(() => {
+    const focusHandler = navigation.addListener("focus", () => {
+      console.log("refreshed");
+      readData();
+    });
+    return focusHandler;
+    //   AsyncStorage.getAllKeys((err, keys) => {
+    //     AsyncStorage.multiGet(keys, (err, stores) => {
+    //       stores.map((result, i, store) => {
+    //         // get at each store's key/value so you can work with it
+    //         let key = store[i][0];
+    //         let value = store[i][1];
+    //         console.log(key);
+    //         console.log(value);
+    //       });
+    //     });
+    //   });
+    // readData();
+  }, [navigation]);
   let image;
-  let path;
-  if (route.params !== undefined && route.params.imagePath != undefined) {
+  if (
+    profilePic !== undefined &&
+    profilePic !== "../assets/TempProfilePic.jpeg"
+  ) {
     image = (
       <Image
-        source={{ uri: route.params.imagePath }}
+        source={{ uri: profilePic }}
         style={{ width: 150, height: 150, borderRadius: 150 / 2 }}
       />
     );
-    path = { uri: route.params.imagePath };
   } else {
     image = (
       <Image
@@ -32,14 +70,10 @@ const ProfilePage = ({ navigation, route }) => {
         style={{ width: 150, height: 150, borderRadius: 150 / 2 }}
       />
     );
-    path = require("../assets/TempProfilePic.jpeg");
   }
-  if (
-    route.params !== undefined &&
-    String(route.params.bioText).length > 0 &&
-    route.params.bioText != undefined
-  ) {
-    showBio = <BioText bioText={route.params.bioText} imagePath={path} />;
+  console.log(bio);
+  if (bio) {
+    showBio = <BioText bioText={bio} />;
   } else {
     showBio = (
       <TouchableOpacity
@@ -49,7 +83,7 @@ const ProfilePage = ({ navigation, route }) => {
           alignSelf: "center",
           alignItems: "center",
         }}
-        onPress={() => navigation.navigate("EditProfile", { imgPath: path })}
+        onPress={() => navigation.navigate("EditProfile")}
       >
         <Text
           style={{
@@ -68,7 +102,7 @@ const ProfilePage = ({ navigation, route }) => {
   }
   return (
     <SafeAreaView style={PageStyles.main}>
-      <AppHeader profilePic={path} />
+      <AppHeader />
       <View style={PageStyles.contentWrap}>
         <View style={styles.container}>{image}</View>
         {showBio}

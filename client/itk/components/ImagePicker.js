@@ -16,6 +16,7 @@ export default PickImage = (props) => {
       setImage(result.assets[0].uri);
     }
     props.imagePath(result.assets[0].uri);
+    // console.log(result.assets[0].uri);
   };
 
   return (

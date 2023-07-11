@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   SafeAreaView,
@@ -11,46 +11,69 @@ import AppHeader from "../components/AppHeader";
 import PickImage from "../components/ImagePicker";
 import { useNavigation } from "@react-navigation/native";
 import { PageStyles } from "../assets/Styles";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BIO_KEY } from "../AsyncKeys";
+import { PROFILE_PIC_KEY } from "../AsyncKeys";
 
 const EditProfile = ({ route }, props) => {
-  // console.log(route.params);
   const navigation = useNavigation();
-  const [newtext, setNewText] = useState();
-  const [image, setImage] = useState(route.params.imgPath.uri);
+  const [bio, setBio] = useState();
+  const [profilePic, setProfilePic] = useState();
+
+  useEffect(() => {
+    // AsyncStorage.getAllKeys((err, keys) => {
+    //   AsyncStorage.multiGet(keys, (err, stores) => {
+    //     stores.map((result, i, store) => {
+    //       // get at each store's key/value so you can work with it
+    //       let key = store[i][0];
+    //       let value = store[i][1];
+    //       console.log(key);
+    //       console.log(value);
+    //     });
+    //   });
+    // });
+    readData();
+  }, []);
 
   const textChangeHandler = (text) => {
-    setNewText(text);
+    setBio(text);
   };
-  let text;
-  if (
-    route.params !== undefined &&
-    String(route.params.oldText).length > 0 &&
-    route.params.oldText != undefined
-  ) {
-    text = route.params.oldText;
-  } else {
-    text = "";
-  }
 
-  function saveButtonHandler() {
-    navigation.navigate("Profile", {
-      bioText: newtext,
-      imagePath: image,
-    });
-  }
+  const readData = async () => {
+    try {
+      const tempBio = await AsyncStorage.getItem(BIO_KEY);
+      const tempPic = await AsyncStorage.getItem(PROFILE_PIC_KEY);
+
+      if (tempPic !== null) {
+        console.log("fetched");
+        setBio(tempBio);
+        setProfilePic(tempPic);
+      }
+    } catch (e) {
+      alert(e);
+    }
+  };
+
+  const saveButtonHandler = async () => {
+    try {
+      await AsyncStorage.setItem(BIO_KEY, bio);
+      await AsyncStorage.setItem(PROFILE_PIC_KEY, profilePic);
+      alert("Data saved");
+    } catch (e) {
+      alert("failed to save");
+    }
+    navigation.navigate("Profile");
+  };
 
   const setImagePath = (path) => {
-    setImage(path);
+    setProfilePic(path);
   };
 
   return (
     <SafeAreaView style={PageStyles.main}>
       <AppHeader />
       <View style={PageStyles.contentWrap}>
-        <PickImage
-          imagePath={setImagePath}
-          passPath={route.params.imgPath}
-        ></PickImage>
+        <PickImage imagePath={setImagePath}></PickImage>
         <View style={styles.container}>
           <TextInput
             style={styles.textBox}
@@ -59,7 +82,7 @@ const EditProfile = ({ route }, props) => {
             onChangeText={textChangeHandler}
             placeholder="Type your bio here..."
           >
-            {text}
+            {bio}
           </TextInput>
           <TouchableOpacity
             style={{ marginTop: 10 }}
