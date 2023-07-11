@@ -11,7 +11,7 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import axios from 'axios';
 
 
-export default function Courts() {
+export default function Courts({route}) {
   // const ref = useRef();
 
   // useEffect(() => {
@@ -130,7 +130,7 @@ export default function Courts() {
         <ScrollView style={styles.nearbyContainer}>
           {courtObjects}
         </ScrollView>
-        <Navbar/>
+        <Navbar route={route}/>
         </View>
     </SafeAreaView>
   );

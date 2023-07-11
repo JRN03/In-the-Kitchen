@@ -5,12 +5,12 @@ import light from "../assets/themes/light";
 import AppHeader from "../components/AppHeader";
 import {PageStyles} from "../assets/Styles";
 
-export default function Friends(){
+export default function Friends({route}){
     return (
         <SafeAreaView style={PageStyles.main}>
             <AppHeader/>
             <View style={PageStyles.contentWrap}>
-                <Navbar/>
+                <Navbar route={route}/>
             </View>
         </SafeAreaView>
     )
