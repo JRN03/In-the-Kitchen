@@ -35,7 +35,7 @@ router.post('/', async (req,res) => {
         court.save();
         return res.status(201).send("Court Uploaded");
     } catch (err) {
-        return res.status(500).send(serr)
+        return res.status(500).send(err)
     }
 
 });
