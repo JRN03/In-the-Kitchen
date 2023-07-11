@@ -73,7 +73,7 @@ const ProfilePage = ({ navigation, route }) => {
         <View style={styles.container}>{image}</View>
         {showBio}
         <MutualFriends></MutualFriends>
-        <Navbar />
+        <Navbar route={route}/>
       </View>
     </SafeAreaView>
   );
