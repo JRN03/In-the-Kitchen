@@ -19,16 +19,23 @@ export default function Courts({route}) {
   // }, []);
   const onRegionChange = (region)=>{
     // console.log(region)
+
+    //I was thinking we can use this too for loading courts, 
+    //like doing a fetch based on user drag too
   }
+  //used for loading data from the backend for courts
+  const [courtObject, setCourtObject] = useState({});
   const [courtMarkers,setCourtMarkers] = useState(<Marker></Marker>);
   const [courtData,setCourtData] = useState([]);
+
+  // used for starting and current positioning on maps
   const [mapLatDelta,setMapLatDelta] = useState(.1);
   const [mapLonDelta,setMapLonDelta] = useState(0.12050628662110796);
   const [mapLat,setMapLat] = useState(36.9741);
   const [mapLon,setMapLon] = useState(-122.0308);
   const initialRegion = {latitude:mapLat,longitude:mapLon,longitudeDelta:mapLonDelta, latitudeDelta:mapLatDelta}
   async function getLatLon(data){
-    console.log("PASSED THROUGH DATA ",data);
+    // console.log("PASSED THROUGH DATA ",data);
     axios({
       method: 'get',
       url: `https://maps.googleapis.com/maps/api/place/details/json?placeid=${data.place_id}&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`,
@@ -45,14 +52,29 @@ export default function Courts({route}) {
   async function getCourtsFromSearch(lat,lon){
     // console.log("QUERY", `https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat}%2C${lon}&radius=1500&query=pickleball%court&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`);
     var secondRes = await fetch(`https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat}%2C${lon}&radius=1500&query=pickleball+courts&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`);
-      var courtsNearby = await secondRes.json();
+    var courtsNearby = await secondRes.json();
       // console.log("COURT length", courtsNearby.results[0]);
       mapMarkers(courtsNearby.results)
   }
   function mapMarkers(results){
-    console.log(results)
+    // console.log(results)
      setCourtMarkers(
         results.map((item,index)=>{
+          //using item.placeId
+          if(!currentCourtObject.hasOwnProperty(item.place_id)){
+            // console.log("CURRENT MARKER",item);
+            //Any item that was not in the DB will make it to this point
+            var courtBody = {
+              name: item.name,
+              location: item.formatted_address,
+              lat:item.geometry.location.lat,
+              lon:item.geometry.location.lng,
+              placesID:item.place_id,
+              times:"8am-9pm"
+            }
+            currentCourtObject[item.place_id] = courtBody
+            //make a post method right here...
+          }
           return(
               <Marker
                 key = {index*100}
@@ -62,14 +84,39 @@ export default function Courts({route}) {
                 />
           )
     }))
+    setCourtObject(currentCourtObject);
+    console.log(courtObject);
+    //at this point we just need to make the posts and all of the courts encountered by users will auto populate in the DB
   }
 
-  // console.log(process.env.MAPS_API);
   useEffect(() => {
     const getCourts = async () => {
       const res = await fetch('http://localhost:8080/courts');
       const data = await res.json();
+      var master = {};
+      for(var i = 0; i<data.length; i ++){
+        var current = data[i].placesID
+        if(current){
+          master[current]=  data[i];
+        }
+        // console.log(master[current]);
+        setCourtMarkers(
+          data.map((item,index)=>{
+            return(
+              <Marker
+                key = {index*100}
+                coordinate = {{latitude:item.lat,longitude:item.lon}}
+                title = {item.name}
+                description = {item.location}
+                />
+          )
+          })
+        )
+      }
       setCourtData(data);
+      setCourtObject(master);
+      // console.log("master",courtObject);
+
       //once all the placesIds are found, we make markers and display them
     }
     
@@ -89,10 +136,11 @@ export default function Courts({route}) {
         <GooglePlacesAutocomplete
           placeholder='Search'
           styles={styles.searchWrap}
+          //onChangeText( maybe find out results from the auto fill)
           onPress={(data, details = null) => {
             // 'details' is provided when fetchDetails = true
-            console.log("data",data);
-            console.log("details",details);
+            // console.log("data",data);
+            // console.log("details",details);
             getLatLon(data);
           }}
           // GooglePlacesSearchQuery= {[{ rankby: 'distance', type: 'restaurant' }]}

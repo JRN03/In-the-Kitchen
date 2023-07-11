@@ -13,6 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import { PageStyles } from "../assets/Styles";
 
 const EditProfile = ({ route }, props) => {
+  // console.log(route.params);
   const navigation = useNavigation();
   const [newtext, setNewText] = useState();
   const [image, setImage] = useState(route.params.imgPath.uri);

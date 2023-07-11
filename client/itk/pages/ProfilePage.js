@@ -13,9 +13,6 @@ import MutualFriends from "../components/MutualFriends";
 import Navbar from "../components/Navbar";
 import { PageStyles } from "../assets/Styles";
 
-//update top left picture to be photo that is choosen
-// seperate page for edit
-
 const ProfilePage = ({ navigation, route }) => {
   let showBio;
   let image;
@@ -42,7 +39,7 @@ const ProfilePage = ({ navigation, route }) => {
     String(route.params.bioText).length > 0 &&
     route.params.bioText != undefined
   ) {
-    showBio = <BioText bioText={route.params.bioText} />;
+    showBio = <BioText bioText={route.params.bioText} imagePath={path} />;
   } else {
     showBio = (
       <TouchableOpacity
