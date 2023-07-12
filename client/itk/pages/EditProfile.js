@@ -17,51 +17,36 @@ import { PROFILE_PIC_KEY } from "../AsyncKeys";
 
 const EditProfile = ({ route }, props) => {
   const navigation = useNavigation();
-  const [bio, setBio] = useState();
-  const [profilePic, setProfilePic] = useState();
+  const [bio, setBio] = useState(route.params.bio);
+  const [profilePic, setProfilePic] = useState(route.params.profilePic);
 
   useEffect(() => {
-    // AsyncStorage.getAllKeys((err, keys) => {
-    //   AsyncStorage.multiGet(keys, (err, stores) => {
-    //     stores.map((result, i, store) => {
-    //       // get at each store's key/value so you can work with it
-    //       let key = store[i][0];
-    //       let value = store[i][1];
-    //       console.log(key);
-    //       console.log(value);
-    //     });
-    //   });
-    // });
-    readData();
-  }, []);
+    const focusHandler = navigation.addListener("focus", () => {
+      console.log(route.params.bio);
+      console.log(route.params.profilePic);
+      setBio(route.params.bio);
+      setProfilePic(route.params.profilePic);
+    });
+    return focusHandler;
+  }, [navigation]);
 
   const textChangeHandler = (text) => {
     setBio(text);
   };
 
-  const readData = async () => {
-    try {
-      const tempBio = await AsyncStorage.getItem(BIO_KEY);
-      const tempPic = await AsyncStorage.getItem(PROFILE_PIC_KEY);
-
-      if (tempPic !== null) {
-        console.log("fetched");
-        setBio(tempBio);
-        setProfilePic(tempPic);
+  const saveButtonHandler = () => {
+    if (bio === undefined) {
+      setBio("");
+    }
+    const saveData = async () => {
+      try {
+        await AsyncStorage.setItem(BIO_KEY, bio);
+        await AsyncStorage.setItem(PROFILE_PIC_KEY, profilePic);
+      } catch (e) {
+        console.log("failed to save in edit profile");
       }
-    } catch (e) {
-      alert(e);
-    }
-  };
-
-  const saveButtonHandler = async () => {
-    try {
-      await AsyncStorage.setItem(BIO_KEY, bio);
-      await AsyncStorage.setItem(PROFILE_PIC_KEY, profilePic);
-      alert("Data saved");
-    } catch (e) {
-      alert("failed to save");
-    }
+    };
+    saveData();
     navigation.navigate("Profile");
   };
 
@@ -73,7 +58,10 @@ const EditProfile = ({ route }, props) => {
     <SafeAreaView style={PageStyles.main}>
       <AppHeader />
       <View style={PageStyles.contentWrap}>
-        <PickImage imagePath={setImagePath}></PickImage>
+        <PickImage
+          imagePath={setImagePath}
+          currentImage={route.params.profilePic}
+        ></PickImage>
         <View style={styles.container}>
           <TextInput
             style={styles.textBox}

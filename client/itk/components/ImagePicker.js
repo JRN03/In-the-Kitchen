@@ -3,7 +3,7 @@ import { Button, Image, View, StyleSheet } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
 export default PickImage = (props) => {
-  const [image, setImage] = useState();
+  const [profilePic, setProfilePic] = useState(props.currentImage);
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -11,18 +11,22 @@ export default PickImage = (props) => {
       aspect: [4, 3],
       quality: 1,
     });
-
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      setProfilePic(result.assets[0].uri);
+      props.imagePath(result.assets[0].uri);
     }
-    props.imagePath(result.assets[0].uri);
-    // console.log(result.assets[0].uri);
   };
+  let image;
+  if (profilePic !== "../assets/TempProfilePic.jpeg") {
+    image = { uri: profilePic };
+  } else {
+    image = require("../assets/TempProfilePic.jpeg");
+  }
 
   return (
     <View style={styles.container}>
       <Image
-        source={!image ? props.passPath : { uri: image }}
+        source={image}
         style={{ width: 150, height: 150, borderRadius: 150 / 2 }}
       />
       <Button title="Edit" onPress={pickImage} />

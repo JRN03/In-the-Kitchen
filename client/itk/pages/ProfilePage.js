@@ -19,39 +19,38 @@ import { PROFILE_PIC_KEY } from "../AsyncKeys";
 const ProfilePage = ({ navigation, route }) => {
   const [bio, setBio] = useState();
   const [profilePic, setProfilePic] = useState();
+  // read data
   const readData = async () => {
     try {
       bioTemp = await AsyncStorage.getItem(BIO_KEY);
       picTemp = await AsyncStorage.getItem(PROFILE_PIC_KEY);
 
+      console.log(bioTemp);
+      console.log(picTemp);
+
       if (picTemp !== null) {
-        console.log("fetched");
-        setBio(bioTemp);
+        if (bioTemp === null) {
+          setBio("");
+        } else {
+          setBio(bioTemp);
+        }
         setProfilePic(picTemp);
       }
     } catch (e) {
-      alert("error");
+      alert("failed to load data in profile page");
     }
   };
+
+  // make sure that page is rerendered
   useEffect(() => {
     const focusHandler = navigation.addListener("focus", () => {
       console.log("refreshed");
       readData();
     });
     return focusHandler;
-    //   AsyncStorage.getAllKeys((err, keys) => {
-    //     AsyncStorage.multiGet(keys, (err, stores) => {
-    //       stores.map((result, i, store) => {
-    //         // get at each store's key/value so you can work with it
-    //         let key = store[i][0];
-    //         let value = store[i][1];
-    //         console.log(key);
-    //         console.log(value);
-    //       });
-    //     });
-    //   });
-    // readData();
-  }, [navigation]);
+  }, [route.name]);
+
+  //set up image
   let image;
   if (
     profilePic !== undefined &&
@@ -71,9 +70,21 @@ const ProfilePage = ({ navigation, route }) => {
       />
     );
   }
-  console.log(bio);
+
+  const editButtonHandler = () => {
+    console.log("clicked edit");
+    console.log(bio);
+    console.log(profilePic);
+    navigation.navigate("EditProfile", {
+      profilePic: profilePic,
+      bio: bio,
+    });
+  };
+
+  //set up bio
   if (bio) {
-    showBio = <BioText bioText={bio} />;
+    console.log("show bio");
+    showBio = <BioText bioText={bio} profilePic={profilePic} />;
   } else {
     showBio = (
       <TouchableOpacity
@@ -83,7 +94,7 @@ const ProfilePage = ({ navigation, route }) => {
           alignSelf: "center",
           alignItems: "center",
         }}
-        onPress={() => navigation.navigate("EditProfile")}
+        onPress={editButtonHandler}
       >
         <Text
           style={{
