@@ -5,9 +5,6 @@ import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 const BioText = (props) => {
   const navigation = useNavigation();
 
-  console.log(props.bioText);
-  console.log(props.profilePic);
-
   return (
     <View style={styles.container}>
       <Text style={styles.textBox}>{props.bioText}</Text>

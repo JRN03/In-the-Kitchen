@@ -13,8 +13,7 @@ import MutualFriends from "../components/MutualFriends";
 import Navbar from "../components/Navbar";
 import { PageStyles } from "../assets/Styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BIO_KEY } from "../AsyncKeys";
-import { PROFILE_PIC_KEY } from "../AsyncKeys";
+import { BIO_KEY, PROFILE_PIC_KEY } from "../AsyncKeys";
 
 const ProfilePage = ({ navigation, route }) => {
   const [bio, setBio] = useState();
@@ -24,9 +23,6 @@ const ProfilePage = ({ navigation, route }) => {
     try {
       bioTemp = await AsyncStorage.getItem(BIO_KEY);
       picTemp = await AsyncStorage.getItem(PROFILE_PIC_KEY);
-
-      console.log(bioTemp);
-      console.log(picTemp);
 
       if (picTemp !== null) {
         if (bioTemp === null) {
@@ -44,7 +40,6 @@ const ProfilePage = ({ navigation, route }) => {
   // make sure that page is rerendered
   useEffect(() => {
     const focusHandler = navigation.addListener("focus", () => {
-      console.log("refreshed");
       readData();
     });
     return focusHandler;
@@ -72,9 +67,6 @@ const ProfilePage = ({ navigation, route }) => {
   }
 
   const editButtonHandler = () => {
-    console.log("clicked edit");
-    console.log(bio);
-    console.log(profilePic);
     navigation.navigate("EditProfile", {
       profilePic: profilePic,
       bio: bio,
@@ -83,7 +75,6 @@ const ProfilePage = ({ navigation, route }) => {
 
   //set up bio
   if (bio) {
-    console.log("show bio");
     showBio = <BioText bioText={bio} profilePic={profilePic} />;
   } else {
     showBio = (
