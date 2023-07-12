@@ -10,6 +10,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ProfilePage from "./pages/ProfilePage";
 import EditProfile from "./pages/EditProfile";
+import AddCourt from "./pages/AddCourt";
 
 const Stack = createNativeStackNavigator();
 
@@ -56,6 +57,11 @@ export default function App() {
           options={{ headerShown: false }}
           name="EditProfile"
           component={EditProfile}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="AddCourt"
+          component={AddCourt}
         />
       </Stack.Navigator>
     </NavigationContainer>
