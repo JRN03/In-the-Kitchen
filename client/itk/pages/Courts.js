@@ -11,12 +11,9 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import axios from 'axios';
 
 
-export default function Courts() {
+export default function Courts({navigation}) {
   // const ref = useRef();
 
-  // useEffect(() => {
-  //   ref.current?.setAddressText('Some Text');
-  // }, []);
   const onRegionChange = (region)=>{
     // console.log(region)
 
@@ -58,6 +55,7 @@ export default function Courts() {
   }
   function mapMarkers(results){
     // console.log(results)
+    var currentCourtObject = courtObject
      setCourtMarkers(
         results.map((item,index)=>{
           //using item.placeId
@@ -123,9 +121,12 @@ export default function Courts() {
     getCourts();
 
   },[])
- 
+  function redirectToPark(data){
+    navigation.navigate('ParkView',{props:data})
+    
+  }
   const courtObjects = courtData.map(courtInfo => (
-    <ParkTab key={courtInfo.name} name={courtInfo.name}/>
+    <ParkTab key={courtInfo.name} name={courtInfo.name} onPress= { ()=>{redirectToPark(courtInfo)}}/>
   ));
 
   return (
