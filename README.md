@@ -1,92 +1,82 @@
 # In The Kitchen
 
+## Client
 
+### Styles and Themes
 
-## Getting started
+The assets folder contains resources for styles and themes. The styles file exports objects for styling main and contentWrap components. Each new page should be wrapped by a View with style contentWrap and that view should be wrapped by a SafeAreaView with style main. This allows consistency throughout the app.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+The colors can be accessed in assets/themes/... For now we only have a light theme, but this allows for easier implementation of a dark theme later on. The lights file has primary and second key names.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+import light from assets/themes
 
-## Add your files
+import dark from assets/themes
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+import {PageStyles} from assets/Styles
 
-```
-cd existing_repo
-git remote add origin https://gitlab.com/the-chefs/in-the-kitchen.git
-git branch -M main
-git push -uf origin main
-```
+### Dependencies
 
-## Integrate with your tools
+- npm install
 
-- [ ] [Set up project integrations](https://gitlab.com/the-chefs/in-the-kitchen/-/settings/integrations)
+- npx expo install react-native-maps
 
-## Collaborate with your team
+- npm install @react-navigation/native @react-navigation/native-stack
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+- npx expo install react-native-screens react-native-safe-area-context
 
-## Test and Deploy
+- npm install react-navigation
 
-Use the built-in continuous integration in GitLab.
+- npm install react-native-gesture-handler
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+- sudo npx expo install expo-image-picker
 
-***
+## Server
 
-# Editing this README
+### Dependencies
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+- npm i mongoose
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+- npm i dotenv
 
-## Name
-Choose a self-explaining name for your project.
+- npm i cors
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+- npm i bodyparser
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+- npm i express
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+- npm i bcryptjs
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+- npm i jsonwebtoken
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+### Running the Server
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+For development testing, run _npm run devStart_ in a terminal. This will start the server on localhost:5000 since we have not yet deployed. GET requests can be made in the browser by visiting the url _http://localhost:5000_ followed by any appropiate routing for testing purposes. Any other form of requests should be made in postman or another third-party app.
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+For PUT/POST requests for users – fName, lName, username, and password are all required.
+For PUT/POST requests for courts – name, location, Google Places ID, are all required.
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+### Models
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+The models for data that is stored in our MongoDB are created here. That is, the information needed for relevant collections in our Database. For example, users will need a first name, last name, username, password, profile picture, and bio. Likewise, courts need to have a location, an associated name, the current rating, a unique Google Places ID, and the times people meet there.
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+### Routes
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+The routes folder is where all the re-routing takes place. This may be to the /auth page or the /courts page where the necessary handling of HTTP Requests go.
 
-## License
-For open source projects, say how it is licensed.
+_Auth.js_
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+The auth route handles user logins and registration. Posts to /auth/register are for new users to create accounts. It checks if the username exists in the Database already and if not, it can create a new user in the database with the appropiate user info. The server uses JWT to create a token and send it over to the client. The client can then use this token to query the user route with authentication. We use bcrypt to encrypt passwords with salting and unique hashes.
+
+The /auth/login checks for a valid username in the database, and if there is one, uses bcrypt to match the entered password to the encrypted one stored.
+
+_courts.js_
+
+The courts route is responsible for uploading new court information and fetching information on already uploaded courts. Currently, our working model for courts would not allow for filtering on regions or states but could be considered for future implementation.
+
+_user.js_
+
+We have a GET and PUT method for the user route. PUT can update information such as friends, bio, and images. The GET would return information about a user such as the First Name, Last Name, Username, Friends, and Image. When queries are sent to the user route, the header for "token" should be specified where token should be attained upon login/register.
+
+### Serving Images
+
+Serving images from the database would be slow and taxing. Instead, it would be best to save the images onto the server and put the file name into the database with the respective users and posts. For now we would save each image as user_image-x.png where x is an incremented number. We handle the image uploads under the user route.
