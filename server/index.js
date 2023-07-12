@@ -6,6 +6,7 @@ import cors from "cors";
 
 import auth from "./routes/auth.js";
 import courts from "./routes/courts.js";
+import user from "./routes/user.js";
 
 const PORT = process.env.PORT || 8080;
 
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
 
 app.use("/auth", auth);
 app.use("/courts", courts);
+app.use("/user", user)
 
 const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
