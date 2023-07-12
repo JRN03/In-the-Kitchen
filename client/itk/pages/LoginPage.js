@@ -1,10 +1,13 @@
 import React, {useState} from 'react';
-import { View, Text, StyleSheet, SafeAreaView, Image, ImageBackground, TextInput, Button, TouchableOpacity, Alert} from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, Image, TextInput, TouchableOpacity, Alert} from "react-native";
 import { useNavigation } from '@react-navigation/native';
-const LoginPage = () => {
+
+const LoginPage = ({}) => {
+
   const navigation = useNavigation();
   const [usernme, onChangeUsrn] = React.useState(null);
   const [userpswd, onChangePswd] = React.useState(null);
+  
   const validateFields = ()=>{
 	if(usernme == null || usernme.length == 0){
 		Alert.alert("Username cannot be empty.");
@@ -31,7 +34,7 @@ const LoginPage = () => {
 				.then(res => res.json())
 				.then(data => {
 						if (data.message === "login successful") {
-								navigation.navigate('Home');
+								navigation.navigate('Home',{token:data.token});
 						} else if (data.message === "Username Not Found") {
 								Alert.alert("Incorrect Username!");
 						} else if (data.message === "Invalid Password") {

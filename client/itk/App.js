@@ -15,6 +15,7 @@ import AddCourt from "./pages/AddCourt";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+
   return (
     <NavigationContainer style={styles.container}>
       <Stack.Navigator>
@@ -34,7 +35,7 @@ export default function App() {
           component={Courts}
         />
         <Stack.Screen
-          options={{ headerShown: false, animation: "none" }}
+          options={{headerShown: false, animation: "none"}}
           name="Home"
           component={Home}
         />

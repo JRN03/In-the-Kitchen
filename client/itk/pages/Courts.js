@@ -13,7 +13,8 @@ import axios from 'axios';
 
 export default function Courts({route}) {
   // const ref = useRef();
-
+  const token = route.params.token;
+  console.log(token);
   // useEffect(() => {
   //   ref.current?.setAddressText('Some Text');
   // }, []);
@@ -178,7 +179,7 @@ export default function Courts({route}) {
         <ScrollView style={styles.nearbyContainer}>
           {courtObjects}
         </ScrollView>
-        <Navbar route={route}/>
+        <Navbar route={route} token={token}/>
         </View>
     </SafeAreaView>
   );
