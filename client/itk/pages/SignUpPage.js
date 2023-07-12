@@ -1,6 +1,7 @@
 import * as React from "react";
 import { View, Text, StyleSheet, SafeAreaView, Image, ImageBackground, TextInput, Button, TouchableOpacity, Alert} from "react-native";
 import { useNavigation } from '@react-navigation/native';
+import { PageStyles } from "../assets/Styles";
 
 const SignUpPage = () => {
 	const navigation = useNavigation();
@@ -59,7 +60,7 @@ const SignUpPage = () => {
 
 	return (
 		<SafeAreaView style = {{flex: 16, backgroundColor: '#176089', alignContent: 'space-between'}}>
-			<View style={{bottom: 100}}>
+			<View style={{bottom: 100, left: 15}}>
 				<TextInput style = {textboxStyle.fname}
 					placeholder = 'First Name'
 					placeholderTextColor={'maroon'}
@@ -109,7 +110,7 @@ const SignUpPage = () => {
 
 			<TouchableOpacity
 				onPress={() => navigation.navigate('Login')}>
-				<Text style={{color: 'white', fontSize: 17, textDecorationLine: 'underline', left: 20}}>Sign Out :(</Text>
+				<Text style={{color: 'white', fontSize: 17, textDecorationLine: 'underline', left: 20}}>Don't sign up, it doesnt hurt our feelings</Text>
 			</TouchableOpacity>
 		</SafeAreaView>
 	);
