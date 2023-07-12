@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -21,14 +21,8 @@ import {
 } from "@expo-google-fonts/roboto-slab";
 import light from "../assets/themes/light";
 import { useNavigation } from "@react-navigation/native";
-/*
-    TODO:
-        decide font
-        retrieve profile pic from database or store/cache locally
-        retrieve username from database or store/cache locally
-        either copy all of this code and add a button to a new component
-            or dynamically set weather the button is active or not
-*/
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { PROFILE_PIC_KEY } from "../AsyncKeys";
 
 const AppHeader = () => {
   const navigation = useNavigation();
@@ -44,6 +38,36 @@ const AppHeader = () => {
     RobotoSlab_900Black,
   });
 
+  const [profilePic, setProfilePic] = useState();
+
+  // make sure that page is rerendered
+  useEffect(() => {
+    const focusHandler = navigation.addListener("focus", () => {
+      readData();
+    });
+    return focusHandler;
+  }, [navigation]);
+
+  // read data
+  const readData = async () => {
+    try {
+      picTemp = await AsyncStorage.getItem(PROFILE_PIC_KEY);
+
+      if (picTemp !== null) {
+        setProfilePic(picTemp);
+      }
+    } catch (e) {
+      alert("failed to load data in profile page");
+    }
+  };
+
+  let image;
+  if (profilePic === "../assets/TempProfilePic.jpeg") {
+    image = require("../assets/TempProfilePic.jpeg");
+  } else {
+    image = { uri: profilePic };
+  }
+
   if (!fontsLoaded) {
     return null;
   }
@@ -55,10 +79,7 @@ const AppHeader = () => {
         style={styles.imgWrap}
         onPress={() => navigation.navigate("Profile")}
       >
-        <Image
-          style={[styles.img, styles.profile]}
-          source={require("../assets/TempProfilePic.jpeg")}
-        />
+        <Image style={[styles.img, styles.profile]} source={image} />
       </TouchableOpacity>
       <View style={styles.titleWrap}>
         <Text style={styles.title}>In the Kitchen</Text>
