@@ -13,12 +13,16 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BIO_KEY } from "../AsyncKeys";
-import { PROFILE_PIC_KEY } from "../AsyncKeys";
+import { BIO_KEY, PROFILE_PIC_KEY } from "../AsyncKeys";
 const LoginPage = () => {
   const navigation = useNavigation();
   const [usernme, onChangeUsrn] = React.useState(null);
   const [userpswd, onChangePswd] = React.useState(null);
+
+  /*
+      Splash Screen for Loading Data?
+      Need to make sure that data is loaded before navigating to next page
+  */
 
   const saveUserData = async () => {
     try {
@@ -27,9 +31,11 @@ const LoginPage = () => {
         PROFILE_PIC_KEY,
         "../assets/TempProfilePic.jpeg"
       );
-      alert("Data saved");
+      console.log("Data saved");
     } catch (e) {
       alert("Failed to save");
+    } finally {
+      // navigation.navigate("Home");
     }
   };
 
@@ -66,7 +72,7 @@ const LoginPage = () => {
           //
           //
           //
-          navigation.navigate("Home");
+          // navigation.navigate("Home");
         } else if (data.message === "Username Not Found") {
           Alert.alert("Incorrect Username!");
         } else if (data.message === "Invalid Password") {
