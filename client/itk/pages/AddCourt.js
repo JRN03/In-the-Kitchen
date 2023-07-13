@@ -1,46 +1,53 @@
-import * as React from "react";
 import { View, Text, StyleSheet, SafeAreaView, Image, ImageBackground, TextInput, Button, TouchableOpacity, Alert} from "react-native";
 import { useNavigation } from '@react-navigation/native';
-import { PageStyles } from "../assets/Styles";
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import MapView, {Marker, PROVIDER_GOOGLE} from "react-native-maps";
+import light from "../assets/themes/light.js";
+import {PageStyles} from "../assets/Styles";
+import {React, useState, useEffect, useRef} from "react";
+import axios from 'axios';
+import { AntDesign } from '@expo/vector-icons';
 
-const AddCourt = () => {
+
+
+const AddCourt = ({route}) => {
 	const navigation = useNavigation();
-  const [fname, onChangeFname] = React.useState(null);
-  const [lname, onChangeLname] = React.useState(null);
-  const [usrnm, onChangeUsrn] = React.useState(null);
-  const [usrpwd, onChangePswd] = React.useState(null);
+    const [Lat,setMapLat] = useState(36.9741);
+    const [Lon,setMapLon] = useState(-122.0308);
+    const [PID, setPID] = useState('useless text');
+    const [Location, setLoc] = useState('useless text');
+    const [Name, setName] = useState('useless text');
+    const [Times, setTimes] = useState(null);
+    const [image, setImage] = useState(null);
+    const addImage=()=>{};
+    // parse everything, images, times
 	
-	const validateFields = ()=>{
-		if(fname == null || fname.length == 0){
-			Alert.alert("First name cannot be empty.");
-			return false;
-		}
-		if(lname == null || lname.length == 0){
-			Alert.alert("Last name cannot be empty.");
-			return false;
-		}
-		if(usrnm == null || usrnm.length == 0){
-			Alert.alert("Username cannot be empty.");
-			return false;
-		}
-		if(usrpwd == null || usrpwd.length == 0){
-			Alert.alert("Password cannot be empty.");
-			return false;
-		}
-		return true;
-	}
+  async function getInfo(data){
+    axios({
+      method: 'get',
+      url: `https://maps.googleapis.com/maps/api/place/details/json?placeid=${data.place_id}&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`,
+    }).then((response) => {
+      setMapLat(response.data.result.geometry.location.lat);
+      setMapLon(response.data.result.geometry.location.lng);
+      setPID(data.place_id)
+      setName(response.data.result.name)
+      setLoc(response.data.result.formatted_address)
+    //   console.log(response.data.result.formatted_address)
+    });
+    
+  }
+
 	const submitForm = () => {
-		if(!validateFields()){
-			return;
-		}
-		console.log(fname, lname, usrnm, usrpwd)
+		console.log(PID, Location, Lat, Lon, Name, Times)
 		fetch('http://localhost:8080/auth/register', {
 		method: 'POST',
 		body: JSON.stringify({
-			fName: fname,
-			lName: lname,
-			username: usrnm,
-			password: usrpwd
+			location: Location,
+			name: Name,
+			times: Times,
+			placesID: PID,
+            lat: Lat,
+            lon: Lon
 		}),
 		headers: {'Content-Type': 'application/json'}
 	})
@@ -48,9 +55,10 @@ const AddCourt = () => {
 	.then(data => {
 		console.log(data);
 		if (data.user) {
-			navigation.navigate('Home');
+			navigation.navigate('Courts');
+            Alert.alert('Court Added!');
 		} else {
-			Alert.alert('Sign Up Failed!');
+			Alert.alert('Error');
 		}
 	})
 	.catch(error => {
@@ -59,58 +67,158 @@ const AddCourt = () => {
 }
 
 	return (
-		<SafeAreaView style = {{flex: 16, backgroundColor: '#176089', alignContent: 'space-between'}}>
-			<View style={{bottom: 100, left: 15}}>
-				<TextInput style = {textboxStyle.fname}
-					placeholder = 'Routeable Court Address'
-					placeholderTextColor={'maroon'}
+		<SafeAreaView style = {PageStyles.main}>
+			<View style = {{}}>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('Courts')}>
+                    <Text style={{color: 'white', fontSize: 17, textDecorationLine: 'underline'}}>{"<- Don't add court, it won't hurt our feelings"}</Text>
+                </TouchableOpacity>
+                <Text style = {{color: 'white', fontSize: 15, textAlign: 'center', top: 10}}>{"Type address of Court/Park below!"}</Text>
+                
+                {/* When the user clicks once it doesnt autofill all the way */}
+                <GooglePlacesAutocomplete
+                    placeholder='Search'
+                    styles={styles.searchWrap}
+                    onPress={(data, details = null) => {
+                        getInfo(data);
+                    }}
+                    query={{
+                        key: 'AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk',
+                        language: 'en',
+                    }}
+                    onFail={(error) => console.error(error)}
+                    enablePoweredByContainer={false}
+
+                />
+                <Text style = {{color: 'white', fontSize: 15, textAlign: 'center', top: 20}}>{"Optional: Add up to three images of the park!"}</Text>
+                
+                <View style = {{top: 30}}>
+                    <View style={imageUploaderStyles.container}>
+                    {
+                        image  && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
+                    }
+                        <View style={imageUploaderStyles.uploadBtnContainer}>
+                            <TouchableOpacity onPress={addImage} style={imageUploaderStyles.uploadBtn} >
+                                <Text>{image ? 'Edit' : 'Upload'} Image</Text>
+                                <AntDesign name="camera" size={20} color="black" />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+                <View style = {{top: -130, left: 175}}>
+                    <View style={imageUploaderStyles.container}>
+                    {
+                        image  && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
+                    }
+                        <View style={imageUploaderStyles.uploadBtnContainer}>
+                            <TouchableOpacity onPress={addImage} style={imageUploaderStyles.uploadBtn} >
+                                <Text>{image ? 'Edit' : 'Upload'} Image</Text>
+                                <AntDesign name="camera" size={20} color="black" />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+                <View style = {{top: -115, left: 87}}>
+                    <View style={imageUploaderStyles.container}>
+                    {
+                        image  && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
+                    }
+                        <View style={imageUploaderStyles.uploadBtnContainer}>
+                            <TouchableOpacity onPress={addImage} style={imageUploaderStyles.uploadBtn} >
+                                <Text>{image ? 'Edit' : 'Upload'} Image</Text>
+                                <AntDesign name="camera" size={20} color="black" />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+
+                <Text style = {{color: 'white', fontSize: 15, textAlign: 'center', top: -100}}>{"Optional: Common court meet times below!"}</Text>
+                <Text style = {{color: 'white', fontSize: 15, textAlign: 'center', top: -100}}>{"Notice formatting:"}</Text>
+                <Text style = {{color: 'white', fontSize: 15, textAlign: 'center', top: -100}}>{"Day: #AM/PM-#AM/PM"}</Text>
+                <Text style = {{color: 'white', fontSize: 15, textAlign: 'center', top: -100}}>{"Ex: Friday: 9AM-12PM"}</Text>
+
+                <TextInput style = {styles.timeBox}
+					placeholder = 'Meeting Times'
+					placeholderTextColor={'#D3D3D3'}
 					autoCapitalize='words'
-					onChangeText={text => onChangeFname(text)}
-					// onChangeText={onChangeFname}
-					value={fname}
+                    multiline
+                    maxLength={150}
+					onChangeText={text => setTimes(text)}
+					value={Times}
 				></TextInput>
 
-				<TextInput style = {textboxStyle.lname}
-					placeholder = 'ya momma'
-					placeholderTextColor={'maroon'}
-					autoCapitalize='words'
-					onChangeText={text => onChangeLname(text)}
-					// onChangeText={onChangeLname}
-					value={lname}
-				></TextInput>
 
-				<TextInput style = {textboxStyle.user}
-					placeholder = 'ya pappa'
-					placeholderTextColor={'maroon'}
-					autoCapitalize="none"
-					onChangeText={text => onChangeUsrn(text)}
-					// onChangeText={onChangeUsrn}
-					value={usrnm}
-				></TextInput>
-
-				<TextInput style = {textboxStyle.pswd}
-					placeholder = 'review?'
-					placeholderTextColor={'maroon'}
-					autoCapitalize="none"
-					secureTextEntry={true}
-					onChangeText={text => onChangePswd(text)}
-					// onChangeText={onChangePswd}
-					value={usrpwd}
-				></TextInput>
 			</View>
 
 			<TouchableOpacity style={buttonStyle.picklebut}
-				onPress={submitForm}>
-				<Text>Add pickle</Text>
-			</TouchableOpacity>
-
-			<TouchableOpacity
-				onPress={() => navigation.navigate('Home')}>
-				<Text style={{color: 'white', fontSize: 17, textDecorationLine: 'underline', left: 20}}>Don't add court, it doesnt hurt our feelings</Text>
+				onPress={null}>
+				<Text style = {{textAlign: 'center'}}>{"Submit Court :D"}</Text>
 			</TouchableOpacity>
 		</SafeAreaView>
 	);
 };
+
+const styles = StyleSheet.create({
+    main: {
+      width: "100%",
+      height: "100%",
+      alignItems: "center",
+      backgroundColor: light.primary,
+      position: "absolute"
+    },
+    contentWrap:{
+      width: "90%",
+      flex: 1,
+      position: "absolute"
+    },
+    map: {
+      height: "35%",
+      width: "100%",
+      borderRadius: 10,
+      position: "relative",
+      zIndex: 0
+    },
+    nearbyContainer:{
+      width: "100%",
+      flexGrow: 0,
+      maxHeight: "32%",
+    },
+    timeBox:{
+        fontSize: 15, 
+        alignSelf: 'center',
+		backgroundColor: 'white',
+		height: 110,
+		margin: 12,
+		borderWidth: 1,
+		borderRadius: 10,
+		padding: 10,
+		width: 250,
+        top: -105
+      },
+    searchWrap: {
+      container: {
+        flex: 0,
+        marginVertical: 10,
+        maxHeight: "45%",
+        zIndex: 1,
+        width: 300,
+        top: 10,
+        left: 15
+      },
+      textInput: {
+        width: '100%',
+        height: 40,
+        borderRadius: 5,
+        zIndex: 2
+      },
+      listView: {
+        borderRadius:5,
+        position: "absolute",
+        top: 42,
+        zIndex: 1
+      },
+  }
+  });
 
 const buttonStyle = StyleSheet.create({
 	picklebut: {
@@ -118,86 +226,35 @@ const buttonStyle = StyleSheet.create({
 		height: 38,
 		width: 78,
 		backgroundColor: 'white',
-		position: 'absolute',
-		top: 480,
-		bottom: 0,
-		left: 150,
-		right: 0,
-		justifyContent: 'center',
-		alignItems: 'center',
-		flex: 1,
+		alignSelf: 'center',
+        top: -100,
 	},
 })
 
-const textboxStyle = StyleSheet.create({
-	fname: {
-		backgroundColor: 'white',
-		height: 40,
-		margin: 12,
-		borderWidth: 1,
-		borderRadius: 10,
-		padding: 10,
-		width: 250,
-		position: 'absolute',
-		top: 270,
-		bottom: 0,
-		left: 40,
-		right: 0,
-		justifyContent: 'center',
-		alignItems: 'center',
-		flex: 1,
-	},
-	lname: {
-		backgroundColor: 'white',
-		height: 40,
-		margin: 12,
-		borderWidth: 1,
-		borderRadius: 10,
-		padding: 10,
-		width: 250,
-		position: 'absolute',
-		top: 330,
-		bottom: 0,
-		left: 40,
-		right: 0,
-		justifyContent: 'center',
-		alignItems: 'center',
-		flex: 1,
-	},
-	user: {
-		backgroundColor: 'white',
-		height: 40,
-		margin: 12,
-		borderWidth: 1,
-		borderRadius: 10,
-		padding: 10,
-		width: 250,
-		position: 'absolute',
-		top: 390,
-		bottom: 0,
-		left: 40,
-		right: 0,
-		justifyContent: 'center',
-		alignItems: 'center',
-		flex: 1,
-	},
-	pswd: {
-		backgroundColor: 'white',
-		height: 40,
-		margin: 12,
-		borderWidth: 1,
-		borderRadius: 10,
-		padding: 10,
-		width: 250,
-		position: 'absolute',
-		top: 450,
-		bottom: 0,
-		left: 40,
-		right: 0,
-		justifyContent: 'center',
-		alignItems: 'center',
-		flex: 1,
-	},
-});
+const imageUploaderStyles=StyleSheet.create({
+    container:{
+        elevation:2,
+        height:160,
+        width:160,
+        backgroundColor:'#efefef',
+        position:'relative',
+        borderRadius:10,
+        overflow:'hidden',
+    },
+    uploadBtnContainer:{
+        opacity:0.7,
+        position:'absolute',
+        right:0,
+        bottom:0,
+        backgroundColor:'lightgrey',
+        width:'100%',
+        height:'25%',
+    },
+    uploadBtn:{
+        display:'flex',
+        alignItems:"center",
+        justifyContent:'center'
+    }
+})
 
 export default AddCourt;
