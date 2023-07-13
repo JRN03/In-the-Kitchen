@@ -22,8 +22,6 @@ const EditProfile = ({ route }, props) => {
 
   useEffect(() => {
     const focusHandler = navigation.addListener("focus", () => {
-      // console.log(route.params.bio);
-      // console.log(route.params.profilePic);
       setBio(route.params.bio);
       setProfilePic(route.params.profilePic);
     });
@@ -47,22 +45,8 @@ const EditProfile = ({ route }, props) => {
         console.log("AsyncStorage error:", error);
       }
     };
-
     readData(); // Call the async function to fetch the value
   }, []);
-
-  // const readData = async () => {
-  //   let tempToken
-  //   try {
-  //     tempToken = await AsyncStorage.getItem(TOKEN)
-  //     console.log("tempToken", tempToken);
-  //   } catch (e) {
-  //     alert("failed to load data in edit profile");
-  //   } finally {
-  //     setToken(tempToken);
-  //   }
-  //   console.log("read data", token)
-  // };
 
   const saveButtonHandler = () => {
     // readData();
@@ -78,20 +62,13 @@ const EditProfile = ({ route }, props) => {
       }
     };
     saveData();
-    console.log("profile pic", profilePic);
-    console.log("token", token);
 
-    // let body = new FormData();
-    // body.append('photo', {uri: profilePic, name: 'photo.png', filename :'myFile.jpg',type: 'image/jpg'});
-
-    // console.log(body)
-    // console.log("assets", profilePic.base64)
     fetch("http://localhost:8080/user/pfp", {
       method: "PUT",
       body: JSON.stringify({
         uri: "data:image/jpeg;base64," + profilePic.base64,
       }),
-      headers: { "Content-Type": "image/jpeg", token: token },
+      headers: { "Content-Type": "appl", token: token },
     })
       .then((res) => res.json())
       .then((data) => {
