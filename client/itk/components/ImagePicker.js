@@ -15,6 +15,7 @@ export default PickImage = (props) => {
       setProfilePic(result.assets[0].uri);
       props.imagePath(result.assets[0].uri);
     }
+    // console.log(result);
   };
   let image;
   if (profilePic !== "../assets/TempProfilePic.jpeg") {

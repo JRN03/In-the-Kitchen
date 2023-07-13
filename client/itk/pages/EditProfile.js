@@ -19,11 +19,12 @@ const EditProfile = ({ route }, props) => {
   const navigation = useNavigation();
   const [bio, setBio] = useState(route.params.bio);
   const [profilePic, setProfilePic] = useState(route.params.profilePic);
+  let token;
 
   useEffect(() => {
     const focusHandler = navigation.addListener("focus", () => {
-      console.log(route.params.bio);
-      console.log(route.params.profilePic);
+      // console.log(route.params.bio);
+      // console.log(route.params.profilePic);
       setBio(route.params.bio);
       setProfilePic(route.params.profilePic);
     });
@@ -47,6 +48,25 @@ const EditProfile = ({ route }, props) => {
       }
     };
     saveData();
+    fetch("http://localhost:8080/user/pfp", {
+      method: "PUT",
+      body: JSON.stringify({
+        uri: profilePic,
+      }),
+      headers: { "Content-Type": "image/jpeg", token: token },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.message === "login successful") {
+          saveUserData();
+          // save token to cache
+          // navigation.navigate('Home',{token:data.token});
+        } else if (data.message === "Username Not Found") {
+          Alert.alert("Incorrect Username!");
+        } else if (data.message === "Invalid Password") {
+          Alert.alert("Incorrect Password!");
+        }
+      });
     navigation.navigate("Profile");
   };
 

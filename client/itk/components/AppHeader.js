@@ -52,7 +52,6 @@ const AppHeader = () => {
   const readData = async () => {
     try {
       picTemp = await AsyncStorage.getItem(PROFILE_PIC_KEY);
-
       if (picTemp !== null) {
         setProfilePic(picTemp);
       }
@@ -62,12 +61,16 @@ const AppHeader = () => {
   };
 
   let image;
-  if (profilePic === "../assets/TempProfilePic.jpeg") {
+  if (
+    profilePic === "../assets/TempProfilePic.jpeg" ||
+    profilePic === undefined
+  ) {
     image = require("../assets/TempProfilePic.jpeg");
   } else {
     image = { uri: profilePic };
   }
-
+  // console.log("in header");
+  // console.log(profilePic);
   if (!fontsLoaded) {
     return null;
   }

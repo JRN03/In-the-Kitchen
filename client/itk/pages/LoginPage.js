@@ -5,37 +5,33 @@ import {
   StyleSheet,
   SafeAreaView,
   Image,
-  ImageBackground,
   TextInput,
-  Button,
   TouchableOpacity,
   Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BIO_KEY, PROFILE_PIC_KEY } from "../AsyncKeys";
-const LoginPage = () => {
+import { PROFILE_PIC_KEY, BIO_KEY, TOKEN } from "../AsyncKeys";
+
+const LoginPage = ({}) => {
   const navigation = useNavigation();
   const [usernme, onChangeUsrn] = React.useState(null);
   const [userpswd, onChangePswd] = React.useState(null);
 
-  /*
-      Splash Screen for Loading Data?
-      Need to make sure that data is loaded before navigating to next page
-  */
-
-  const saveUserData = async () => {
+  const saveUserData = async (token) => {
     try {
       await AsyncStorage.setItem(BIO_KEY, "");
       await AsyncStorage.setItem(
         PROFILE_PIC_KEY,
         "../assets/TempProfilePic.jpeg"
       );
+      await AsyncStorage.setItem(TOKEN, token);
       console.log("Data saved");
     } catch (e) {
+      console.log(e);
       alert("Failed to save");
     } finally {
-      // navigation.navigate("Home");
+      navigation.navigate("Home");
     }
   };
 
@@ -65,14 +61,10 @@ const LoginPage = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.message === "login successful") {
-          //
-          // need to fetch profile pic from server here
-          // then save locally with saveUserData
-          saveUserData();
-          //
-          //
-          //
-          // navigation.navigate("Home");
+          console.log(data);
+          saveUserData(data.token);
+          // save token to cache
+          // navigation.navigate('Home',{token:data.token});
         } else if (data.message === "Username Not Found") {
           Alert.alert("Incorrect Username!");
         } else if (data.message === "Invalid Password") {
@@ -166,9 +158,9 @@ const buttonStyle = StyleSheet.create({
     width: 78,
     backgroundColor: "white",
     position: "absolute",
-    top: 530,
+    top: 510,
     bottom: 0,
-    left: 54,
+    left: 73,
     right: 0,
     justifyContent: "center",
     alignItems: "center",
@@ -199,9 +191,9 @@ const textboxStyle = StyleSheet.create({
     padding: 10,
     width: 250,
     position: "absolute",
-    top: 390,
+    top: 360,
     bottom: 0,
-    left: 40,
+    left: 58,
     right: 0,
     justifyContent: "center",
     alignItems: "center",
@@ -216,9 +208,9 @@ const textboxStyle = StyleSheet.create({
     padding: 10,
     width: 250,
     position: "absolute",
-    top: 450,
+    top: 430,
     bottom: 0,
-    left: 40,
+    left: 58,
     right: 0,
     justifyContent: "center",
     alignItems: "center",
@@ -242,9 +234,9 @@ const styles = StyleSheet.create({
   },
   login: {
     position: "absolute",
-    top: 180,
+    top: 130,
     bottom: 320,
-    left: 0,
+    left: 19,
     right: 200,
     justifyContent: "center",
     alignItems: "center",
@@ -269,6 +261,7 @@ const styles = StyleSheet.create({
   ball3: {
     justifyContent: "center",
     right: 0,
+    left: 20,
     top: -1250,
     height: "70%",
     width: "70%",

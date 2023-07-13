@@ -15,9 +15,13 @@ import { PageStyles } from "../assets/Styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BIO_KEY, PROFILE_PIC_KEY } from "../AsyncKeys";
 
+// need to use state to manage if the page is ready
+// use conditional isReady state while we fetch data
+
 const ProfilePage = ({ navigation, route }) => {
   const [bio, setBio] = useState();
   const [profilePic, setProfilePic] = useState();
+  const [isReady, setIsReady] = useState(false);
   // read data
   const readData = async () => {
     try {
@@ -34,6 +38,8 @@ const ProfilePage = ({ navigation, route }) => {
       }
     } catch (e) {
       alert("failed to load data in profile page");
+    } finally {
+      setIsReady(true);
     }
   };
 
@@ -44,6 +50,10 @@ const ProfilePage = ({ navigation, route }) => {
     });
     return focusHandler;
   }, [route.name]);
+
+  if (!isReady) {
+    return null;
+  }
 
   //set up image
   let image;
