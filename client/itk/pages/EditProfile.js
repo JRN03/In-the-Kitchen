@@ -12,14 +12,14 @@ import PickImage from "../components/ImagePicker";
 import { useNavigation } from "@react-navigation/native";
 import { PageStyles } from "../assets/Styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BIO_KEY } from "../AsyncKeys";
-import { PROFILE_PIC_KEY } from "../AsyncKeys";
+import { BIO_KEY, TOKEN, PROFILE_PIC_KEY } from "../AsyncKeys";
 
 const EditProfile = ({ route }, props) => {
   const navigation = useNavigation();
   const [bio, setBio] = useState(route.params.bio);
   const [profilePic, setProfilePic] = useState(route.params.profilePic);
-  let token;
+  const [token, setToken] = useState(null);
+
 
   useEffect(() => {
     const focusHandler = navigation.addListener("focus", () => {
@@ -35,7 +35,38 @@ const EditProfile = ({ route }, props) => {
     setBio(text);
   };
 
+  useEffect(() => {
+    const readData = async () => {
+      try {
+        const value = await AsyncStorage.getItem(TOKEN);
+        if (value !== null) {
+          // Value found in async storage, set it as the initial state
+          setToken(value);
+        } 
+      } catch (error) {
+        // Handle AsyncStorage errors
+        console.log('AsyncStorage error:', error);
+      }
+    };
+
+    readData(); // Call the async function to fetch the value
+  }, []);
+
+  // const readData = async () => {
+  //   let tempToken
+  //   try {
+  //     tempToken = await AsyncStorage.getItem(TOKEN)
+  //     console.log("tempToken", tempToken);
+  //   } catch (e) {
+  //     alert("failed to load data in edit profile");
+  //   } finally {
+  //     setToken(tempToken);
+  //   }
+  //   console.log("read data", token)
+  // };
+
   const saveButtonHandler = () => {
+    // readData();
     if (bio === undefined) {
       setBio("");
     }
@@ -48,24 +79,24 @@ const EditProfile = ({ route }, props) => {
       }
     };
     saveData();
+    console.log("profile pic", profilePic);
+    console.log("token", token);
+
+    // let body = new FormData();
+    // body.append('photo', {uri: profilePic, name: 'photo.png', filename :'myFile.jpg',type: 'image/jpg'});
+    
+    // console.log(body)
+    // console.log("assets", profilePic.base64)
     fetch("http://localhost:8080/user/pfp", {
       method: "PUT",
       body: JSON.stringify({
-        uri: profilePic,
+        uri: 'data:image/jpeg;base64,' + profilePic.base64,
       }),
       headers: { "Content-Type": "image/jpeg", token: token },
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.message === "login successful") {
-          saveUserData();
-          // save token to cache
-          // navigation.navigate('Home',{token:data.token});
-        } else if (data.message === "Username Not Found") {
-          Alert.alert("Incorrect Username!");
-        } else if (data.message === "Invalid Password") {
-          Alert.alert("Incorrect Password!");
-        }
+        console.log(data);
       });
     navigation.navigate("Profile");
   };

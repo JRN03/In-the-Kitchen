@@ -12,8 +12,9 @@ export default PickImage = (props) => {
       quality: 1,
     });
     if (!result.canceled) {
+      console.log("image picker", result.assets);
       setProfilePic(result.assets[0].uri);
-      props.imagePath(result.assets[0].uri);
+      props.imagePath(result.assets[0]);
     }
     // console.log(result);
   };
