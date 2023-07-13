@@ -80,10 +80,9 @@ const EditProfile = ({ route }, props) => {
   const setImagePath = (path) => {
     setProfilePic(path);
   };
-
   return (
     <SafeAreaView style={PageStyles.main}>
-      <AppHeader />
+      <AppHeader pfp={profilePic.uri} />
       <View style={PageStyles.contentWrap}>
         <PickImage
           imagePath={setImagePath}

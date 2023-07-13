@@ -108,7 +108,7 @@ const ProfilePage = ({ navigation, route }) => {
   }
   return (
     <SafeAreaView style={PageStyles.main}>
-      <AppHeader />
+      <AppHeader pfp={profilePic} />
       <View style={PageStyles.contentWrap}>
         <View style={styles.container}>{image}</View>
         {showBio}

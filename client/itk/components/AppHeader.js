@@ -24,7 +24,7 @@ import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PROFILE_PIC_KEY } from "../AsyncKeys";
 
-const AppHeader = () => {
+const AppHeader = (props) => {
   const navigation = useNavigation();
   let [fontsLoaded] = useFonts({
     RobotoSlab_100Thin,
@@ -77,6 +77,12 @@ const AppHeader = () => {
   }
   if (!fontsLoaded) {
     return null;
+  }
+  if (
+    props.pfp !== undefined &&
+    props.pfp !== "../assets/TempProfilePic.jpeg"
+  ) {
+    image = { uri: props.pfp };
   }
 
   return (
