@@ -78,7 +78,7 @@ const EditProfile = ({ route }, props) => {
       }
     };
     saveData();
-    console.log("profile pic", profilePic);
+    // console.log("profile pic", profilePic.base64);
     console.log("token", token);
 
     // let body = new FormData();
@@ -91,7 +91,7 @@ const EditProfile = ({ route }, props) => {
       body: JSON.stringify({
         uri: "data:image/jpeg;base64," + profilePic.base64,
       }),
-      headers: { "Content-Type": "image/jpeg", token: token },
+      headers: { "Content-Type": "application/json", token: token },
     })
       .then((res) => res.json())
       .then((data) => {

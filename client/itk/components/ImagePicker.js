@@ -10,13 +10,12 @@ export default PickImage = (props) => {
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
+      base64: true,
     });
     if (!result.canceled) {
-      console.log("image picker", result.assets);
       setProfilePic(result.assets[0].uri);
       props.imagePath(result.assets[0]);
     }
-    // console.log(result);
   };
   let image;
   if (profilePic !== "../assets/TempProfilePic.jpeg") {
