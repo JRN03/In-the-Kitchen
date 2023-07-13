@@ -21,8 +21,8 @@ import { BIO_KEY, PROFILE_PIC_KEY } from "../AsyncKeys";
 const ProfilePage = ({ navigation, route }) => {
   const [bio, setBio] = useState();
   const [profilePic, setProfilePic] = useState();
-  const [isReady, setIsReady] = useState(false);
-  // read data
+
+  // read profile pic + bio from cache
   const readData = async () => {
     try {
       bioTemp = await AsyncStorage.getItem(BIO_KEY);
@@ -38,8 +38,6 @@ const ProfilePage = ({ navigation, route }) => {
       }
     } catch (e) {
       alert("failed to load data in profile page");
-    } finally {
-      setIsReady(true);
     }
   };
 
@@ -50,10 +48,6 @@ const ProfilePage = ({ navigation, route }) => {
     });
     return focusHandler;
   }, [route.name]);
-
-  if (!isReady) {
-    return null;
-  }
 
   //set up image
   let image;

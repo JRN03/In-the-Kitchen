@@ -39,6 +39,7 @@ const AppHeader = () => {
   });
 
   const [profilePic, setProfilePic] = useState();
+  const [isReady, setIsReady] = useState(false);
 
   // make sure that page is rerendered
   useEffect(() => {
@@ -48,7 +49,7 @@ const AppHeader = () => {
     return focusHandler;
   }, [navigation]);
 
-  // read data
+  // get profile pic from cache
   const readData = async () => {
     try {
       picTemp = await AsyncStorage.getItem(PROFILE_PIC_KEY);
@@ -57,9 +58,14 @@ const AppHeader = () => {
       }
     } catch (e) {
       alert("failed to load data in profile page");
+    } finally {
+      setIsReady(true);
     }
   };
-
+  // if image isnt fetched from cache return
+  if (!isReady) {
+    return;
+  }
   let image;
   if (
     profilePic === "../assets/TempProfilePic.jpeg" ||
@@ -69,8 +75,6 @@ const AppHeader = () => {
   } else {
     image = { uri: profilePic };
   }
-  // console.log("in header");
-  // console.log(profilePic);
   if (!fontsLoaded) {
     return null;
   }
