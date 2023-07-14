@@ -8,6 +8,7 @@ import light from "../assets/themes/light.js";
 import axios from 'axios';
 
 // check submit form, how to send over images, how to send over meeting times
+// react form for meeting time
 
 const AddCourt = ({ route }) => {
   const navigation = useNavigation();
@@ -62,12 +63,13 @@ const AddCourt = ({ route }) => {
   }
 
   const submitForm = () => {
-    console.log(PID, Location, Lat, Lon, Name, Times);
-    fetch("http://localhost:8080/auth/register", {
+    // console.log(PID, Location, Lat, Lon, Name, Times);
+    fetch("http://localhost:8080/courts", {
       method: "POST",
       body: JSON.stringify({
         location: Location,
         name: Name,
+				// ensure times : day: start-end ARRAY [, ,]
         times: Times,
         placesID: PID,
         lat: Lat,

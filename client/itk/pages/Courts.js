@@ -11,25 +11,17 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import axios from 'axios';
 
 
-export default function Courts({route}) {
+export default function Courts() {
   // const ref = useRef();
-  const token = route.params.token;
-  console.log(token);
+
   // useEffect(() => {
   //   ref.current?.setAddressText('Some Text');
   // }, []);
   const onRegionChange = (region)=>{
     // console.log(region)
-
-    //I was thinking we can use this too for loading courts, 
-    //like doing a fetch based on user drag too
   }
-  //used for loading data from the backend for courts
-  const [courtObject, setCourtObject] = useState({});
   const [courtMarkers,setCourtMarkers] = useState(<Marker></Marker>);
   const [courtData,setCourtData] = useState([]);
-
-  // used for starting and current positioning on maps
   const [mapLatDelta,setMapLatDelta] = useState(.1);
   const [mapLonDelta,setMapLonDelta] = useState(0.12050628662110796);
   const [mapLat,setMapLat] = useState(36.9741);
@@ -61,21 +53,6 @@ export default function Courts({route}) {
     // console.log(results)
      setCourtMarkers(
         results.map((item,index)=>{
-          //using item.placeId
-          if(!currentCourtObject.hasOwnProperty(item.place_id)){
-            // console.log("CURRENT MARKER",item);
-            //Any item that was not in the DB will make it to this point
-            var courtBody = {
-              name: item.name,
-              location: item.formatted_address,
-              lat:item.geometry.location.lat,
-              lon:item.geometry.location.lng,
-              placesID:item.place_id,
-              times:"8am-9pm"
-            }
-            currentCourtObject[item.place_id] = courtBody
-            //make a post method right here...
-          }
           return(
               <Marker
                 key = {index*100}
@@ -85,39 +62,14 @@ export default function Courts({route}) {
                 />
           )
     }))
-    setCourtObject(currentCourtObject);
-    console.log(courtObject);
-    //at this point we just need to make the posts and all of the courts encountered by users will auto populate in the DB
   }
 
+  // console.log(process.env.MAPS_API);
   useEffect(() => {
     const getCourts = async () => {
       const res = await fetch('http://localhost:8080/courts');
       const data = await res.json();
-      var master = {};
-      for(var i = 0; i<data.length; i ++){
-        var current = data[i].placesID
-        if(current){
-          master[current]=  data[i];
-        }
-        // console.log(master[current]);
-        setCourtMarkers(
-          data.map((item,index)=>{
-            return(
-              <Marker
-                key = {index*100}
-                coordinate = {{latitude:item.lat,longitude:item.lon}}
-                title = {item.name}
-                description = {item.location}
-                />
-          )
-          })
-        )
-      }
       setCourtData(data);
-      setCourtObject(master);
-      // console.log("master",courtObject);
-
       //once all the placesIds are found, we make markers and display them
     }
     
@@ -137,7 +89,6 @@ export default function Courts({route}) {
         <GooglePlacesAutocomplete
           placeholder='Search'
           styles={styles.searchWrap}
-          //onChangeText( maybe find out results from the auto fill)
           onPress={(data, details = null) => {
             // 'details' is provided when fetchDetails = true
             // console.log("data",data);
@@ -179,7 +130,7 @@ export default function Courts({route}) {
         <ScrollView style={styles.nearbyContainer}>
           {courtObjects}
         </ScrollView>
-        <Navbar route={route} token={token}/>
+        <Navbar/>
         </View>
     </SafeAreaView>
   );
