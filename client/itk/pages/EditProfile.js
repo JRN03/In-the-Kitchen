@@ -67,7 +67,7 @@ const EditProfile = ({ route }, props) => {
       body: JSON.stringify({
         uri: "data:image/jpeg;base64," + profilePic.base64,
       }),
-      headers: { "Content-Type": "appl", token: token },
+      headers: { "Content-Type": "application/json", token: token },
     })
       .then((res) => res.json())
       .then((data) => {

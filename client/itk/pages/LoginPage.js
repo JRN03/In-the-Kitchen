@@ -19,7 +19,6 @@ const LoginPage = ({}) => {
   const [userpswd, onChangePswd] = React.useState(null);
 
   const saveUserData = async (token) => {
-    console.log("login page", token);
     try {
       await AsyncStorage.setItem(BIO_KEY, "");
       await AsyncStorage.setItem(
