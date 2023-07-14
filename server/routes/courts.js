@@ -5,6 +5,7 @@ const router = express.Router()
 
 router.get("/", async (req,res) => {
     const courts = await Court.find();
+    console.log(courts);
     res.status(200).send(courts);
 });
 
@@ -39,21 +40,21 @@ router.post('/', async (req,res) => {
 
 });
 
-router.put('/:places_id', (req,res)=>{
+router.put('/:places_id/rating/:score', (req,res)=>{
     var place_id = req.params.places_id;
-    console.log(place_id);
-    res.status(201).json({'message':"success"});
-    // Court.findOneAndUpdate(
-    //     {placesID:place_id},
-    //     { $addToSet: { rating: req.body.rating } }
-    // ).then((court)=>{
-    //     if(court){
-    //         res.status(201).json(court);
-    //     }
-    // }).catch((err) => {
-    //     console.log(err);
-    //     res.status(500).json(err);
-    // });
+    var score = req.params.score
+    Court.updateOne(
+        {placesID:place_id},
+        { $push: { rating: score } }
+    ).then((court)=>{
+        if(court){
+            console.log("new",court)
+            res.status(201).json(court);
+        }
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).json(err);
+    });
     
 })
 

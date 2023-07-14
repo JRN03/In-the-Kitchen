@@ -9,10 +9,7 @@ const courtsSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    rating: {   // ratings -- type number & will default to 0/5 stars if 0 ratings
-        type: Number,
-        default: 0
-    },
+    rating: [Number],
     times: {    // meeting times for events -- type string & will just default to "N/A"
         type: String
     },

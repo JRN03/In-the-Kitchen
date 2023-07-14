@@ -5,7 +5,6 @@ import AppHeader from "../components/AppHeader";
 import Navbar from "../components/Navbar";
 import {PageStyles} from "../assets/Styles";
 import light from "../assets/themes/light.js";
-const PICKLEBALL_IMG = require('../assets/pickleball.png');
 import ParkCard from "../components/ParkCard";
 import Review from "../components/Review";
 
@@ -22,31 +21,14 @@ import {
     RobotoSlab_900Black,
 } from '@expo-google-fonts/roboto-slab';
 
-
-const reviewData = [
-    {   
-        rating:5
-    },
-    {
-        rating:4
-    },{
-        rating:2
-    },{
-        rating:4
-    },{
-        rating:3
-    },{
-        rating:5
-    }
-
-]
 const meetingTimes = ['Friday: 9am-12pm', 'Tuesday: 9am-12pm'];
 
 // export default function ParkView({navigation,route}) {
 export default function ParkView({navigation,route}) {
+    const token = route.params.token;
    
-
     var {props} = route.params;
+    console.log("ParkView",props);
     const [lat,setLat] =  useState(props.lat);
     const [lon,setLon] =  useState(props.lon);
     const [mapLatDelta,setMapLatDelta] = useState(.1);
@@ -78,7 +60,10 @@ export default function ParkView({navigation,route}) {
                 <View style = {styles.textContainer}>
                     <Text style = {styles.introText}>{props.name}</Text>
                 </View>
-                <Review />
+                <Review 
+                    ratings = {props.rating}
+                    placesID = {props.placesID}
+                />
 
                 {/* <MapView
                     style={styles.map} 
@@ -96,9 +81,11 @@ export default function ParkView({navigation,route}) {
                     name = {props.name}
                     location = {props.location}
                     meetTimes = {meetingTimes}
+                    lat = {lat}
+                    lon = {lon}
                 />
-                <Navbar/>
-                <Text onPress = {()=>{navigation.navigate('Courts')}} style = {{fontSize: 15, marginTop:10,textAlign:'left',color:'white', textDecorationLine: 'underline',}}>Back to Courts</Text>
+                <Navbar route={route} token={token}/>
+                <Text onPress = {()=>{navigation.navigate('Courts',{token:token})}} style = {{fontSize: 15, marginTop:10,textAlign:'left',color:'white', textDecorationLine: 'underline',}}>Back to Courts</Text>
 
             </View>
         </SafeAreaView>

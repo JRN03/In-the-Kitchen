@@ -1,27 +1,12 @@
-import { View, StyleSheet, Text, ScrollView, SafeAreaView, Alert, processColor, TouchableOpacity } from "react-native";
-import MapView, {Marker, PROVIDER_GOOGLE} from "react-native-maps";
+import { View, StyleSheet, Text, ScrollView, SafeAreaView, Alert, processColor, TouchableOpacity, Linking } from "react-native";
 import {React, useState, useEffect, useRef} from "react";
 import {PageStyles} from "../assets/Styles";
 import light from "../assets/themes/light.js";
-import { Rating, AirbnbRating } from 'react-native-ratings';
 const PICKLEBALL_IMG = require('../assets/pickleball.png');
 import axios from 'axios';
 import * as Location from 'expo-location';
 
 
-
-import {
-    useFonts,
-    RobotoSlab_100Thin,
-    RobotoSlab_200ExtraLight,
-    RobotoSlab_300Light,
-    RobotoSlab_400Regular,
-    RobotoSlab_500Medium,
-    RobotoSlab_600SemiBold,
-    RobotoSlab_700Bold,
-    RobotoSlab_800ExtraBold,
-    RobotoSlab_900Black,
-} from '@expo-google-fonts/roboto-slab';
 
 export default function ParkCard(props){
     const [meetings, setMeetings] = useState();
@@ -65,11 +50,15 @@ export default function ParkCard(props){
    
     return (
         <View style = {styles.main}>
-            <Text style={{fontFamily:"RobotoSlab_700Bold", fontSize: 18, textAlign : "left", color:"grey",paddingTop:5}}>{props.location}</Text>
-            <Text style={{fontFamily:"RobotoSlab_700Bold", fontSize: 24, textAlign : "left", color:"black", paddingTop:5}}>Meet Times:</Text>
+            <Text style={{fontFamily:"RobotoSlab_700Bold", fontSize: 18, textAlign : "left", color:"grey",paddingVertical:5}}>{props.location}</Text>
+            <Text style={{fontFamily:"RobotoSlab_700Bold", fontSize: 24, textAlign : "left", color:"black", paddingVertical:5}}>Meet Times:</Text>
             {/* <Text style = {{}>{props.meetTimes}</Text> */}
             {meetings}
             {/* <Text style = {{fontFamily:"RobotoSlab_700Bold", fontSize: 18, textAlign : "left", color:"grey",paddingTop:5}}>{props.meetTimes[0]}</Text> */}
+            <TouchableOpacity style = {styles.button} onPress={() => Linking.openURL(`maps://app?saddr=${userCurrentLocation.lat}+${userCurrentLocation.lon}&daddr=${props.lat}+${props.lon}`)}>
+                <Text style={{fontFamily:"RobotoSlab_700Bold", fontSize: 16, color:"white"}}> Get Directions</Text>
+            </TouchableOpacity>
+
         </View>
 
     )
@@ -86,5 +75,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         flexDirection: "column",
         alignItems: "left",
+    },    
+    button: {
+        marginTop:20,
+        alignItems:"center",
+        justifyContent: "center",
+        borderRadius: 100,
+        backgroundColor: "#1E94D7",
+        padding: 5,
+
     },
 });

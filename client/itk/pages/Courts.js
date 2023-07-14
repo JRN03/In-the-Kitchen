@@ -14,7 +14,7 @@ import * as Location from 'expo-location';
 
 export default function Courts({navigation,route}) {
   const token = route.params.token;
-  console.log(token);
+  // console.log(token);
   const onRegionChange = (region)=>{
     // console.log(region)
   }
@@ -82,7 +82,7 @@ export default function Courts({navigation,route}) {
           )
     }))
     setCourtObject(currentCourtObject);
-    console.log(courtObject);
+    // console.log(courtObject);
     //at this point we just need to make the posts and all of the courts encountered by users will auto populate in the DB
   }
 
@@ -109,6 +109,7 @@ export default function Courts({navigation,route}) {
           )
           })
         )
+        // console.log(data[i].rating)
       }
       setCourtData(data);
       setCourtObject(master);
@@ -124,8 +125,8 @@ export default function Courts({navigation,route}) {
 
       let currentLocation = await Location.getCurrentPositionAsync({});
       // (currentLocation);
-      console.log("Location:");
-      console.log(currentLocation);
+      // console.log("Location:");
+      // console.log(currentLocation);
 
       setMapLat(currentLocation.coords.latitude);
       setMapLon(currentLocation.coords.longitude);

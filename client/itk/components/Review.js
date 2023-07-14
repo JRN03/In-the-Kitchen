@@ -2,36 +2,43 @@ import { Rating, AirbnbRating } from 'react-native-ratings';
 import {React, useState, useEffect, useRef} from "react";
 import { View, StyleSheet, Text, Alert, processColor, TouchableOpacity,Modal,Pressable } from "react-native";
 import axios from 'axios';
+const PICKLEBALL_IMG = require('../assets/pickleball.png');
 
 
 export default function Review(props){
+    console.log(props)
     const [modalVisible, setModalVisible] = useState(false);
     const [userRating , setUserRating] = useState(3);
     const [parkRatings, setParkRating]= useState(props.ratings)
     const [parkScore, setParkScore] = useState(0);
-    function getRating(){
-        var parkRating = 0;
+    useEffect(()=>{
+        var score = 0
+        console.log(parkRatings)
         for(var i = 0; i<parkRatings.length; i++){
-            parkRating+=props.ratings[i];
+            score+=props.ratings[i];
         }
-        setParkScore((parkRating/props.ratings[i]))
-    }
-    
+        setParkScore((score/parkRatings.length))
+        console.log("SCORE",parkScore)
 
+    },[parkRatings,parkScore])
+
+   
     function ratingCompleted(rating) {
-        console.log("Rating is: " + rating)
+        // console.log("Rating is: " + rating)
         setUserRating(rating)
     } 
     function submitReview(){
         //make post method from here
         axios({
             method: 'put',
-            url: `http://localhost:8080/courts/${props.placesID}`,
-            body:{rating:userRating}
+            url: `http://localhost:8080/courts/${props.placesID}/rating/${userRating}`,
           }).then((response) => {
             // console.log(response.status)
             if(response.status == 201){
                 Alert.alert("Your review has been added!");
+                var currentReviews = parkRatings;
+                currentReviews.push(userRating);
+                setParkRating(currentReviews);
             }else{
                 Alert.alert("There was an issue adding your review...")
             }
@@ -53,23 +60,26 @@ export default function Review(props){
                         flexDirection: "row",
                         alignItems: "left",
         }}>
-            <AirbnbRating
-                ratingColor='yellow'
+            <Rating
+                type = "custom"
+                ratingImage = {PICKLEBALL_IMG}
+                ratingColor='#176089'
                 ratingBackgroundColor='#176089'
-                ratingCount={5}
-                size={20}
-                defaultValue = {3}
+                ratingCount={parkScore}
+                size={30}
+                defaultRating = {parkScore}
+                readonly = {true}
                 reviewSize = {20}
                 // review = {reviews}
                 showRating = {false}
                 isDisabled = {true}
-                ratingContainerStyle = {{flex:3,alignItems:"left",left:-25}}
+                style = {{flex:3,alignItems:"left",left:-25}}
             />
             <Pressable
                 style={[styles.button, styles.buttonOpen]}
                 onPress={() => setModalVisible(true)}
             >
-                <Text style={styles.textStyle}>Review</Text>
+                <Text style={{fontFamily:"RobotoSlab_500Medium", fontSize: 16, color:"white"}}>Review</Text>
             </Pressable>
         </View>
         
@@ -85,7 +95,7 @@ export default function Review(props){
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <Text style={styles.modalText}>Leave a reivew</Text>
+                        <Text style={{fontFamily:"RobotoSlab_500Medium", fontSize: 16, color:"black", textAlign: "center"}}>Leave a reivew</Text>
                         <AirbnbRating
                             ratingColor='yellow'
                             ratingBackgroundColor='white'
@@ -106,7 +116,7 @@ export default function Review(props){
                                 setModalVisible(!modalVisible)
                                 submitReview()
                                 }}>
-                        <Text style={{fontSize:18,color:'black',textAlign:'center'}}>Submit</Text>
+                        <Text style={{fontFamily:"RobotoSlab_500Medium", fontSize: 16, color:"white", textAlign: "center"}}>Submit</Text>
                         </Pressable>
                     </View>
              </View>
@@ -138,17 +148,20 @@ const styles = StyleSheet.create({
       elevation: 5,
     },
     button: {
-      borderRadius: 20,
-      padding: 10,
-      elevation: 2,
-      width:100
+        // marginTop:20,
+        alignItems:"center",
+        justifyContent: "center",
+        borderRadius: 100,
+        backgroundColor: "#1E94D7",
+        padding: 5,
+
     },
     buttonOpen: {
       backgroundColor: "#1E94D7",
       right:-20
     },
     buttonClose: {
-        paddingTop: 10,
+        // paddingTop: 10,
       backgroundColor: '#2196F3',
     },
     textStyle: {
