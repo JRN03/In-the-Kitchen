@@ -49,7 +49,6 @@ const EditProfile = ({ route }, props) => {
   }, []);
 
   const saveButtonHandler = () => {
-    // readData();
     if (bio === undefined) {
       setBio("");
     }
