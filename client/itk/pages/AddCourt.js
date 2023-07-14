@@ -135,12 +135,12 @@ const AddCourt = ({ route }) => {
       updatedMeetTimes[index].end = selectedItem;
       setMeetTimesArr(updatedMeetTimes);
     };
-  
+    
     return (
       <View key={index} style={times.meetTimeRow}>
         <SelectDropdown
           data={Days}
-          defaultValue={selectedDay}
+          defaultValue= {selectedDay}
           onSelect={handleDayChange}
           buttonTextAfterSelection={(selectedItem) => selectedItem}
           rowTextForSelection={(item) => item}
@@ -370,6 +370,9 @@ const imageUploaderStyles = StyleSheet.create({
 });
 
 const times = StyleSheet.create({
+  dropdownButtonText: {
+    fontSize: 15
+  },
   dropdownButton: {
     width: 100,
     height: 30,
