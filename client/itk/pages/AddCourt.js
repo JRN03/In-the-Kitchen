@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, SafeAreaView, Image, ImageBackground, TextInput
 import { useNavigation } from '@react-navigation/native';
 import { PageStyles } from "../assets/Styles";
 
-const SignUpPage = () => {
+const AddCourt = () => {
 	const navigation = useNavigation();
   const [fname, onChangeFname] = React.useState(null);
   const [lname, onChangeLname] = React.useState(null);
@@ -62,7 +62,7 @@ const SignUpPage = () => {
 		<SafeAreaView style = {{flex: 16, backgroundColor: '#176089', alignContent: 'space-between'}}>
 			<View style={{bottom: 100, left: 15}}>
 				<TextInput style = {textboxStyle.fname}
-					placeholder = 'First Name'
+					placeholder = 'Routeable Court Address'
 					placeholderTextColor={'maroon'}
 					autoCapitalize='words'
 					onChangeText={text => onChangeFname(text)}
@@ -71,7 +71,7 @@ const SignUpPage = () => {
 				></TextInput>
 
 				<TextInput style = {textboxStyle.lname}
-					placeholder = 'Last Name'
+					placeholder = 'ya momma'
 					placeholderTextColor={'maroon'}
 					autoCapitalize='words'
 					onChangeText={text => onChangeLname(text)}
@@ -80,7 +80,7 @@ const SignUpPage = () => {
 				></TextInput>
 
 				<TextInput style = {textboxStyle.user}
-					placeholder = 'Username'
+					placeholder = 'ya pappa'
 					placeholderTextColor={'maroon'}
 					autoCapitalize="none"
 					onChangeText={text => onChangeUsrn(text)}
@@ -89,7 +89,7 @@ const SignUpPage = () => {
 				></TextInput>
 
 				<TextInput style = {textboxStyle.pswd}
-					placeholder = 'Password'
+					placeholder = 'review?'
 					placeholderTextColor={'maroon'}
 					autoCapitalize="none"
 					secureTextEntry={true}
@@ -101,16 +101,12 @@ const SignUpPage = () => {
 
 			<TouchableOpacity style={buttonStyle.picklebut}
 				onPress={submitForm}>
-				<Text>Get to Pickling</Text>
+				<Text>Add pickle</Text>
 			</TouchableOpacity>
-			{/* <TouchableOpacity style={buttonStyle.picklebut}
-				onPress={()=>navigation.navigate('courts')}>
-				<Text>Get to Pickling</Text>
-			</TouchableOpacity> */}
 
 			<TouchableOpacity
-				onPress={() => navigation.navigate('Login')}>
-				<Text style={{color: 'white', fontSize: 17, textDecorationLine: 'underline', left: 20}}>Don't sign up, it doesnt hurt our feelings</Text>
+				onPress={() => navigation.navigate('Home')}>
+				<Text style={{color: 'white', fontSize: 17, textDecorationLine: 'underline', left: 20}}>Don't add court, it doesnt hurt our feelings</Text>
 			</TouchableOpacity>
 		</SafeAreaView>
 	);
@@ -204,4 +200,4 @@ const textboxStyle = StyleSheet.create({
 	},
 });
 
-export default SignUpPage;
+export default AddCourt;

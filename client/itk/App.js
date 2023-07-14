@@ -11,10 +11,11 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ProfilePage from "./pages/ProfilePage";
 import EditProfile from "./pages/EditProfile";
 import ParkView from "./pages/ParkView";
-
+import AddCourt from "./pages/AddCourt";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+
   return (
     <NavigationContainer style={styles.container}>
       <Stack.Navigator>
@@ -34,7 +35,7 @@ export default function App() {
           component={Courts}
         />
         <Stack.Screen
-          options={{ headerShown: false, animation: "none" }}
+          options={{headerShown: false, animation: "none"}}
           name="Home"
           component={Home}
         />
@@ -63,6 +64,12 @@ export default function App() {
           name="ParkView"
           component={ParkView}
         />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="AddCourt"
+          component={AddCourt}
+        />
+ 
       </Stack.Navigator>
     </NavigationContainer>
     // <View style={styles.container}>

@@ -48,6 +48,8 @@ import {PageStyles} from assets/Styles
 
 - npm i bcryptjs
 
+- npm i jsonwebtoken
+
 ### Running the Server
 
 For development testing, run _npm run devStart_ in a terminal. This will start the server on localhost:5000 since we have not yet deployed. GET requests can be made in the browser by visiting the url _http://localhost:5000_ followed by any appropiate routing for testing purposes. Any other form of requests should be made in postman or another third-party app.
@@ -65,10 +67,18 @@ The routes folder is where all the re-routing takes place. This may be to the /a
 
 _Auth.js_
 
-The auth route handles user logins and registration. Posts to /auth/register are for new users to create accounts. It checks if the username exists in the Database already and if not, it can create a new user in the database with the appropiate user info. We use bcrypt to encrypt passwords with salting and unique hashes.
+The auth route handles user logins and registration. Posts to /auth/register are for new users to create accounts. It checks if the username exists in the Database already and if not, it can create a new user in the database with the appropiate user info. The server uses JWT to create a token and send it over to the client. The client can then use this token to query the user route with authentication. We use bcrypt to encrypt passwords with salting and unique hashes.
 
 The /auth/login checks for a valid username in the database, and if there is one, uses bcrypt to match the entered password to the encrypted one stored.
 
 _courts.js_
 
 The courts route is responsible for uploading new court information and fetching information on already uploaded courts. Currently, our working model for courts would not allow for filtering on regions or states but could be considered for future implementation.
+
+_user.js_
+
+We have a GET and PUT method for the user route. PUT can update information such as friends, bio, and images. The GET would return information about a user such as the First Name, Last Name, Username, Friends, and Image. When queries are sent to the user route, the header for "token" should be specified where token should be attained upon login/register.
+
+### Serving Images
+
+Serving images from the database would be slow and taxing. Instead, it would be best to save the images onto the server and put the file name into the database with the respective users and posts. For now we would save each image as user_image-x.png where x is an incremented number. We handle the image uploads under the user route.

@@ -12,13 +12,9 @@ import axios from 'axios';
 import * as Location from 'expo-location';
 
 
-
-// import GetLocation from 'react-native-get-location'
-
-
-export default function Courts({navigation}) {
-  // const ref = useRef();
-
+export default function Courts({navigation,route}) {
+  const token = route.params.token;
+  console.log(token);
   const onRegionChange = (region)=>{
     // console.log(region)
   }
@@ -200,7 +196,7 @@ export default function Courts({navigation}) {
         <ScrollView style={styles.nearbyContainer}>
           {courtObjects}
         </ScrollView>
-        <Navbar/>
+        <Navbar route={route} token={token}/>
         </View>
     </SafeAreaView>
   );
