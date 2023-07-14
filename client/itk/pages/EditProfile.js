@@ -61,11 +61,22 @@ const EditProfile = ({ route }, props) => {
       }
     };
     saveData();
-
+    // upload image to server
     fetch("http://localhost:8080/user/pfp", {
       method: "PUT",
       body: JSON.stringify({
         uri: "data:image/jpeg;base64," + profilePic.base64,
+      }),
+      headers: { "Content-Type": "application/json", token: token },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      });
+    fetch("http://localhost:8080/user/bio", {
+      method: "PUT",
+      body: JSON.stringify({
+        bio: bio,
       }),
       headers: { "Content-Type": "application/json", token: token },
     })
