@@ -63,7 +63,8 @@ const AppHeader = () => {
       <View style={styles.titleWrap}>
         <Text style={styles.title}>In the Kitchen</Text>
       </View>
-      <TouchableOpacity style={styles.imgWrap}>
+      <TouchableOpacity style={styles.imgWrap}
+      onPress={() => navigation.navigate("AddCourt")}>
         <Image style={[styles.img]} source={require("../assets/add2.png")} />
       </TouchableOpacity>
     </SafeAreaView>
