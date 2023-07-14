@@ -30,6 +30,8 @@ import {PageStyles} from assets/Styles
 
 - sudo npx expo install expo-image-picker
 
+- npm install react-native-ratings
+
 ## Server
 
 ### Dependencies

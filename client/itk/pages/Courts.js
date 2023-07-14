@@ -9,6 +9,11 @@ import Navbar from "../components/Navbar";
 import {PageStyles} from "../assets/Styles";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import axios from 'axios';
+import * as Location from 'expo-location';
+
+
+
+// import GetLocation from 'react-native-get-location'
 
 
 export default function Courts({navigation}) {
@@ -16,9 +21,6 @@ export default function Courts({navigation}) {
 
   const onRegionChange = (region)=>{
     // console.log(region)
-
-    //I was thinking we can use this too for loading courts, 
-    //like doing a fetch based on user drag too
   }
   //used for loading data from the backend for courts
   const [courtObject, setCourtObject] = useState({});
@@ -30,6 +32,7 @@ export default function Courts({navigation}) {
   const [mapLonDelta,setMapLonDelta] = useState(0.12050628662110796);
   const [mapLat,setMapLat] = useState(36.9741);
   const [mapLon,setMapLon] = useState(-122.0308);
+  const [userCurrentLocation, setUserCurrentLocation] = useState({latitude:mapLat,longitude:mapLon});
   const initialRegion = {latitude:mapLat,longitude:mapLon,longitudeDelta:mapLonDelta, latitudeDelta:mapLatDelta}
   async function getLatLon(data){
     // console.log("PASSED THROUGH DATA ",data);
@@ -114,16 +117,34 @@ export default function Courts({navigation}) {
       setCourtData(data);
       setCourtObject(master);
       // console.log("master",courtObject);
-
       //once all the placesIds are found, we make markers and display them
     }
+    const getPermissions = async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        console.log("Please grant location permissions");
+        return;
+      }
+
+      let currentLocation = await Location.getCurrentPositionAsync({});
+      // (currentLocation);
+      console.log("Location:");
+      console.log(currentLocation);
+
+      setMapLat(currentLocation.coords.latitude);
+      setMapLon(currentLocation.coords.longitude);
+      setUserCurrentLocation({lat:currentLocation.coords.latitude,lon:currentLocation.coords.longitude})
+    };
     
+    getPermissions();
+
     getCourts();
+
 
   },[])
   function redirectToPark(data){
     navigation.navigate('ParkView',{props:data})
-    
+
   }
   const courtObjects = courtData.map(courtInfo => (
     <ParkTab key={courtInfo.name} name={courtInfo.name} onPress= { ()=>{redirectToPark(courtInfo)}}/>

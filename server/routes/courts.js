@@ -1,5 +1,4 @@
 import express from 'express';
-import court from '../models/court.js';
 import Court from "../models/court.js"
 
 const router = express.Router()
@@ -39,5 +38,23 @@ router.post('/', async (req,res) => {
     }
 
 });
+
+router.put('/:places_id', (req,res)=>{
+    var place_id = req.params.places_id;
+    console.log(place_id);
+    res.status(201).json({'message':"success"});
+    // Court.findOneAndUpdate(
+    //     {placesID:place_id},
+    //     { $addToSet: { rating: req.body.rating } }
+    // ).then((court)=>{
+    //     if(court){
+    //         res.status(201).json(court);
+    //     }
+    // }).catch((err) => {
+    //     console.log(err);
+    //     res.status(500).json(err);
+    // });
+    
+})
 
 export default router

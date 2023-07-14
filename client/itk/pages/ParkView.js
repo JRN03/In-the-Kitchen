@@ -1,10 +1,14 @@
-import { View, StyleSheet, Text, ScrollView, SafeAreaView, Alert, processColor } from "react-native";
+import { View, StyleSheet, Text, ScrollView, SafeAreaView, Alert, processColor, TouchableOpacity } from "react-native";
 import MapView, {Marker, PROVIDER_GOOGLE} from "react-native-maps";
 import {React, useState, useEffect, useRef} from "react";
 import AppHeader from "../components/AppHeader";
 import Navbar from "../components/Navbar";
 import {PageStyles} from "../assets/Styles";
 import light from "../assets/themes/light.js";
+const PICKLEBALL_IMG = require('../assets/pickleball.png');
+import ParkCard from "../components/ParkCard";
+import Review from "../components/Review";
+
 import {
     useFonts,
     RobotoSlab_100Thin,
@@ -18,15 +22,29 @@ import {
     RobotoSlab_900Black,
 } from '@expo-google-fonts/roboto-slab';
 
+
 const reviewData = [
     {   
-        rating:5,
-    
+        rating:5
+    },
+    {
+        rating:4
+    },{
+        rating:2
+    },{
+        rating:4
+    },{
+        rating:3
+    },{
+        rating:5
     }
 
 ]
+const meetingTimes = ['Friday: 9am-12pm', 'Tuesday: 9am-12pm'];
+
 // export default function ParkView({navigation,route}) {
 export default function ParkView({navigation,route}) {
+   
 
     var {props} = route.params;
     const [lat,setLat] =  useState(props.lat);
@@ -48,6 +66,8 @@ export default function ParkView({navigation,route}) {
     if (!fontsLoaded) {
       return null;
     }
+   
+
 
     // we need some type of review parser.
 
@@ -55,26 +75,31 @@ export default function ParkView({navigation,route}) {
         <SafeAreaView style={PageStyles.main}>
             <AppHeader/>
             <View style={PageStyles.contentWrap}>
-                <Text onPress = {()=>{navigation.navigate('Courts')}} style = {{fontSize: 15, marginTop:10,textAlign:'right',color:'white'}}>Back to Courts</Text>
                 <View style = {styles.textContainer}>
                     <Text style = {styles.introText}>{props.name}</Text>
-                    <Text style = {styles.introText}>{props.location}</Text>
                 </View>
-                <MapView
+                <Review />
+
+                {/* <MapView
                     style={styles.map} 
                     provider={PROVIDER_GOOGLE}
                     initialRegion = {{latitude:lat,longitude:lon,latitudeDelta:mapLatDelta, longitudeDelta:mapLonDelta}}
                     > 
                     <Marker
-                key = {100}
-                coordinate = {{latitude:lat,longitude:lon}}
-                title = {props.name}
-                description = {props.location}
+                        key = {100}
+                        coordinate = {{latitude:lat,longitude:lon}}
+                        title = {props.name}
+                        description = {props.location}
+                    />
+                </MapView> */}
+                <ParkCard
+                    name = {props.name}
+                    location = {props.location}
+                    meetTimes = {meetingTimes}
                 />
-                </MapView>
-
-
                 <Navbar/>
+                <Text onPress = {()=>{navigation.navigate('Courts')}} style = {{fontSize: 15, marginTop:10,textAlign:'left',color:'white', textDecorationLine: 'underline',}}>Back to Courts</Text>
+
             </View>
         </SafeAreaView>
 
@@ -94,9 +119,9 @@ const styles = StyleSheet.create({
   introText:{
     color:"white",
     fontFamily:"RobotoSlab_400Regular",
-    fontSize: 20,
+    fontSize: 28,
     fontWeight:'bold',
-    textAlign: 'center',
+    textAlign: 'left',
   },
   textContainer:{
     marginTop: 10
@@ -107,7 +132,7 @@ const styles = StyleSheet.create({
     position: "absolute"
   },
   map: {
-    height: "35%",
+    height: "25%",
     width: "100%",
     borderRadius: 10,
     position: "relative",
@@ -118,25 +143,14 @@ const styles = StyleSheet.create({
     width: "100%",
     flexGrow: 0,
     maxHeight: "32%",
-  }
+  },
+  button: {
+    // flex: 1,
+    alignItems:"center",
+    justifyContent: "center",
+    borderRadius: 10,
+    height: 30,
+    backgroundColor: "#176089",
+    paddingTop:5
+},
 });
-//,
-// searchWrap: {
-//     container: {
-//       flex: 0,
-//       marginVertical: 10,
-//       maxHeight: "45%",
-//       zIndex: 1
-//     },
-//     textInput: {
-//       height: 40,
-//       borderRadius: 5,
-//       zIndex: 2
-//     },
-//     listView: {
-//       borderRadius:5,
-//       position: "absolute",
-//       top: 42,
-//       zIndex: 1
-//     },
-// }
