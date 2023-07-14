@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { PageStyles } from "../assets/Styles";
 
 const SignUpPage = () => {
-	const navigation = useNavigation();
+  const navigation = useNavigation();
   const [fname, onChangeFname] = React.useState(null);
   const [lname, onChangeLname] = React.useState(null);
   const [usrnm, onChangeUsrn] = React.useState(null);
