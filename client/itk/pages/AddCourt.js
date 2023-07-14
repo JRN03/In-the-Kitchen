@@ -1,13 +1,11 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, SafeAreaView, Image, TextInput, TouchableOpacity, Alert } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, Image, TextInput, TouchableOpacity, Alert, ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import light from "../assets/themes/light.js";
 import axios from 'axios';
-import { Picker } from '@react-native-picker/picker';
-import PickerBox from 'react-native-picker-box';
 import SelectDropdown from 'react-native-select-dropdown'
 
 // check submit form, how to send over images, how to send over meeting times
@@ -20,15 +18,27 @@ const AddCourt = ({ route }) => {
   const [PID, setPID] = useState("useless text");
   const [Location, setLoc] = useState("useless text");
   const [Name, setName] = useState("useless text");
-  // const [Times, setTimes] = useState(null);
   const [image1, setImage1] = useState(null);
   const [image2, setImage2] = useState(null);
   const [image3, setImage3] = useState(null);
 
-	const DoW = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-	const nums = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
-	const ampm = ["AM", "PM"]
-	const [Day, setDay] = useState('Day');
+	const Days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+	const nums = ["6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM"]
+  const [meetTimesArr, setMeetTimesArr] = useState([{ day: "", start: "", end: "" }]);
+
+  const addMeetTime = () => {
+    if (meetTimesArr.length < 5) {
+      setMeetTimesArr([...meetTimesArr, { day: "", start: "", end: "" }]);
+    }
+    if (meetTimesArr.length < 5) {
+
+    }
+  };
+
+  const removeMeetTime = (index) => {
+    const updatedMeetTimes = meetTimesArr.filter((_, i) => i !== index);
+    setMeetTimesArr(updatedMeetTimes);
+  };
 
 	const addImage = async (imageNumber) => {
 		let _image = await ImagePicker.launchImageLibraryAsync({
@@ -100,19 +110,74 @@ const AddCourt = ({ route }) => {
       });
   };
 
-  dayState={
-    data: [
-      {label: 'Monday', value: 'Monday'},
-      {label: 'Tuesday', value: 'Tuesday'},
-      {label: 'Wednesday', value: 'Wednesday'},
-			{label: 'Thursday', value: 'Thursday'},
-			{label: 'Friday', value: 'Friday'},
-			{label: 'Saturday', value: 'Saturday'},
-			{label: 'Sunday', value: 'Sunday'},
-    ],
-    selectedValue: ''
-  }
-
+  const MeetTimeRow = ({ day, start, end, index }) => {
+    const [selectedDay, setSelectedDay] = useState(day);
+    const [selectedStart, setSelectedStart] = useState(start);
+    const [selectedEnd, setSelectedEnd] = useState(end);
+  
+    const handleDayChange = (selectedItem) => {
+      setSelectedDay(selectedItem);
+      const updatedMeetTimes = [...meetTimesArr];
+      updatedMeetTimes[index].day = selectedItem;
+      setMeetTimesArr(updatedMeetTimes);
+    };
+  
+    const handleStartChange = (selectedItem) => {
+      setSelectedStart(selectedItem);
+      const updatedMeetTimes = [...meetTimesArr];
+      updatedMeetTimes[index].start = selectedItem;
+      setMeetTimesArr(updatedMeetTimes);
+    };
+  
+    const handleEndChange = (selectedItem) => {
+      setSelectedEnd(selectedItem);
+      const updatedMeetTimes = [...meetTimesArr];
+      updatedMeetTimes[index].end = selectedItem;
+      setMeetTimesArr(updatedMeetTimes);
+    };
+  
+    return (
+      <View key={index} style={times.meetTimeRow}>
+        <SelectDropdown
+          data={Days}
+          defaultValue={selectedDay}
+          onSelect={handleDayChange}
+          buttonTextAfterSelection={(selectedItem) => selectedItem}
+          rowTextForSelection={(item) => item}
+          buttonStyle={times.dropdownButton}
+          buttonTextStyle={times.dropdownButtonText}
+          dropdownStyle={times.dropdown}
+          rowStyle={times.dropdownRow}
+        />
+        <SelectDropdown
+          data={nums}
+          defaultValue={selectedStart}
+          onSelect={handleStartChange}
+          buttonTextAfterSelection={(selectedItem) => selectedItem}
+          rowTextForSelection={(item) => item}
+          buttonStyle={times.dropdownButton}
+          buttonTextStyle={times.dropdownButtonText}
+          dropdownStyle={times.dropdown}
+          rowStyle={times.dropdownRow}
+        />
+        <SelectDropdown
+          data={nums}
+          defaultValue={selectedEnd}
+          onSelect={handleEndChange}
+          buttonTextAfterSelection={(selectedItem) => selectedItem}
+          rowTextForSelection={(item) => item}
+          buttonStyle={times.dropdownButton}
+          buttonTextStyle={times.dropdownButtonText}
+          dropdownStyle={times.dropdown}
+          rowStyle={times.dropdownRow}
+        />
+        <TouchableOpacity onPress={() => removeMeetTime(index)}>
+          <Text style={times.removeBtn}>Remove</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+  
   return (
     <SafeAreaView style={styles.main}>
       <View style={{}}>
@@ -183,87 +248,24 @@ const AddCourt = ({ route }) => {
         <Text style={{ color: "white", fontSize: 15, textAlign: "center", top: -100 }}>
           {"Notice formatting -> Day: Start - Stop"}
         </Text>
-        <Text style={{ color: "white", fontSize: 15, textAlign: "center", top: -100 }}>
-          {"Ex: Friday: 9AM-12PM"}
-        </Text>
-
-				<SelectDropdown
-					defaultButtonText="Day"
-					buttonStyle = {{width: 110, height: 35, bottom: 95, right: 20, borderRadius: 10}}
-					data={DoW}
-					onSelect={(selectedItem, index) => {
-						setDay(selectedItem)
-					}}
-					buttonTextAfterSelection={(selectedItem, index) => {
-						return selectedItem
-					}}
-					rowTextForSelection={(item, index) => {
-						return item
-					}}
-				/>
-				<View style = {{alignContent: 'space-between'}}>
-					<SelectDropdown
-						defaultButtonText="#"
-						buttonStyle = {{width: 60, height: 35, bottom: 130, left: 95, borderRadius: 10}}
-						data={nums}
-						onSelect={(selectedItem, index) => {
-							setDay(selectedItem)
-						}}
-						buttonTextAfterSelection={(selectedItem, index) => {
-							return selectedItem
-						}}
-						rowTextForSelection={(item, index) => {
-							return item
-						}}
-					/>
-					<SelectDropdown
-						defaultButtonText="A/P"
-						buttonStyle = {{width: 60, height: 35, bottom: 165, left: 160, borderRadius: 10}}
-						data={ampm}
-						onSelect={(selectedItem, index) => {
-							setDay(selectedItem)
-						}}
-						buttonTextAfterSelection={(selectedItem, index) => {
-							return selectedItem
-						}}
-						rowTextForSelection={(item, index) => {
-							return item
-						}}
-					/>
-					<SelectDropdown
-						defaultButtonText="#"
-						buttonStyle = {{width: 60, height: 35, bottom: 200, left: 225, borderRadius: 10}}
-						data={nums}
-						onSelect={(selectedItem, index) => {
-							setDay(selectedItem)
-						}}
-						buttonTextAfterSelection={(selectedItem, index) => {
-							return selectedItem
-						}}
-						rowTextForSelection={(item, index) => {
-							return item
-						}}
-					/>
-					<SelectDropdown
-						defaultButtonText="A/P"
-						buttonStyle = {{width: 60, height: 35, bottom: 235, left: 295, borderRadius: 10}}
-						data={ampm}
-						onSelect={(selectedItem, index) => {
-							setDay(selectedItem)
-						}}
-						buttonTextAfterSelection={(selectedItem, index) => {
-							return selectedItem
-						}}
-						rowTextForSelection={(item, index) => {
-							return item
-						}}
-					/>
-				</View>
+        <TouchableOpacity style={buttonStyle.picklebut} onPress={null}>
+          <Text style={{ textAlign: "center" }}>{"Submit Court :D"}</Text>
+        </TouchableOpacity>
+          {meetTimesArr.map((data, index) => (
+            <MeetTimeRow
+              key={index}
+              day={data.day}
+              start={data.start}
+              end={data.end}
+              index={index}
+            />
+          ))}
+        {meetTimesArr.length < 5 && (
+          <TouchableOpacity onPress={addMeetTime}>
+            <Text style={{ color: 'white', fontSize: 30, textAlign: 'center', width: 30, height: 30, borderRadius: 10, bottom: 140 }}>+</Text>
+          </TouchableOpacity>
+        )}
       </View>
-
-      <TouchableOpacity style={buttonStyle.picklebut} onPress={submitForm}>
-        <Text style={{ textAlign: "center" }}>{"Submit Court :D"}</Text>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -337,7 +339,7 @@ const buttonStyle = StyleSheet.create({
     width: 78,
     backgroundColor: "white",
     alignSelf: "center",
-    top: -100,
+    top: 85,
   },
 });
 
@@ -366,5 +368,43 @@ const imageUploaderStyles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+const times = StyleSheet.create({
+  dropdownButton: {
+    width: 100,
+    height: 30,
+    alignContent: 'space-between'
+  },
+  meetTimeRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    // paddingVertical: 10,
+    // paddingHorizontal: 20,
+    // marginBottom: 0,
+    bottom: 135,
+    height: 35,
+    width: 100,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    // backgroundColor: 'red'
+  },
+  input: {
+    flex: 1,
+    backgroundColor: "white",
+    fontSize: 15,
+    color: "black",
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    marginRight: 10,
+  },
+  removeBtn: {
+    fontSize: 15,
+    color: "black",
+    // top: 30,
+    right: -10
+  },
+});
+
 
 export default AddCourt;
