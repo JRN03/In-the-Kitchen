@@ -1,23 +1,12 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  Image,
-  TextInput,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import React, {useState} from 'react';
+import { View, Text, StyleSheet, SafeAreaView, Image, ImageBackground, TextInput, Button, TouchableOpacity, Alert} from "react-native";
+import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PROFILE_PIC_KEY, BIO_KEY, TOKEN, FNAME, LNAME, UNAME } from "../AsyncKeys";
-
 const LoginPage = ({}) => {
   const navigation = useNavigation();
   const [usernme, onChangeUsrn] = React.useState(null);
   const [userpswd, onChangePswd] = React.useState(null);
-
   const saveUserData = async (data) => {
     try {
       await AsyncStorage.setItem(BIO_KEY, data._doc.bio);
@@ -38,42 +27,41 @@ const LoginPage = ({}) => {
     }
   };
 
-  const validateFields = () => {
-    if (usernme == null || usernme.length == 0) {
-      Alert.alert("Username cannot be empty.");
-      return false;
-    }
-    if (userpswd == null || userpswd.length == 0) {
-      Alert.alert("Password cannot be empty.");
-      return false;
-    }
-    return true;
-  };
-  const submitForm = () => {
-    if (!validateFields()) {
-      return;
-    }
-    fetch("http://localhost:8080/auth/login", {
-      method: "POST",
-      body: JSON.stringify({
-        username: usernme,
-        password: userpswd,
-      }),
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.message === "login successful") {
-          saveUserData(data);
-          // save token to cache
-          // navigation.navigate('Home',{token:data.token});
-        } else if (data.message === "Username Not Found") {
-          Alert.alert("Incorrect Username!");
-        } else if (data.message === "Invalid Password") {
-          Alert.alert("Incorrect Password!");
-        }
-      });
-  };
+
+  const validateFields = ()=>{
+	if(usernme == null || usernme.length == 0){
+		Alert.alert("Username cannot be empty.");
+		return false;
+	}
+	if(userpswd == null || userpswd.length == 0){
+		Alert.alert("Password cannot be empty.");
+		return false;
+	}
+	return true;
+	}
+	const submitForm = () => {
+		if(!validateFields()){
+			return;
+		}
+		fetch('http://localhost:8080/auth/login', {
+				method: 'POST',
+				body: JSON.stringify({
+						username: usernme,
+						password: userpswd
+				}),
+				headers: { 'Content-Type': 'application/json' }
+		})
+				.then(res => res.json())
+				.then(data => {
+						if (data.message === "login successful") {
+								navigation.navigate('Home');
+						} else if (data.message === "Username Not Found") {
+								Alert.alert("Incorrect Username!");
+						} else if (data.message === "Invalid Password") {
+								Alert.alert("Incorrect Password!");
+						}
+				});
+	};
 
   return (
     <SafeAreaView style={{ flex: 16, backgroundColor: "#176089" }}>
@@ -149,8 +137,9 @@ const LoginPage = ({}) => {
           Sign Up!
         </Text>
       </TouchableOpacity>
-    </SafeAreaView>
-  );
+
+		</SafeAreaView>
+	);
 };
 
 const buttonStyle = StyleSheet.create({

@@ -58,7 +58,7 @@ const ProfilePage = ({navigation,route}) => {
         </View>
         <BioText bioText={bio} profilePic={profilePic} />
         {/* <MutualFriends/> */}
-        <Navbar />
+        <Navbar route={route}/>
       </View>
     </SafeAreaView>
   );

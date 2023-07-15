@@ -10,6 +10,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ProfilePage from "./pages/ProfilePage";
 import EditProfile from "./pages/EditProfile";
+import AddCourt from "./pages/AddCourt";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BIO_KEY, TOKEN, PROFILE_PIC_KEY } from "./AsyncKeys";
 
@@ -34,7 +35,8 @@ export default function App() {
   }, []);
 
   if (!isReady) {
-    return (
+  
+  return (
       <NavigationContainer style={styles.container}>
         <Stack.Navigator>
           <Stack.Screen
@@ -53,7 +55,7 @@ export default function App() {
             component={Courts}
           />
           <Stack.Screen
-            options={{ headerShown: false, animation: "none" }}
+            options={{headerShown: false, animation: "none"}}
             name="Home"
             component={Home}
           />
@@ -77,7 +79,12 @@ export default function App() {
             name="EditProfile"
             component={EditProfile}
           />
-        </Stack.Navigator>
+          <Stack.Screen
+          options={{ headerShown: false }}
+          name="AddCourt"
+          component={AddCourt}
+        />
+      </Stack.Navigator>
       </NavigationContainer>
     );
   } else {
