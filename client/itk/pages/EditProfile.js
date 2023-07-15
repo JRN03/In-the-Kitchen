@@ -61,6 +61,8 @@ const EditProfile = ({ route }, props) => {
       }
     };
     saveData();
+    console.log(token);
+    // console.log(profilePic);
     // upload image to server
     fetch("http://localhost:8080/user/pfp", {
       method: "PUT",
@@ -87,8 +89,8 @@ const EditProfile = ({ route }, props) => {
     navigation.navigate("Profile");
   };
 
-  const setImagePath = (path) => {
-    setProfilePic(path);
+  const setImagePath = (image) => {
+    setProfilePic(image);
   };
   return (
     <SafeAreaView style={PageStyles.main}>
