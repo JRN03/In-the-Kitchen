@@ -2,8 +2,14 @@ import express from 'express';
 import User from "../models/user.js"
 import bcrypt from 'bcryptjs'
 import jwt from "jsonwebtoken";
+import path from "path";
+import fs from "fs";
 
 const router = express.Router()
+
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 router.get("/", (req,res) => res.send("In top-level auth route"))
 router.post('/register', async (req,res) => {
@@ -28,19 +34,25 @@ router.post('/register', async (req,res) => {
         password: hashPassword
     });
 
-    const token = jwt.sign({id:user._id}, process.env.TOKEN_SECRET,{expiresIn: "10m"});
+    const token = jwt.sign({id:user._id}, process.env.TOKEN_SECRET,{expiresIn: "60m"});
 
     try {
         user.save(); //saves to database
-        return res.status(200).send({user: true, fName: user.fName, lName: user.lName, username: user.username, token: token});
+        const {password,...data} = user;
+        data.bio = "N/A";
+        data.token = token;
+        const imagePath = path.join(__dirname, "resources", user.image);
+        const image = fs.readFileSync(imagePath);
+        const base64Image = Buffer.from(image).toString("base64");
+        data.imageData = base64Image;
+        return res.status(200).send({user: true, ...data});
     }catch(err) {
-        return res.status(500).send(err);
+        return res.status(500).send({message: err});
     }
 
 });
 
 router.post('/login',async (req,res) => {
-    console.log(req.body)
 
     const user = await User.findOne({"username":req.body.username});
     if(!user) return res.status(404).send({message:"Username Not Found"});
@@ -49,10 +61,22 @@ router.post('/login',async (req,res) => {
     if(!validPassword) return res.status(404).json({message:"Invalid Password"});
 
     //Token for Authentication
-    const token = jwt.sign({id:user._id}, process.env.TOKEN_SECRET,{expiresIn: "10m"});
+    const token = jwt.sign({id:user._id}, process.env.TOKEN_SECRET,{expiresIn: "60m"});
 
-    res.status(200).json({ message: "login successful", fName: user.fName, lName: user.lName, username: user.username, token: token});
-    console.log(token);
+    const imagePath = path.join(__dirname, "resources", user.image);
+
+    try {
+      const image = fs.readFileSync(imagePath);
+      const base64Image = Buffer.from(image).toString("base64");
+      const {password,...data} = user;
+      data.imageData = base64Image;
+      data.token = token;
+      data.message = "login successful";
+      return res.status(200).send({...data});
+    } catch (error) {
+      console.log("Error in get user",error);
+      return res.status(500).send({ message: "Failed to read the image file" });
+    }
 
 });
 

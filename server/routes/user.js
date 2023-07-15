@@ -13,15 +13,38 @@ const __dirname = path.dirname(__filename);
 router.get("/", verify, async (req, res) => {
   const id = req.id;
   const user = await User.findOne({ _id: id });
-  if (user) return res.status(200).send({fName: user.fName, lName: user.lName, username: user.username, friends: user.friends, bio: user.bio, image: user.image});
+  if (user){
+    const imagePath = path.join(__dirname, "resources", user.image);
+    try {
+      const image = fs.readFileSync(imagePath);
+      const base64Image = Buffer.from(image).toString("base64");
+      const {password,...data} = user;
+      return res.status(200).send({...data, imageData:base64Image,token: token});
+    } catch (error) {
+      console.log("Error in get user",error);
+      return res.status(500).send({ message: "Failed to read the image file" });
+    }
+  } 
   return res.status(404).send({message:"ID not Found"});
 });
 
-router.get("/pfp", async (req, res) => {
-  const id = req.body.id;
+router.get("/pfp", verify, async (req, res) => {
+
+  const id = req.id;
   const user = await User.findOne({ _id: id });
-  if (user) return res.status(200).sendFile(__dirname + `/resources/${user.image}`);
-  return res.status(404).send({message:"ID not Found"});
+  if (user) {
+    const imagePath = path.join(__dirname, "resources", user.image);
+    try {
+      const image = fs.readFileSync(imagePath);
+      const base64Image = Buffer.from(image).toString("base64");
+      return res.status(200).send({ imageData: base64Image });
+    } catch (error) {
+      console.log("Error in get pfp",error);
+      return res.status(500).send({ message: "Failed to read the image file" });
+    }
+  }
+  return res.status(404).send({ message: "ID not Found" });
+
 });
 
 router.put("/pfp", verify, async (req, res) => {
@@ -38,8 +61,6 @@ router.put("/pfp", verify, async (req, res) => {
 
   const uri = req.body.uri;
   const base64Data = uri.split(";base64,").pop(); // Extract base64 data without the prefix
-
-  console.log("req body",req.body);
   // return;
 
   const fileExtension = "jpg"
@@ -52,9 +73,9 @@ router.put("/pfp", verify, async (req, res) => {
     } else {
       const user = await User.updateOne({ _id: id }, { image: filename });
       if (user) return res.status(201).send({ message: "Image Updated" });
+      return res.status(404).send({message:"ID not Found"});
     }
   });
-  return res.status(404).send({message:"ID not Found"});
 });
 
 router.put("/bio", verify, async (req, res) => {

@@ -19,11 +19,16 @@ const userSchema = new mongoose.Schema({
         required: true,
     },
     bio:{
-        type: String
+        type: String,
+        default: "N/A"
     },
     image:{
-        type: String
+        type: String,
+        default: "TempProfilePic.jpeg"
     },
+    friends: {
+        type: [String]
+    }
     // friends: [String] (not completed. is cursed)
 });
 
