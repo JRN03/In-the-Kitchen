@@ -21,11 +21,13 @@ import {
 } from "@expo-google-fonts/roboto-slab";
 import light from "../assets/themes/light";
 import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PROFILE_PIC_KEY } from "../AsyncKeys";
+import {getItemFromCache} from "../ReadCache";
 
-const AppHeader = (props) => {
+const AppHeader = () => {
+
   const navigation = useNavigation();
+
   let [fontsLoaded] = useFonts({
     RobotoSlab_100Thin,
     RobotoSlab_200ExtraLight,
@@ -39,50 +41,23 @@ const AppHeader = (props) => {
   });
 
   const [profilePic, setProfilePic] = useState();
-  const [isReady, setIsReady] = useState(false);
 
-  // make sure that page is rerendered
+  // make sure that page is rerendered and cache fetched again
   useEffect(() => {
-    const focusHandler = navigation.addListener("focus", () => {
-      readData();
+
+    navigation.addListener("focus", () => {
+      getProfilePic();
     });
-    return focusHandler;
+
+    const getProfilePic = async () => {
+      const pfp = await getItemFromCache(PROFILE_PIC_KEY);
+      setProfilePic(pfp);
+    };
+
   }, [navigation]);
 
-  // get profile pic from cache
-  const readData = async () => {
-    try {
-      picTemp = await AsyncStorage.getItem(PROFILE_PIC_KEY);
-      if (picTemp !== null) {
-        setProfilePic(picTemp);
-      }
-    } catch (e) {
-      alert("failed to load data in profile page");
-    } finally {
-      setIsReady(true);
-    }
-  };
-  // if image isnt fetched from cache return
-  if (!isReady) {
-    return;
-  }
-  let image;
-  if (
-    profilePic === "../assets/TempProfilePic.jpeg" ||
-    profilePic === undefined
-  ) {
-    image = require("../assets/TempProfilePic.jpeg");
-  } else {
-    image = { uri: profilePic };
-  }
   if (!fontsLoaded) {
     return null;
-  }
-  if (
-    props.pfp !== undefined &&
-    props.pfp !== "../assets/TempProfilePic.jpeg"
-  ) {
-    image = { uri: props.pfp };
   }
 
   return (
@@ -92,7 +67,7 @@ const AppHeader = (props) => {
         style={styles.imgWrap}
         onPress={() => navigation.navigate("Profile")}
       >
-        <Image style={[styles.img, styles.profile]} source={image} />
+        <Image style={[styles.img, styles.profile]} source={profilePic ? {uri:profilePic} : require("../assets/TempProfilePic.jpeg")} />
       </TouchableOpacity>
       <View style={styles.titleWrap}>
         <Text style={styles.title}>In the Kitchen</Text>

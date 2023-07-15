@@ -11,21 +11,24 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { PROFILE_PIC_KEY, BIO_KEY, TOKEN } from "../AsyncKeys";
+import { PROFILE_PIC_KEY, BIO_KEY, TOKEN, FNAME, LNAME, UNAME } from "../AsyncKeys";
 
 const LoginPage = ({}) => {
   const navigation = useNavigation();
   const [usernme, onChangeUsrn] = React.useState(null);
   const [userpswd, onChangePswd] = React.useState(null);
 
-  const saveUserData = async (token) => {
+  const saveUserData = async (data) => {
     try {
-      await AsyncStorage.setItem(BIO_KEY, "");
+      await AsyncStorage.setItem(BIO_KEY, data._doc.bio);
       await AsyncStorage.setItem(
         PROFILE_PIC_KEY,
-        "../assets/TempProfilePic.jpeg"
+        "data:image/jpeg;base64,"+data.imageData
       );
-      await AsyncStorage.setItem(TOKEN, token);
+      await AsyncStorage.setItem(TOKEN, data.token);
+      await AsyncStorage.setItem(FNAME, data._doc.fName);
+      await AsyncStorage.setItem(LNAME, data._doc.lName);
+      await AsyncStorage.setItem(UNAME, data._doc.username);
       console.log("Data saved");
     } catch (e) {
       console.log(e);
@@ -61,8 +64,7 @@ const LoginPage = ({}) => {
       .then((res) => res.json())
       .then((data) => {
         if (data.message === "login successful") {
-          console.log(data);
-          saveUserData(data.token);
+          saveUserData(data);
           // save token to cache
           // navigation.navigate('Home',{token:data.token});
         } else if (data.message === "Username Not Found") {

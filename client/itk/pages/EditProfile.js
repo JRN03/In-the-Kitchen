@@ -13,52 +13,34 @@ import { useNavigation } from "@react-navigation/native";
 import { PageStyles } from "../assets/Styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BIO_KEY, TOKEN, PROFILE_PIC_KEY } from "../AsyncKeys";
+import { getItemFromCache } from "../ReadCache";
+const EditProfile = ({ route }) => {
 
-const EditProfile = ({ route }, props) => {
   const navigation = useNavigation();
   const [bio, setBio] = useState(route.params.bio);
   const [profilePic, setProfilePic] = useState(route.params.profilePic);
   const [token, setToken] = useState(null);
 
-  useEffect(() => {
-    const focusHandler = navigation.addListener("focus", () => {
-      setBio(route.params.bio);
-      setProfilePic(route.params.profilePic);
-    });
-    return focusHandler;
-  }, [navigation]);
 
   const textChangeHandler = (text) => {
     setBio(text);
   };
 
   useEffect(() => {
-    const readData = async () => {
-      try {
-        const value = await AsyncStorage.getItem(TOKEN);
-        if (value !== null) {
-          // Value found in async storage, set it as the initial state
-          setToken(value);
-        }
-      } catch (error) {
-        // Handle AsyncStorage errors
-        console.log("AsyncStorage error:", error);
-      }
+    const getCache = async () => {
+      const t = await getItemFromCache(TOKEN);
+      setToken(t);
     };
-    readData(); // Call the async function to fetch the value
+    getCache(); // Call the async function to fetch the value
   }, []);
 
   const saveButtonHandler = () => {
-    let pfp = "data:image/jpeg;base64," + profilePic.base64;
-    if (bio === undefined) {
-      setBio("");
-    }
     const saveData = async () => {
       try {
         await AsyncStorage.setItem(BIO_KEY, bio);
-        await AsyncStorage.setItem(PROFILE_PIC_KEY, pfp);
+        await AsyncStorage.setItem(PROFILE_PIC_KEY, profilePic);
       } catch (e) {
-        console.log("failed to save in edit profile");
+        console.log("failed to save in edit profile",e);
       }
     };
     saveData();
@@ -68,7 +50,7 @@ const EditProfile = ({ route }, props) => {
     fetch("http://localhost:8080/user/pfp", {
       method: "PUT",
       body: JSON.stringify({
-        uri: pfp,
+        uri: profilePic,
       }),
       headers: { "Content-Type": "application/json", token: token },
     })
@@ -76,6 +58,7 @@ const EditProfile = ({ route }, props) => {
       .then((data) => {
         console.log(data);
       });
+
     fetch("http://localhost:8080/user/bio", {
       method: "PUT",
       body: JSON.stringify({
@@ -86,13 +69,15 @@ const EditProfile = ({ route }, props) => {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
+        navigation.navigate("Profile");
       });
-    navigation.navigate("Profile");
+
   };
 
   const setImagePath = (image) => {
     setProfilePic(image);
   };
+
   return (
     <SafeAreaView style={PageStyles.main}>
       <AppHeader pfp={profilePic.uri} />
@@ -112,21 +97,10 @@ const EditProfile = ({ route }, props) => {
             {bio}
           </TextInput>
           <TouchableOpacity
-            style={{ marginTop: 10 }}
+            style={styles.save}
             onPress={saveButtonHandler}
           >
-            <Text
-              style={{
-                fontSize: 15,
-                color: "white",
-                backgroundColor: "#1E94D7",
-                borderWidth: 1,
-                borderColor: "white",
-                borderRadius: 6,
-              }}
-            >
-              Save
-            </Text>
+            <Text style={{ fontSize: 15, color: "white"}}>Save</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -153,6 +127,15 @@ const styles = StyleSheet.create({
     marginTop: 15,
     padding: 10,
   },
+  save: {
+    backgroundColor: "#1E94D7",
+    borderWidth: 1,
+    borderColor: "white",
+    borderRadius: 6,
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+    marginVertical: 10
+  }
 });
 
 export default EditProfile;

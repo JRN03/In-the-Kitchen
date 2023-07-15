@@ -19,12 +19,12 @@ router.get("/", verify, async (req, res) => {
       const image = fs.readFileSync(imagePath);
       const base64Image = Buffer.from(image).toString("base64");
       const { password, ...data } = user;
-      return res
-        .status(200)
-        .send({ ...data, imageData: base64Image, token: token });
+      return res.status(200).send({ ...data, imageData: base64Image, token: token });
     } catch (error) {
-      console.log("Error in get user", error);
-      return res.status(500).send({ message: "Failed to read the image file" });
+      const image = fs.readFileSync(path.join(__dirname,"resources","TempProfilePic.jpeg"));
+      const base64Image = Buffer.from(image).toString("base64");
+      const { password, ...data } = user;
+      return res.status(404).send({ ...data, imageData: base64Image, token: token,message:"Failed to retrieve image" });
     }
   }
   return res.status(404).send({ message: "ID not Found" });

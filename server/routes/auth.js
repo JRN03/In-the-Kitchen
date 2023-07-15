@@ -21,7 +21,7 @@ router.post('/register', async (req,res) => {
 
     //check user in database
     const userExists = await User.findOne({username:req.body.username});
-    if(userExists) return res.status(404).send("Username is Taken");
+    if(userExists) return res.status(404).send({message: "Username is Taken"});
 
     //Password Hashing
     const salt = await bcrypt.genSalt(10);
@@ -39,7 +39,6 @@ router.post('/register', async (req,res) => {
     try {
         user.save(); //saves to database
         const {password,...data} = user;
-        data.bio = "N/A";
         data.token = token;
         const imagePath = path.join(__dirname, "resources", user.image);
         const image = fs.readFileSync(imagePath);
@@ -66,16 +65,21 @@ router.post('/login',async (req,res) => {
     const imagePath = path.join(__dirname, "resources", user.image);
 
     try {
-      const image = fs.readFileSync(imagePath);
-      const base64Image = Buffer.from(image).toString("base64");
-      const {password,...data} = user;
-      data.imageData = base64Image;
-      data.token = token;
-      data.message = "login successful";
-      return res.status(200).send({...data});
+        const image = fs.readFileSync(imagePath);
+        const base64Image = Buffer.from(image).toString("base64");
+        const {password,...data} = user;
+        data.imageData = base64Image;
+        data.token = token;
+        data.message = "login successful";
+        return res.status(200).send({...data});
     } catch (error) {
-      console.log("Error in get user",error);
-      return res.status(500).send({ message: "Failed to read the image file" });
+        const image = fs.readFileSync(path.join(__dirname,"resources","TempProfilePic.jpeg"));
+        const base64Image = Buffer.from(image).toString("base64");
+        const { password, ...data } = user;
+        data.token = token;
+        data.message = "login successful";
+        data.imageData = base64Image;
+        return res.status(404).send({ ...data });
     }
 
 });

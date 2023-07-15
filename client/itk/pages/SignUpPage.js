@@ -1,14 +1,34 @@
 import * as React from "react";
-import { View, Text, StyleSheet, SafeAreaView, Image, ImageBackground, TextInput, Button, TouchableOpacity, Alert} from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, TextInput, TouchableOpacity, Alert} from "react-native";
 import { useNavigation } from '@react-navigation/native';
-
+import { PROFILE_PIC_KEY,BIO_KEY,FNAME,LNAME,UNAME,TOKEN } from "../AsyncKeys";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const SignUpPage = () => {
-	const navigation = useNavigation();
-  const [fname, onChangeFname] = React.useState(null);
-  const [lname, onChangeLname] = React.useState(null);
-  const [usrnm, onChangeUsrn] = React.useState(null);
-  const [usrpwd, onChangePswd] = React.useState(null);
+
+  	const navigation = useNavigation();
+  	const [fname, onChangeFname] = React.useState(null);
+  	const [lname, onChangeLname] = React.useState(null);
+  	const [usrnm, onChangeUsrn] = React.useState(null);
+  	const [usrpwd, onChangePswd] = React.useState(null);
 	
+	  const cacheData = async (data) => {
+		try {
+		  await AsyncStorage.setItem(BIO_KEY, data._doc.bio);
+		  await AsyncStorage.setItem(
+			PROFILE_PIC_KEY,
+		   data.imageData
+		  );
+		  await AsyncStorage.setItem(TOKEN, data.token);
+		  await AsyncStorage.setItem(FNAME, data._doc.fName);
+		  await AsyncStorage.setItem(LNAME, data._doc.lName);
+		  await AsyncStorage.setItem(UNAME, data._doc.username);
+		  console.log("Data saved");
+		} catch (e) {
+		  console.log(e);
+		  alert("Failed to save");
+		}
+	  };
+
 	const validateFields = ()=>{
 		if(fname == null || fname.length == 0){
 			Alert.alert("First name cannot be empty.");
@@ -32,7 +52,6 @@ const SignUpPage = () => {
 		if(!validateFields()){
 			return;
 		}
-		console.log(fname, lname, usrnm, usrpwd)
 		fetch('http://localhost:8080/auth/register', {
 		method: 'POST',
 		body: JSON.stringify({
@@ -45,8 +64,8 @@ const SignUpPage = () => {
 	})
 	.then(res => res.json())
 	.then(data => {
-		console.log(data);
 		if (data.user) {
+			cacheData(data);
 			navigation.navigate('Home');
 		} else {
 			Alert.alert('Sign Up Failed!');
@@ -109,7 +128,7 @@ const SignUpPage = () => {
 
 			<TouchableOpacity
 				onPress={() => navigation.navigate('Login')}>
-				<Text style={{color: 'white', fontSize: 17, textDecorationLine: 'underline', left: 20}}>Sign Out :(</Text>
+				<Text style={{color: 'white', fontSize: 17, textDecorationLine: 'underline', left: 20}}>Sign Out</Text>
 			</TouchableOpacity>
 		</SafeAreaView>
 	);

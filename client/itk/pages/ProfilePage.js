@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   SafeAreaView,
-  TouchableOpacity,
   Text,
   Image,
   StyleSheet,
@@ -12,107 +11,53 @@ import BioText from "../components/BioText";
 import MutualFriends from "../components/MutualFriends";
 import Navbar from "../components/Navbar";
 import { PageStyles } from "../assets/Styles";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BIO_KEY, PROFILE_PIC_KEY } from "../AsyncKeys";
-
+import { BIO_KEY, PROFILE_PIC_KEY, FNAME, LNAME,UNAME } from "../AsyncKeys";
+import { getItemFromCache } from "../ReadCache";
 // need to use state to manage if the page is ready
 // use conditional isReady state while we fetch data
 
-const ProfilePage = ({ navigation, route }) => {
-  const [bio, setBio] = useState();
+const ProfilePage = ({navigation,route}) => {
+  
+  const [bio, setBio] = useState("N/A");
   const [profilePic, setProfilePic] = useState();
-
-  // read profile pic + bio from cache
-  const readData = async () => {
-    try {
-      bioTemp = await AsyncStorage.getItem(BIO_KEY);
-      picTemp = await AsyncStorage.getItem(PROFILE_PIC_KEY);
-
-      if (picTemp !== null) {
-        if (bioTemp === null) {
-          setBio("");
-        } else {
-          setBio(bioTemp);
-        }
-        setProfilePic(picTemp);
-      }
-    } catch (e) {
-      alert("failed to load data in profile page");
-    }
-  };
-
+  const [name,setName] = useState("");
+  const [username,setUsername] = useState("");
   // make sure that page is rerendered
   useEffect(() => {
-    const focusHandler = navigation.addListener("focus", () => {
-      readData();
+
+    navigation.addListener("focus", () => {
+      getCache();
     });
-    return focusHandler;
-  }, [route.name]);
 
-  //set up image
-  let image;
-  if (
-    profilePic !== undefined &&
-    profilePic !== "../assets/TempProfilePic.jpeg"
-  ) {
-    image = (
-      <Image
-        source={{ uri: profilePic }}
-        style={{ width: 150, height: 150, borderRadius: 150 / 2 }}
-      />
-    );
-  } else {
-    image = (
-      <Image
-        source={require("../assets/TempProfilePic.jpeg")}
-        style={{ width: 150, height: 150, borderRadius: 150 / 2 }}
-      />
-    );
-  }
+    const getCache = async () => {
+      const pfp = await getItemFromCache(PROFILE_PIC_KEY);
+      const desc = await getItemFromCache(BIO_KEY);
+      const fname = await getItemFromCache(FNAME);
+      const lname = await getItemFromCache(LNAME);
+      const uname = await getItemFromCache(UNAME);
 
-  const editButtonHandler = () => {
-    navigation.navigate("EditProfile", {
-      profilePic: profilePic,
-      bio: bio,
-    });
-  };
+      setProfilePic(pfp);
+      setBio(desc);
+      setName(fname+" "+lname);
+      setUsername(uname);
+    };
 
-  //set up bio
-  if (bio) {
-    showBio = <BioText bioText={bio} profilePic={profilePic} />;
-  } else {
-    showBio = (
-      <TouchableOpacity
-        style={{
-          marginTop: 10,
-          width: "30%",
-          alignSelf: "center",
-          alignItems: "center",
-        }}
-        onPress={editButtonHandler}
-      >
-        <Text
-          style={{
-            fontSize: 15,
-            color: "white",
-            backgroundColor: "#1E94D7",
-            borderWidth: 1,
-            borderColor: "white",
-            borderRadius: 6,
-          }}
-        >
-          Edit Profile
-        </Text>
-      </TouchableOpacity>
-    );
-  }
+  },[route.name]);
+
   return (
     <SafeAreaView style={PageStyles.main}>
-      <AppHeader pfp={profilePic} />
+      <AppHeader />
       <View style={PageStyles.contentWrap}>
-        <View style={styles.container}>{image}</View>
-        {showBio}
-        <MutualFriends></MutualFriends>
+        <View style={styles.container}>
+          <Image
+            source={profilePic ? { uri: profilePic } : require("../assets/TempProfilePic.jpeg")}
+            style={{ width: 150, height: 150, borderRadius: 150 / 2 }}
+          />
+          <Text style={styles.name}>{name}</Text>
+          <Text style={styles.tag}>@{username}</Text>
+        </View>
+        <BioText bioText={bio} profilePic={profilePic} />
+        {/* <MutualFriends/> */}
         <Navbar />
       </View>
     </SafeAreaView>
@@ -121,11 +66,18 @@ const ProfilePage = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 20,
-    maxHeight: 200,
-    minHeight: 180,
     alignItems: "center",
+    marginTop: 30,
   },
+  name:{
+    color: "white",
+    fontSize: 30,
+    marginTop: 10,
+  },
+  tag: {
+    color:"#cccccc",
+    fontSize: 20
+  }
 });
 
 export default ProfilePage;
