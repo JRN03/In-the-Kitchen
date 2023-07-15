@@ -88,7 +88,7 @@ const AddCourt = ({ route }) => {
         location: Location,
         name: Name,
 				// ensure times : day: start-end ARRAY [, ,]
-        times: Times,
+        times: meetTimesArr,
         placesID: PID,
         lat: Lat,
         lon: Lon,
@@ -135,7 +135,7 @@ const AddCourt = ({ route }) => {
       updatedMeetTimes[index].end = selectedItem;
       setMeetTimesArr(updatedMeetTimes);
     };
-    
+
     return (
       <View key={index} style={times.meetTimeRow}>
         <SelectDropdown
@@ -248,7 +248,7 @@ const AddCourt = ({ route }) => {
         <Text style={{ color: "white", fontSize: 15, textAlign: "center", top: -100 }}>
           {"Notice formatting -> Day: Start - Stop"}
         </Text>
-        <TouchableOpacity style={buttonStyle.picklebut} onPress={null}>
+        <TouchableOpacity style={buttonStyle.picklebut} onPress={submitForm}>
           <Text style={{ textAlign: "center" }}>{"Submit Court :D"}</Text>
         </TouchableOpacity>
           {meetTimesArr.map((data, index) => (
