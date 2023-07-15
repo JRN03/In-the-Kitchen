@@ -18,20 +18,20 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   const [isReady, setIsReady] = useState(false);
 
-  // useEffect(() => {
-  //   const readData = async () => {
-  //     try {
-  //       const value = await AsyncStorage.getItem(TOKEN);
-  //       if (value !== null) {
-  //         setIsReady(true);
-  //       }
-  //     } catch (error) {
-  //       // Handle AsyncStorage errors
-  //       console.log("AsyncStorage error:", error);
-  //     }
-  //   };
-  //   readData(); // Call the async function to fetch the value
-  // }, []);
+  useEffect(() => {
+    const readData = async () => {
+      try {
+        const value = await AsyncStorage.getItem(TOKEN);
+        if (value !== null) {
+          setIsReady(true);
+        }
+      } catch (error) {
+        // Handle AsyncStorage errors
+        console.log("AsyncStorage error:", error);
+      }
+    };
+    readData(); // Call the async function to fetch the value
+  }, []);
 
   if (!isReady) {
     return (
@@ -113,6 +113,16 @@ export default function App() {
             options={{ headerShown: false }}
             name="EditProfile"
             component={EditProfile}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="Login"
+            component={LoginPage}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="Sign Up"
+            component={SignUpPage}
           />
         </Stack.Navigator>
       </NavigationContainer>

@@ -49,25 +49,26 @@ const EditProfile = ({ route }, props) => {
   }, []);
 
   const saveButtonHandler = () => {
+    let pfp = "data:image/jpeg;base64," + profilePic.base64;
     if (bio === undefined) {
       setBio("");
     }
     const saveData = async () => {
       try {
         await AsyncStorage.setItem(BIO_KEY, bio);
-        await AsyncStorage.setItem(PROFILE_PIC_KEY, profilePic.uri);
+        await AsyncStorage.setItem(PROFILE_PIC_KEY, pfp);
       } catch (e) {
         console.log("failed to save in edit profile");
       }
     };
     saveData();
-    console.log(token);
+    // console.log(token);
     // console.log(profilePic);
     // upload image to server
     fetch("http://localhost:8080/user/pfp", {
       method: "PUT",
       body: JSON.stringify({
-        uri: "data:image/jpeg;base64," + profilePic.base64,
+        uri: pfp,
       }),
       headers: { "Content-Type": "application/json", token: token },
     })

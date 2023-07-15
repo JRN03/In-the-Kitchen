@@ -19,6 +19,7 @@ export default PickImage = (props) => {
   };
   let image;
   if (profilePic !== "../assets/TempProfilePic.jpeg") {
+    // console.log("here", props.currentImage);
     image = { uri: profilePic };
   } else {
     image = require("../assets/TempProfilePic.jpeg");
