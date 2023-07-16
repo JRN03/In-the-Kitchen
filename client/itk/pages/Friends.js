@@ -6,12 +6,11 @@ import AppHeader from "../components/AppHeader";
 import {PageStyles} from "../assets/Styles";
 
 export default function Friends({route}){
-    const token = route.params.token;
     return (
         <SafeAreaView style={PageStyles.main}>
-            <AppHeader/>
+            <AppHeader route={route}/>
             <View style={PageStyles.contentWrap}>
-                <Navbar route={route} token={token}/>
+                <Navbar route={route}/>
             </View>
         </SafeAreaView>
     )

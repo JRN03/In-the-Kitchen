@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   SafeAreaView,
@@ -11,45 +11,66 @@ import AppHeader from "../components/AppHeader";
 import PickImage from "../components/ImagePicker";
 import { useNavigation } from "@react-navigation/native";
 import { PageStyles } from "../assets/Styles";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BIO_KEY, TOKEN, PROFILE_PIC_KEY } from "../AsyncKeys";
+import { getItemFromCache } from "../ReadCache";
+const EditProfile = ({ route }) => {
 
-const EditProfile = ({ route }, props) => {
-  // console.log(route.params);
   const navigation = useNavigation();
-  const [newtext, setNewText] = useState();
-  const [image, setImage] = useState(route.params.imgPath.uri);
+  const [bio, setBio] = useState(route.params.bio);
+  const [profilePic, setProfilePic] = useState(route.params.profilePic);
+  const [token, setToken] = useState(null);
 
   const textChangeHandler = (text) => {
-    setNewText(text);
+    setBio(text);
   };
-  let text;
-  if (
-    route.params !== undefined &&
-    String(route.params.oldText).length > 0 &&
-    route.params.oldText != undefined
-  ) {
-    text = route.params.oldText;
-  } else {
-    text = "";
-  }
 
-  function saveButtonHandler() {
-    navigation.navigate("Profile", {
-      bioText: newtext,
-      imagePath: image,
-    });
-  }
+  useEffect(() => {
+    const getCache = async () => {
+      const t = await getItemFromCache(TOKEN);
+      setToken(t);
+    };
+    getCache(); // Call the async function to fetch the value
+  }, []);
 
-  const setImagePath = (path) => {
-    setImage(path);
+  const saveButtonHandler = async () => {
+    try {
+      await AsyncStorage.setItem(BIO_KEY, bio);
+      await AsyncStorage.setItem(PROFILE_PIC_KEY, profilePic);
+  
+      await fetch("http://localhost:8080/user/pfp", {
+        method: "PUT",
+        body: JSON.stringify({
+          uri: profilePic,
+        }),
+        headers: { "Content-Type": "application/json", token: token },
+      })
+  
+      await fetch("http://localhost:8080/user/bio", {
+        method: "PUT",
+        body: JSON.stringify({
+          bio: bio,
+        }),
+        headers: { "Content-Type": "application/json", token: token },
+      })
+  
+      navigation.navigate("Profile");
+      
+    } catch (e) {
+      console.log("failed to save in edit profile", e);
+    }
+  };
+  const setImagePath = (image) => {
+    setProfilePic(image);
   };
 
   return (
     <SafeAreaView style={PageStyles.main}>
-      <AppHeader />
+      <AppHeader pfp={profilePic.uri} />
       <View style={PageStyles.contentWrap}>
         <PickImage
           imagePath={setImagePath}
-          passPath={route.params.imgPath}
+          currentImage={route.params.profilePic}
         ></PickImage>
         <View style={styles.container}>
           <TextInput
@@ -59,24 +80,13 @@ const EditProfile = ({ route }, props) => {
             onChangeText={textChangeHandler}
             placeholder="Type your bio here..."
           >
-            {text}
+            {bio}
           </TextInput>
           <TouchableOpacity
-            style={{ marginTop: 10 }}
+            style={styles.save}
             onPress={saveButtonHandler}
           >
-            <Text
-              style={{
-                fontSize: 15,
-                color: "white",
-                backgroundColor: "#1E94D7",
-                borderWidth: 1,
-                borderColor: "white",
-                borderRadius: 6,
-              }}
-            >
-              Save
-            </Text>
+            <Text style={{ fontSize: 15, color: "white"}}>Save</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -103,6 +113,15 @@ const styles = StyleSheet.create({
     marginTop: 15,
     padding: 10,
   },
+  save: {
+    backgroundColor: "#1E94D7",
+    borderWidth: 1,
+    borderColor: "white",
+    borderRadius: 6,
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+    marginVertical: 10
+  }
 });
 
 export default EditProfile;
