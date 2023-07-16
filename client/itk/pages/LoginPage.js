@@ -1,12 +1,38 @@
-import React, {useState} from 'react';
-import { View, Text, StyleSheet, SafeAreaView, Image, ImageBackground, TextInput, Button, TouchableOpacity, Alert} from "react-native";
+import React, {useEffect} from 'react';
+import { View, Text, StyleSheet, SafeAreaView, Image, TextInput, TouchableOpacity, Alert} from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PROFILE_PIC_KEY, BIO_KEY, TOKEN, FNAME, LNAME, UNAME } from "../AsyncKeys";
+import { getItemFromCache } from '../ReadCache';
 const LoginPage = ({}) => {
+
   const navigation = useNavigation();
   const [usernme, onChangeUsrn] = React.useState(null);
   const [userpswd, onChangePswd] = React.useState(null);
+
+  useEffect(() => {
+
+    const checkCache = async () => {
+      try{
+  
+        const token = await getItemFromCache(TOKEN);
+        await fetch("http://localhost:8080/user", {
+          method: "GET",
+          headers: { "Content-Type": "application/json", token: token },
+        }).then(res => {
+          if (res.status == 404 || res.status == 200) navigation.navigate("Home");
+        });
+  
+      } catch (e){
+        console.log(e);
+      }
+      
+    }
+
+    checkCache();
+  }, [navigation]);
+
+
   const saveUserData = async (data) => {
     try {
       await AsyncStorage.setItem(BIO_KEY, data._doc.bio);
@@ -54,7 +80,7 @@ const LoginPage = ({}) => {
 				.then(res => res.json())
 				.then(data => {
 						if (data.message === "login successful") {
-								navigation.navigate('Home');
+								saveUserData(data);
 						} else if (data.message === "Username Not Found") {
 								Alert.alert("Incorrect Username!");
 						} else if (data.message === "Invalid Password") {

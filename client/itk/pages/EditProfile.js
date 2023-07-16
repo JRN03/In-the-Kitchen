@@ -21,7 +21,6 @@ const EditProfile = ({ route }) => {
   const [profilePic, setProfilePic] = useState(route.params.profilePic);
   const [token, setToken] = useState(null);
 
-
   const textChangeHandler = (text) => {
     setBio(text);
   };
@@ -34,46 +33,33 @@ const EditProfile = ({ route }) => {
     getCache(); // Call the async function to fetch the value
   }, []);
 
-  const saveButtonHandler = () => {
-    const saveData = async () => {
-      try {
-        await AsyncStorage.setItem(BIO_KEY, bio);
-        await AsyncStorage.setItem(PROFILE_PIC_KEY, profilePic);
-      } catch (e) {
-        console.log("failed to save in edit profile",e);
-      }
-    };
-    saveData();
-    // console.log(token);
-    // console.log(profilePic);
-    // upload image to server
-    fetch("http://localhost:8080/user/pfp", {
-      method: "PUT",
-      body: JSON.stringify({
-        uri: profilePic,
-      }),
-      headers: { "Content-Type": "application/json", token: token },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-      });
-
-    fetch("http://localhost:8080/user/bio", {
-      method: "PUT",
-      body: JSON.stringify({
-        bio: bio,
-      }),
-      headers: { "Content-Type": "application/json", token: token },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        navigation.navigate("Profile");
-      });
-
+  const saveButtonHandler = async () => {
+    try {
+      await AsyncStorage.setItem(BIO_KEY, bio);
+      await AsyncStorage.setItem(PROFILE_PIC_KEY, profilePic);
+  
+      await fetch("http://localhost:8080/user/pfp", {
+        method: "PUT",
+        body: JSON.stringify({
+          uri: profilePic,
+        }),
+        headers: { "Content-Type": "application/json", token: token },
+      })
+  
+      await fetch("http://localhost:8080/user/bio", {
+        method: "PUT",
+        body: JSON.stringify({
+          bio: bio,
+        }),
+        headers: { "Content-Type": "application/json", token: token },
+      })
+  
+      navigation.navigate("Profile");
+      
+    } catch (e) {
+      console.log("failed to save in edit profile", e);
+    }
   };
-
   const setImagePath = (image) => {
     setProfilePic(image);
   };
