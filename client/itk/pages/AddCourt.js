@@ -22,18 +22,25 @@ const AddCourt = ({ route }) => {
   const [image2, setImage2] = useState(null);
   const [image3, setImage3] = useState(null);
 
+  const [images, setImages] = useState([])
+  
+
 	const Days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 	const nums = ["6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM"]
   const [meetTimesArr, setMeetTimesArr] = useState([{ day: "", start: "", end: "" }]);
 
   const addMeetTime = () => {
-    if (meetTimesArr.length < 5) {
-      setMeetTimesArr([...meetTimesArr, { day: "", start: "", end: "" }]);
-    }
-    if (meetTimesArr.length < 5) {
-
-    }
+	const lastMeetTime = meetTimesArr[meetTimesArr.length - 1];
+	if (lastMeetTime.day === "" || lastMeetTime.start === "" || lastMeetTime.end === "") {
+	  Alert.alert("Please fill in the previous meeting time before adding a new one.");
+	  return;
+	}
+  
+	if (meetTimesArr.length < 5) {
+	  setMeetTimesArr([...meetTimesArr, { day: "", start: "", end: "" }]);
+	}
   };
+  
 
   const removeMeetTime = (index) => {
     const updatedMeetTimes = meetTimesArr.filter((_, i) => i !== index);
@@ -51,13 +58,16 @@ const AddCourt = ({ route }) => {
 		if (!_image.canceled) {
 			switch (imageNumber) {
 				case 1:
-					setImage1(_image.assets[0].uri);
+					setImage1(_image);
+          setImages([...images,_image])
 					break;
 				case 2:
-					setImage2(_image.assets[0].uri);
+					setImage2(_image);
+          setImages([...images,_image])
 					break;
 				case 3:
-					setImage3(_image.assets[0].uri);
+					setImage3(_image);
+          setImages([...images,_image])
 					break;
 				default:
 					break;
@@ -80,35 +90,51 @@ const AddCourt = ({ route }) => {
     
   }
 
-  const submitForm = () => {
-    // console.log(PID, Location, Lat, Lon, Name, Times);
-    fetch("http://localhost:8080/courts", {
-      method: "POST",
-      body: JSON.stringify({
-        location: Location,
-        name: Name,
-				// ensure times : day: start-end ARRAY [, ,]
-        times: meetTimesArr,
-        placesID: PID,
-        lat: Lat,
-        lon: Lon,
-      }),
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        if (data.user) {
-          navigation.navigate("Courts");
-          Alert.alert("Court Added!");
-        } else {
-          Alert.alert("Error");
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
+  const validateFields = () => { 
+	// go through array -> make sure each field is filled
+	const isAnyEmpty = meetTimesArr.some((meetTime) => {
+		return meetTime.day === "" || meetTime.start === "" || meetTime.end === "";
+		});
+	// alert is day/start/end empty
+	if (isAnyEmpty) {
+		Alert.alert("Please fill in all meeting times.");
+		return;
+	}
+};
+	const submitForm = () => {
+		// console.log(PID, Location, Lat, Lon, Name, Times);
+		if(!validateFields()){
+			return;
+		}
+		fetch("http://localhost:8080/courts", {
+		method: "POST",
+		body: JSON.stringify({
+			location: Location,
+			name: Name,
+			times: meetTimesArr,
+			placesID: PID,
+			lat: Lat,
+			lon: Lon,
+      images: ["data:image/jpeg;base64,"+image1.assets[0].base64,
+      "data:image/jpeg;base64,"+image2,assets[0].base64,
+      "data:image/jpeg;base64,"+image3,assets[0].base64]
+		}),
+		headers: { "Content-Type": "application/json" },
+		})
+		.then((res) => res.json())
+		.then((data) => {
+			console.log(data);
+			if (data.user) {
+			navigation.navigate("Courts");
+			Alert.alert("Court Added!");
+			} else {
+			Alert.alert("Error");
+			}
+		})
+		.catch((error) => {
+			console.error("Error:", error);
+		});
+	};
 
   const MeetTimeRow = ({ day, start, end, index }) => {
     const [selectedDay, setSelectedDay] = useState(day);
@@ -248,9 +274,6 @@ const AddCourt = ({ route }) => {
         <Text style={{ color: "white", fontSize: 15, textAlign: "center", top: -100 }}>
           {"Notice formatting -> Day: Start - Stop"}
         </Text>
-        <TouchableOpacity style={buttonStyle.picklebut} onPress={submitForm}>
-          <Text style={{ textAlign: "center" }}>{"Submit Court :D"}</Text>
-        </TouchableOpacity>
           {meetTimesArr.map((data, index) => (
             <MeetTimeRow
               key={index}
@@ -262,9 +285,12 @@ const AddCourt = ({ route }) => {
           ))}
         {meetTimesArr.length < 5 && (
           <TouchableOpacity onPress={addMeetTime}>
-            <Text style={{ color: 'white', fontSize: 30, textAlign: 'center', width: 30, height: 30, borderRadius: 10, bottom: 140 }}>+</Text>
+            <Text style={{ color: 'white', fontSize: 30, textAlign: 'center', width: 30, height: 30, borderRadius: 10, bottom: 100 }}>+</Text>
           </TouchableOpacity>
         )}
+        <TouchableOpacity style={buttonStyle.picklebut} onPress={submitForm}>
+          <Text style={{ textAlign: "center" }}>{"Submit Court :D"}</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -339,7 +365,7 @@ const buttonStyle = StyleSheet.create({
     width: 78,
     backgroundColor: "white",
     alignSelf: "center",
-    top: 85,
+    bottom: 75,
   },
 });
 
@@ -385,7 +411,7 @@ const times = StyleSheet.create({
     // paddingVertical: 10,
     // paddingHorizontal: 20,
     // marginBottom: 0,
-    bottom: 135,
+    bottom: 95,
     height: 35,
     width: 100,
     alignSelf: 'center',
