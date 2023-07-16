@@ -18,7 +18,7 @@ const BioText = (props) => {
           })
         }
       >
-        <Text style={{color:"white", fontSize:20}}>Edit Profile</Text>
+        {!props.isFriend && <Text style={{color:"white", fontSize:20}}>Edit Profile</Text>}
       </TouchableOpacity>
     </View>
   );

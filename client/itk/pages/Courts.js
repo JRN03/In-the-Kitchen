@@ -1,7 +1,6 @@
-import { View, StyleSheet, Text, ScrollView, SafeAreaView, Alert, processColor } from "react-native";
+import { View, StyleSheet, Text, ScrollView, SafeAreaView } from "react-native";
 import MapView, {Marker, PROVIDER_GOOGLE} from "react-native-maps";
-import Searchbar from "../components/Searchbar";
-import {React, useState, useEffect, useRef} from "react";
+import {React, useState, useEffect} from "react";
 import ParkTab from "../components/ParkTab";
 import light from "../assets/themes/light.js";
 import AppHeader from "../components/AppHeader";
@@ -11,7 +10,7 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import axios from 'axios';
 
 
-export default function Courts({route}) {
+export default function Courts({route,navigation}) {
   // const ref = useRef();
   // useEffect(() => {
   //   ref.current?.setAddressText('Some Text');
@@ -129,7 +128,7 @@ export default function Courts({route}) {
 
   return (
     <SafeAreaView style={PageStyles.main}>
-      <AppHeader route={route}/>
+      <AppHeader route={route} action={()=>navigation.navigate("AddCourt")}/>
       <View style={PageStyles.contentWrap}>
         {/* <Searchbar onSubmit={onSubmitText}/> */}
         <GooglePlacesAutocomplete

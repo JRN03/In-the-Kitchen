@@ -25,6 +25,15 @@ const EditProfile = ({ route }) => {
     setBio(text);
   };
 
+  const logout = async () => {
+    try{
+      await AsyncStorage.clear();
+      navigation.navigate("Login");
+    } catch(e) {
+      console.log(e);
+    }
+  }
+
   useEffect(() => {
     const getCache = async () => {
       const t = await getItemFromCache(TOKEN);
@@ -66,7 +75,7 @@ const EditProfile = ({ route }) => {
 
   return (
     <SafeAreaView style={PageStyles.main}>
-      <AppHeader pfp={profilePic.uri} />
+      <AppHeader action={logout} />
       <View style={PageStyles.contentWrap}>
         <PickImage
           imagePath={setImagePath}

@@ -6,7 +6,7 @@ export default function Searchbar({onSubmit}){
     return(
     <View style={styles.searchWrap}>
         <TextInput 
-         placeholder="Search Courts"
+         placeholder="Search Friends"
          onSubmitEditing={() => onSubmit(text)}
          onChangeText={onChangeText}
          value = {text}
@@ -18,8 +18,8 @@ export default function Searchbar({onSubmit}){
 
 const styles = StyleSheet.create({
     searchWrap: {
-        marginVertical: 10,
-        height: 40,
+        marginBottom: 20,
+        height: 30,
         width: "100%",
         backgroundColor:"white",
         borderRadius: 50,
