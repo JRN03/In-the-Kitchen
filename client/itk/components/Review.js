@@ -52,7 +52,7 @@ export default function Review(props){
         <View >
         <View 
             style = {{width: "100%",
-                        height: 60,
+                        height: 50,
                         borderRadius: 20,
                         // backgroundColor: "white",
                         marginVertical: 10,
@@ -66,7 +66,7 @@ export default function Review(props){
                 ratingColor='#176089'
                 ratingBackgroundColor='#176089'
                 ratingCount={parkScore}
-                size={30}
+                imageSize={30}
                 defaultRating = {parkScore}
                 readonly = {true}
                 reviewSize = {20}
@@ -79,7 +79,7 @@ export default function Review(props){
                 style={[styles.button, styles.buttonOpen]}
                 onPress={() => setModalVisible(true)}
             >
-                <Text style={{fontFamily:"RobotoSlab_500Medium", fontSize: 16, color:"white"}}>Review</Text>
+                <Text style={{fontFamily:"RobotoSlab_500Medium", fontSize: 14, color:"white"}}>Review</Text>
             </Pressable>
         </View>
         
@@ -158,7 +158,8 @@ const styles = StyleSheet.create({
     },
     buttonOpen: {
       backgroundColor: "#1E94D7",
-      right:-20
+      right:-20,
+      width:80
     },
     buttonClose: {
         // paddingTop: 10,

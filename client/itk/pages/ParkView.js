@@ -1,12 +1,13 @@
 import { View, StyleSheet, Text, ScrollView, SafeAreaView, Alert, processColor, TouchableOpacity } from "react-native";
 import MapView, {Marker, PROVIDER_GOOGLE} from "react-native-maps";
-import {React, useState, useEffect, useRef} from "react";
+import {React, useState, useEffect, useRef,Component} from "react";
 import AppHeader from "../components/AppHeader";
 import Navbar from "../components/Navbar";
 import {PageStyles} from "../assets/Styles";
 import light from "../assets/themes/light.js";
 import ParkCard from "../components/ParkCard";
 import Review from "../components/Review";
+import MyCarousel from "../components/Carousel";
 
 import {
     useFonts,
@@ -64,19 +65,9 @@ export default function ParkView({navigation,route}) {
                     ratings = {props.rating}
                     placesID = {props.placesID}
                 />
-
-                {/* <MapView
-                    style={styles.map} 
-                    provider={PROVIDER_GOOGLE}
-                    initialRegion = {{latitude:lat,longitude:lon,latitudeDelta:mapLatDelta, longitudeDelta:mapLonDelta}}
-                    > 
-                    <Marker
-                        key = {100}
-                        coordinate = {{latitude:lat,longitude:lon}}
-                        title = {props.name}
-                        description = {props.location}
-                    />
-                </MapView> */}
+                <View style = {{ width: "100%"}}>
+                  <MyCarousel/>
+                </View>
                 <ParkCard
                     name = {props.name}
                     location = {props.location}

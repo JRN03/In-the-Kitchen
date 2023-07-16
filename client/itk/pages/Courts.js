@@ -19,10 +19,10 @@ export default function Courts({navigation,route}) {
     // console.log(region)
   }
   //used for loading data from the backend for courts
-  const [courtObject, setCourtObject] = useState({});
+  const courtObject = useRef({});
   const [courtMarkers,setCourtMarkers] = useState(<Marker></Marker>);
   const [courtData,setCourtData] = useState([]);
-
+  const [courtTabs, setCourtTabs] = useState([])
   // used for starting and current positioning on maps
   const [mapLatDelta,setMapLatDelta] = useState(.1);
   const [mapLonDelta,setMapLonDelta] = useState(0.12050628662110796);
@@ -46,42 +46,28 @@ export default function Courts({navigation,route}) {
     
   }
   async function getCourtsFromSearch(lat,lon){
+    console.log(lat,lon)
     // console.log("QUERY", `https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat}%2C${lon}&radius=1500&query=pickleball%court&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`);
     var secondRes = await fetch(`https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat}%2C${lon}&radius=1500&query=pickleball+courts&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`);
     var courtsNearby = await secondRes.json();
       // console.log("COURT length", courtsNearby.results[0]);
-      mapMarkers(courtsNearby.results)
+    mapMarkers(courtsNearby.results)
+      
+
   }
   function mapMarkers(results){
-    // console.log(results)
-    var currentCourtObject = courtObject
-     setCourtMarkers(
-        results.map((item,index)=>{
-          //using item.placeId
-          if(!currentCourtObject.hasOwnProperty(item.place_id)){
-            // console.log("CURRENT MARKER",item);
-            //Any item that was not in the DB will make it to this point
-            var courtBody = {
-              name: item.name,
-              location: item.formatted_address,
-              lat:item.geometry.location.lat,
-              lon:item.geometry.location.lng,
-              placesID:item.place_id,
-              times:"8am-9pm"
-            }
-            currentCourtObject[item.place_id] = courtBody
-            //make a post method right here...
-          }
-          return(
-              <Marker
-                key = {index*100}
-                coordinate = {{latitude:item.geometry.location.lat,longitude:item.geometry.location.lng}}
-                title = {item.name}
-                description = {item.formatted_address}
-                />
-          )
+    var currentCourtObject = courtObject.current
+
+    setCourtTabs(results.map((item,index)=>{
+      // console.log(currentCourtObject)
+
+      if(currentCourtObject.hasOwnProperty(item.place_id)){
+        // console.log(curre)
+        return(
+          <ParkTab key={currentCourtObject[item.place_id].name} name={currentCourtObject[item.place_id].name} onPress= { ()=>{redirectToPark(currentCourtObject[item.place_id])}}/>
+         )
+      }
     }))
-    setCourtObject(currentCourtObject);
     // console.log(courtObject);
     //at this point we just need to make the posts and all of the courts encountered by users will auto populate in the DB
   }
@@ -112,9 +98,11 @@ export default function Courts({navigation,route}) {
         // console.log(data[i].rating)
       }
       setCourtData(data);
-      setCourtObject(master);
+      courtObject.current = master;
+      console.log("CourtObject",courtObject.current);
       // console.log("master",courtObject);
       //once all the placesIds are found, we make markers and display them
+      getPermissions();
     }
     const getPermissions = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -131,11 +119,11 @@ export default function Courts({navigation,route}) {
       setMapLat(currentLocation.coords.latitude);
       setMapLon(currentLocation.coords.longitude);
       setUserCurrentLocation({lat:currentLocation.coords.latitude,lon:currentLocation.coords.longitude})
+      getCourtsFromSearch(currentLocation.coords.latitude,currentLocation.coords.longitude);
     };
     
-    getPermissions();
 
-    getCourts();
+    getCourts()
 
 
   },[])
@@ -143,9 +131,11 @@ export default function Courts({navigation,route}) {
     navigation.navigate('ParkView',{props:data})
 
   }
-  const courtObjects = courtData.map(courtInfo => (
-    <ParkTab key={courtInfo.name} name={courtInfo.name} onPress= { ()=>{redirectToPark(courtInfo)}}/>
-  ));
+  // setCourtTabs( courtData.map(courtInfo =>{
+  //    return(
+  //   <ParkTab key={courtInfo.name} name={courtInfo.name} onPress= { ()=>{redirectToPark(courtInfo)}}/>
+  //  )}
+  //  ));
 
   return (
     <SafeAreaView style={PageStyles.main}>
@@ -195,7 +185,7 @@ export default function Courts({navigation,route}) {
             Nearby Courts
           </Text>
         <ScrollView style={styles.nearbyContainer}>
-          {courtObjects}
+          {courtTabs}
         </ScrollView>
         <Navbar route={route} token={token}/>
         </View>

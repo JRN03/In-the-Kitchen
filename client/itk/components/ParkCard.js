@@ -68,7 +68,7 @@ export default function ParkCard(props){
 const styles = StyleSheet.create({
     main:{
         width: "100%",
-        height: 250,
+        height: 200,
         borderRadius: 20,
         backgroundColor: "white",
         marginVertical: 10,
