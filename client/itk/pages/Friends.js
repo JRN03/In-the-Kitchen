@@ -1,5 +1,5 @@
 import * as React from "react";
-import { SafeAreaView, ScrollView, StyleSheet,Text, View } from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet,Text, View, Image, TouchableOpacity} from "react-native";
 import Navbar from "../components/Navbar";
 import AppHeader from "../components/AppHeader";
 import {PageStyles} from "../assets/Styles";
@@ -18,11 +18,15 @@ import {
 } from '@expo-google-fonts/roboto-slab';
 import FriendTab from "../components/FriendTab";
 import AddFriendDialogue from "../components/AddFriendDialogue";
+import { getItemFromCache } from "../ReadCache";
+import { TOKEN } from "../AsyncKeys";
 
 export default function Friends({route,navigation}){
 
     const [showDialogue, setShowDialogue] = React.useState(false);
-
+    const [friendData, setFriendData] = React.useState([]);
+    const [token,setToken] = React.useState();
+    const [friendComponents,setFriendComponents] = React.useState([]);
     let [fontsLoaded] = useFonts({
         RobotoSlab_100Thin,
         RobotoSlab_200ExtraLight,
@@ -35,51 +39,70 @@ export default function Friends({route,navigation}){
         RobotoSlab_900Black,
     });
 
-    if (!fontsLoaded) {
-      return null;
-    }
-
     const toggleAdd = () => {
         //open box for adding friend
         setShowDialogue(!showDialogue);
-        console.log(showDialogue);
     }
-    const friendData = [
-        {
-            bio: "I do stuff with maps",
-            fName: "Royce",
-            lName: "Williams",
-            username: "royceMaps"
-        },
-        {
-            bio: "I don't touch grass",
-            fName: "Matthew",
-            lName: "Anderson",
-            username: "maande"
-        },
-        {
-            bio: "Simp",
-            fName: "Caleb",
-            lName: "Intal",
-            username: "fintal1?"
-        },
-        {
-            bio: "Bad at pickleball, send help",
-            fName: "Nick",
-            lName: "?????",
-            username: "nicknicknicknick"
+
+    // Run fetch every 5 seconds 
+    React.useEffect(() => {
+    
+        const getToken = async () => {
+            const t = await getItemFromCache(TOKEN);
+            setToken(t);
+        };
+
+        const getFriends = () => {
+
+            fetch("http://localhost:8080/user/friends",{
+                method: "GET",
+                headers: {"Content-Type":"appllication/json",token:token}
+            })
+            .then(res => res.status == 200 ? res.json() : {friends:[]})
+            .then(data => {
+                setFriendData(data.friends);
+            })
+            .catch(e => console.log('err',e));
+
         }
-    ]
-    const friendComponents = friendData.map(data => 
-        <FriendTab key={data.fName} name={data.fName+" "+data.lName} data={data}/>
-    );
+        getToken();
+        getFriends();
+        const interval = setInterval(getFriends, 5000); // Send request every 5 seconds
+
+        return () => {
+            clearInterval(interval); // Clean up the interval when component unmounts
+        };
+
+    },[token]);
+
+    React.useEffect(() => {
+    
+        const newFriendComponents = friendData.map(data => 
+            <FriendTab key={data.username} name={data.fName+" "+data.lName} data={data}/>
+        );
+        
+        setFriendComponents(newFriendComponents);
+
+    },[friendData]);
+
+    if (!fontsLoaded) {
+        return null;
+    }
+    
+    if (!token) return;
+
     return (
         <SafeAreaView style={PageStyles.main}>
             <AppHeader route={route} action={toggleAdd}/>
             <View style={PageStyles.contentWrap}>
-                {showDialogue && <AddFriendDialogue/>}
-                <Text style={styles.header}>Friends</Text>
-                <Searchbar/>
+                <AddFriendDialogue visible={showDialogue} onClose={toggleAdd}/>
+                <View style={styles.header}>
+                    <Text style={styles.headerTxt}>Friends</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate("FriendRequests")} >
+                        <Image style={styles.headerImg} source={require("../assets/inbox.png")}/>
+                    </TouchableOpacity>
+                </View>
+                <Searchbar placeholder={"Search Friends"}/>
                 <ScrollView style={styles.scroll}>
                     {friendComponents}
                 </ScrollView>
@@ -91,11 +114,21 @@ export default function Friends({route,navigation}){
 
 const styles = StyleSheet.create({
     header: {
+        marginVertical: 10,
+        flexDirection: "row",
+        alignItems: "center",
+        height: 40
+    },
+    headerTxt: {
         color: "white",
         fontSize: 32,
-        marginVertical: 10,
-        fontFamily:"RobotoSlab_700Bold",
         letterSpacing: 2,
+        fontFamily:"RobotoSlab_700Bold",
+        flex: 1,
+    },
+    headerImg: {
+        height: "80%",
+        aspectRatio: 1
     },
     scroll:{
         flexGrow: 0

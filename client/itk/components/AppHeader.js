@@ -53,6 +53,7 @@ const AppHeader = ({route,action}) => {
       const pfp = await getItemFromCache(PROFILE_PIC_KEY);
       setProfilePic(pfp);
     };
+    getProfilePic();
 
   }, [navigation]);
 

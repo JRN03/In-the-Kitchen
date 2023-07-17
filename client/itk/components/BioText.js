@@ -10,7 +10,7 @@ const BioText = (props) => {
     <View style={styles.container}>
       <Text style={styles.textBox}>{props.bioText}</Text>
       <TouchableOpacity
-        style={styles.edit}
+        style={[styles.edit, {display: props.isFriend ? "none" : "flex"}]}
         onPress={() =>
           navigation.navigate("EditProfile", {
             bio: props.bioText,
@@ -18,7 +18,7 @@ const BioText = (props) => {
           })
         }
       >
-        {!props.isFriend && <Text style={{color:"white", fontSize:20}}>Edit Profile</Text>}
+        <Text style={{color:"white", fontSize:20}}>Edit Profile</Text>
       </TouchableOpacity>
     </View>
   );

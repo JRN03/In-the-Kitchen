@@ -1,5 +1,6 @@
 import express from "express";
 import User from "../models/user.js";
+import FriendRequests from "../models/friendRequest.js";
 import verify from "../verify.js";
 import path from "path";
 import fs from "fs";
@@ -87,18 +88,87 @@ router.put("/bio", verify, async (req, res) => {
   return res.status(500).send({ message: "Internal Server Error" });
 });
 
-router.put("/friend", verify, async (req, res) => {
+router.put("/friend/request", verify, async (req, res) => {
   const id = req.id;
   const user = await User.findOne({ _id: id });
-  if (!user) return res.status(404).send({ message: "ID not Found" });
+  if (!user) return res.status(404).send({ message: "Access Denied: Failed to add friend" });
+
+  const isFriend = user.friends.some((existingFriend) => existingFriend.username === req.body.username);
+  if (isFriend) return res.status(400).send({ message: "This Person is Already your Friend" });
+  
+  if (user.username === req.body.username) return res.status(400).send({message:"You Can't Add Yourself as a Friend!"})
+  
   const friend = await User.findOne({ username: req.body.username });
   if (!friend) return res.status(404).send({ message: "User not Found" });
-  const success = await User.updateOne(
-    { _id: id },
-    { $push: { friends: req.body.username } }
-  );
-  if (success) return res.status(200).send({ message: "Friend Added" });
-  return res.status(500).send({ message: "Internal Server Error" });
+
+  const isPending = await FriendRequests.findOne({
+    sender: user.username, 
+    receiver: friend.username
+  }) || await FriendRequests.findOne({
+    receiver: user.username, 
+    sender: friend.username
+  }); 
+
+  if (isPending) return res.status(400).send({message:"A Friend Request for This User is Pending"})
+
+  const request = new FriendRequests({
+    receiver: friend.username,
+    sender: user.username
+  });
+
+  try{
+    await request.save();
+    await User.updateOne({_id:id},{$push: {friendRequests: request._id}});
+    await User.updateOne({_id:friend._id},{$push:{friendRequests: request._id}});
+    return res.status(201).send({message: "Friend Request Sent!"});
+  } catch(e) {
+    console.log(e);
+  } 
+
+  return res.status(500).send({ message: "Internal Server Error: Failed to add friend" });
+});
+
+router.get("/friends", verify, async (req, res) => {
+  const id = req.id;
+  const user = await User.findOne({ _id: id });
+  if (!user) return res.status(404).send({ message: "Access Denied: Failed to get friends" });
+  return res.status(200).send({friends: user.friends});
+});
+
+router.get("/friends/requests", verify, async (req, res) => {
+  const id = req.id;
+  const user = await User.findOne({ _id: id });
+  if (!user) return res.status(404).send({ message: "Access Denied: Failed to get friends" });
+  
+  // for id in user.friendRequests: add request.sender to requestsIn if request.receiver.username == user.username otherwise add request.receiver to requestsOut
+  const requestsIn = []
+  const requestsOut = []
+
+  for (let i = 0; i < user.friendRequests.length; i++){
+
+    const request = await FriendRequests.findOne({_id:user.friendRequests[i]._id});
+
+    if (!request) continue;
+    
+    const sender = await User.findOne({username:request.sender});
+    const receiver = await User.findOne({username:request.receiver});
+
+    if (!sender || !receiver){ 
+      await FriendRequests.deleteOne({_id:user.friendRequests[i]._id})
+      continue;
+    }
+
+    if (request.receiver === user.username){
+      const senderData = {fName:sender.fName ,lName:sender.lName,username:sender.username,image:sender.image};
+      requestsIn.push({...senderData,reqId: request._id});
+    }
+    else {
+      const receiverData = {fName:receiver.fName ,lName:receiver.lName,username:receiver.username,image:receiver.image};
+      requestsOut.push({...receiverData,reqId: request._id});
+    }
+    
+  }
+  return res.status(200).send({requestsIn:requestsIn,requestsOut:requestsOut})
 });
 
 export default router;

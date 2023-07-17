@@ -27,6 +27,9 @@ const courtsSchema = new mongoose.Schema({
     lon:{
         type:Number,
         required:true
+    },
+    images: {
+        type: [String]
     }
 
 });

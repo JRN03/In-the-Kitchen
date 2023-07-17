@@ -7,6 +7,8 @@ import cors from "cors";
 import auth from "./routes/auth.js";
 import courts from "./routes/courts.js";
 import user from "./routes/user.js";
+import image from "./routes/images.js";
+import friendRequest from "./routes/requests.js";
 
 const PORT = process.env.PORT || 8080;
 
@@ -25,7 +27,9 @@ app.get("/", (req, res) => {
 
 app.use("/auth", auth);
 app.use("/courts", courts);
-app.use("/user", user)
+app.use("/user", user);
+app.use("/images",image);
+app.use("/friendrequests",friendRequest);
 
 const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

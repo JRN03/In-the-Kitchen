@@ -123,7 +123,7 @@ export default function Courts({route,navigation}) {
   },[])
  
   const courtObjects = courtData.map(courtInfo => (
-    <ParkTab key={courtInfo.name} name={courtInfo.name}/>
+    <ParkTab key={courtInfo.placesID} name={courtInfo.name}/>
   ));
 
   return (
