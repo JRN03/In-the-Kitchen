@@ -93,7 +93,7 @@ router.put("/friend/request", verify, async (req, res) => {
   const user = await User.findOne({ _id: id });
   if (!user) return res.status(404).send({ message: "Access Denied: Failed to add friend" });
 
-  const isFriend = user.friends.some((existingFriend) => existingFriend.username === req.body.username);
+  const isFriend = user.friends.some((existingFriend) => existingFriend === req.body.username);
   if (isFriend) return res.status(400).send({ message: "This Person is Already your Friend" });
   
   if (user.username === req.body.username) return res.status(400).send({message:"You Can't Add Yourself as a Friend!"})
@@ -132,7 +132,12 @@ router.get("/friends", verify, async (req, res) => {
   const id = req.id;
   const user = await User.findOne({ _id: id });
   if (!user) return res.status(404).send({ message: "Access Denied: Failed to get friends" });
-  return res.status(200).send({friends: user.friends});
+  const friends = []
+  for (let i = 0; i < user.friends.length; i++){
+    const friend = await User.findOne({username: user.friends[i]});
+    friends.push({fName:friend.fName,lName:friend.lName,username:friend.username,bio:friend.bio,image:friend.image})
+  }
+  return res.status(200).send({friends: friends});
 });
 
 router.get("/friends/requests", verify, async (req, res) => {

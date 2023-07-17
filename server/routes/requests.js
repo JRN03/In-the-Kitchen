@@ -18,8 +18,8 @@ router.put("/accept/:id", async (req,res) => {
 
     if (!receiverUser || !senderUser) res.status(400).send({message:"Unable to complete request"});
 
-    receiverUser.friends = [...receiverUser.friends, {fName: senderUser.fName, lName: senderUser.lName, username: senderUsername, image: senderUser.image, bio: senderUser.bio}]
-    senderUser.friends = [...senderUser.friends, {fName: receiverUser.fName, lName: receiverUser.lName, username: receiverUsername, image: receiverUser.image, bio: receiverUser.bio}]
+    receiverUser.friends = [...receiverUser.friends, senderUsername]
+    senderUser.friends = [...senderUser.friends, receiverUsername]
 
     await receiverUser.save();
     await senderUser.save();
