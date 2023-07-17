@@ -41,7 +41,7 @@ const MyCarousel = (props) => {
       data={DATA}
       renderItem={renderItem}
       sliderWidth={width}
-      itemWidth={210}
+      itemWidth={220}
       activeSlideAlignment="center"
       layout={"default"}
       contentContainerCustomStyle={styles.container}
@@ -55,11 +55,10 @@ const styles = StyleSheet.create({
   image: { height: "100%", aspectRatio: 1, borderRadius: 20 },
   container: {
     height: 200,
-    // width: "100%",
     borderColor: "blue",
     borderWidth: 2,
     alignContent: "center",
-    // justifyContent: "center",
+    justifyContent: "center",
   },
 });
 export default MyCarousel;
