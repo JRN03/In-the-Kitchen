@@ -65,7 +65,7 @@ export default function Courts({route,navigation}) {
   // console.log(process.env.MAPS_API);
   useEffect(() => {
     const getCourts = async () => {
-      const res = await fetch('http://localhost:8080/courts');
+      const res = await fetch('http://localhost:8080/courts/all');
       const data = await res.json();
       setCourtData(data);
       //once all the placesIds are found, we make markers and display them

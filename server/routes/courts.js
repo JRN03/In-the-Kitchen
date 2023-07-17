@@ -9,9 +9,15 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+router.get("/all",async(req,res) => {
+  const courts = await Court.find();
+  if (!courts) return res.status(500).send({message:"Failed to retrieve courts"});
+  return res.status(200).send(courts);
+});
+
 router.get("/", async (req,res) => {
 
-    const court = await Court.find({placesID:1});
+    const court = await Court.findOne({placesID:req.pid});
     if(!court) res.status(404).send({message:"Court not Found"});
 
     const imageData = []

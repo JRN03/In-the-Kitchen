@@ -22,7 +22,7 @@ import {
 import light from "../assets/themes/light";
 import SelectDropdown from "react-native-select-dropdown";
 
-export default function Courts() {
+export default function Courts({route}) {
   
   const [lat, setLat] = useState();
   const [lon, setLon] = useState();
@@ -210,7 +210,7 @@ export default function Courts() {
             </TouchableOpacity>}
         </View>
         <TouchableOpacity onPress={submit} style={styles.imageSelect}><Text style={styles.imageText}>Add Court</Text></TouchableOpacity>
-        <Navbar/>
+        <Navbar route ={route}/>
       </View>
     </SafeAreaView>
   );
