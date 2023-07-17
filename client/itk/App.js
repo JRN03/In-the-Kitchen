@@ -10,6 +10,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ProfilePage from "./pages/ProfilePage";
 import EditProfile from "./pages/EditProfile";
 import AddCourt from "./pages/AddCourt";
+import ViewFriend from "./pages/ViewFriend";
+import FriendRequests from "./pages/FriendRequests";
 
 const Stack = createNativeStackNavigator();
 
@@ -62,6 +64,16 @@ export default function App() {
           options={{ headerShown: false }}
           name="AddCourt"
           component={AddCourt}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="ViewFriend"
+          component={ViewFriend}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="FriendRequests"
+          component={FriendRequests}
         />
       </Stack.Navigator>
     </NavigationContainer>

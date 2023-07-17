@@ -13,6 +13,7 @@ import Navbar from "../components/Navbar";
 import { PageStyles } from "../assets/Styles";
 import { BIO_KEY, PROFILE_PIC_KEY, FNAME, LNAME,UNAME } from "../AsyncKeys";
 import { getItemFromCache } from "../ReadCache";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 // need to use state to manage if the page is ready
 // use conditional isReady state while we fetch data
 
@@ -22,6 +23,16 @@ const ProfilePage = ({navigation,route}) => {
   const [profilePic, setProfilePic] = useState();
   const [name,setName] = useState("");
   const [username,setUsername] = useState("");
+
+  const logout = async () => {
+    try{
+      await AsyncStorage.clear();
+      navigation.navigate("Login");
+    } catch(e) {
+      console.log(e);
+    }
+  }
+
   // make sure that page is rerendered
   useEffect(() => {
 
@@ -46,7 +57,7 @@ const ProfilePage = ({navigation,route}) => {
 
   return (
     <SafeAreaView style={PageStyles.main}>
-      <AppHeader />
+      <AppHeader action={logout}/>
       <View style={PageStyles.contentWrap}>
         <View style={styles.container}>
           <Image

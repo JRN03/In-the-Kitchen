@@ -82,7 +82,7 @@ const LoginPage = ({}) => {
 						if (data.message === "login successful") {
 								saveUserData(data);
 						} else if (data.message === "Username Not Found") {
-								Alert.alert("Incorrect Username!");
+								Alert.alert("Username Not Found");
 						} else if (data.message === "Invalid Password") {
 								Alert.alert("Incorrect Password!");
 						}

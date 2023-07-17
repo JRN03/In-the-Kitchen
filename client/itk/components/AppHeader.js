@@ -24,7 +24,8 @@ import { useNavigation } from "@react-navigation/native";
 import { PROFILE_PIC_KEY } from "../AsyncKeys";
 import {getItemFromCache} from "../ReadCache";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const AppHeader = ({route}) => {
+
+const AppHeader = ({route,action}) => {
 
   const navigation = useNavigation();
 
@@ -41,15 +42,6 @@ const AppHeader = ({route}) => {
   });
 
   const [profilePic, setProfilePic] = useState();
-
-  const logout = async () => {
-    try{
-      await AsyncStorage.clear();
-      navigation.navigate("Login");
-    } catch(e) {
-      console.log(e);
-    }
-  }
   // make sure that page is rerendered and cache fetched again
   useEffect(() => {
 
@@ -61,6 +53,7 @@ const AppHeader = ({route}) => {
       const pfp = await getItemFromCache(PROFILE_PIC_KEY);
       setProfilePic(pfp);
     };
+    getProfilePic();
 
   }, [navigation]);
 
@@ -80,7 +73,7 @@ const AppHeader = ({route}) => {
       <View style={styles.titleWrap}>
         <Text style={styles.title}>In the Kitchen</Text>
       </View> 
-      <TouchableOpacity style={styles.imgWrap} onPress={route ? ()=>{} : logout}>
+      <TouchableOpacity style={styles.imgWrap} onPress={action ? action : () => {}}>
         <Image style={[styles.img]} source={route ? require("../assets/add2.png") : require("../assets/logout.png")} />
       </TouchableOpacity>
     </SafeAreaView>

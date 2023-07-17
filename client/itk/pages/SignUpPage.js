@@ -17,7 +17,7 @@ const SignUpPage = () => {
 		  await AsyncStorage.setItem(BIO_KEY, data._doc.bio);
 		  await AsyncStorage.setItem(
 			PROFILE_PIC_KEY,
-		   data.imageData
+			"data:image/jpeg;base64,"+data.imageData
 		  );
 		  await AsyncStorage.setItem(TOKEN, data.token);
 		  await AsyncStorage.setItem(FNAME, data._doc.fName);
@@ -69,7 +69,7 @@ const SignUpPage = () => {
 			cacheData(data);
 			navigation.navigate('Home');
 		} else {
-			Alert.alert('Sign Up Failed!');
+			Alert.alert('Username is Taken!');
 		}
 	})
 	.catch(error => {
