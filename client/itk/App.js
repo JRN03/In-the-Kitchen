@@ -10,7 +10,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ProfilePage from "./pages/ProfilePage";
 import EditProfile from "./pages/EditProfile";
-import AddCourt from "./pages/AddCourt";
+import AddCourt from "./pages/UploadCourt";
 
 const Stack = createNativeStackNavigator();
 
