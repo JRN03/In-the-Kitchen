@@ -1,6 +1,7 @@
 import * as React from "react";
 import { View, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { useNavigation } from '@react-navigation/native';
+import light from "../assets/themes/light";
 
 const Navbar = ({route}) => {
     const navigation = useNavigation();
@@ -33,6 +34,11 @@ const styles = StyleSheet.create({
         bottom: 0,
     },
     button:{
+        borderRadius: 10,
+        padding: 10
+    },
+    buttonSelected:{
+        backgroundColor: light.primary,
         borderRadius: 10,
         padding: 10
     },
