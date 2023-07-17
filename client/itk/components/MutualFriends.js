@@ -26,9 +26,7 @@ const MutualFriends = () => {
 
   return (
     <View style={styles.container}>
-      <View>
-        <Text style={styles.text}> {numFriends} Friends:</Text>
-      </View>
+      <Text style={styles.text}> {numFriends} Friends:</Text>
       <View>
         <FlatList
           horizontal={true}
@@ -37,6 +35,7 @@ const MutualFriends = () => {
           contentContainerStyle={{
             paddingHorizontal: SPACING,
           }}
+          style={styles.list}
           keyExtractor={(item) => item.id}
           renderItem={({ item, index }) => (
             <TouchableOpacity
@@ -63,14 +62,20 @@ const MutualFriends = () => {
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    marginTop: 20,
-    maxHeight: 100,
+    marginVertical: 20,
+    borderColor:"black",
+    borderWidth:1,
   },
   text: {
     fontSize: 20,
     color: "white",
     marginBottom: 10,
   },
+  list:{
+    borderColor:"red",
+    borderWidth:1,
+    height:100
+  }
 });
 
 export default MutualFriends;

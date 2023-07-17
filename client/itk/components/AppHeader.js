@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -21,17 +21,14 @@ import {
 } from "@expo-google-fonts/roboto-slab";
 import light from "../assets/themes/light";
 import { useNavigation } from "@react-navigation/native";
-/*
-    TODO:
-        decide font
-        retrieve profile pic from database or store/cache locally
-        retrieve username from database or store/cache locally
-        either copy all of this code and add a button to a new component
-            or dynamically set weather the button is active or not
-*/
+import { PROFILE_PIC_KEY } from "../AsyncKeys";
+import {getItemFromCache} from "../ReadCache";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const AppHeader = () => {
+const AppHeader = ({route,action}) => {
+
   const navigation = useNavigation();
+
   let [fontsLoaded] = useFonts({
     RobotoSlab_100Thin,
     RobotoSlab_200ExtraLight,
@@ -44,6 +41,22 @@ const AppHeader = () => {
     RobotoSlab_900Black,
   });
 
+  const [profilePic, setProfilePic] = useState();
+  // make sure that page is rerendered and cache fetched again
+  useEffect(() => {
+
+    navigation.addListener("focus", () => {
+      getProfilePic();
+    });
+
+    const getProfilePic = async () => {
+      const pfp = await getItemFromCache(PROFILE_PIC_KEY);
+      setProfilePic(pfp);
+    };
+    getProfilePic();
+
+  }, [navigation]);
+
   if (!fontsLoaded) {
     return null;
   }
@@ -55,17 +68,13 @@ const AppHeader = () => {
         style={styles.imgWrap}
         onPress={() => navigation.navigate("Profile")}
       >
-        <Image
-          style={[styles.img, styles.profile]}
-          source={require("../assets/TempProfilePic.jpeg")}
-        />
+        <Image style={[styles.img, styles.profile]} source={profilePic ? {uri:profilePic} : require("../assets/TempProfilePic.jpeg")} />
       </TouchableOpacity>
       <View style={styles.titleWrap}>
         <Text style={styles.title}>In the Kitchen</Text>
-      </View>
-      <TouchableOpacity style={styles.imgWrap}
-      onPress={() => navigation.navigate("AddCourt")}>
-        <Image style={[styles.img]} source={require("../assets/add2.png")} />
+      </View> 
+      <TouchableOpacity style={styles.imgWrap} onPress={action ? action : () => {}}>
+        <Image style={[styles.img]} source={route ? require("../assets/add2.png") : require("../assets/logout.png")} />
       </TouchableOpacity>
     </SafeAreaView>
   );
