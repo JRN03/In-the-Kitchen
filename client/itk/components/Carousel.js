@@ -55,8 +55,8 @@ const styles = StyleSheet.create({
   image: { height: "100%", aspectRatio: 1, borderRadius: 20 },
   container: {
     height: 200,
-    borderColor: "blue",
-    borderWidth: 2,
+    // borderColor: "blue",
+    // borderWidth: 2,
     alignContent: "center",
     justifyContent: "center",
   },
