@@ -16,7 +16,8 @@ router.post('/', async (req,res) => {
     const times = req.body.times ? req.body.times:"N/A";
     const placesID = req.body.placesID;
     const lat = req.body.lat;
-    const lon = req.body.lon; 
+    const lon = req.body.lon;
+    const images = req.body.images; 
 
 
     const alreadyUploaded = await Court.findOne({placesID: placesID});
@@ -28,14 +29,15 @@ router.post('/', async (req,res) => {
         times: times,
         placesID: placesID,
         lat:lat,
-        lon:lon
+        lon:lon,
+        // images:images
     });
 
     try {
         court.save();
-        return res.status(201).send("Court Uploaded");
+        return res.status(201).send({message: "Court Uploaded"});
     } catch (err) {
-        return res.status(500).send(err)
+        return res.status(500).send({message: err})
     }
 
 });

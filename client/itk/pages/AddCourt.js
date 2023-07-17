@@ -21,19 +21,19 @@ const AddCourt = ({ route }) => {
   const [image1, setImage1] = useState(null);
   const [image2, setImage2] = useState(null);
   const [image3, setImage3] = useState(null);
-
   const [images, setImages] = useState([])
-  
 
 	const Days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 	const nums = ["6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM"]
   const [meetTimesArr, setMeetTimesArr] = useState([{ day: "", start: "", end: "" }]);
 
   const addMeetTime = () => {
-	const lastMeetTime = meetTimesArr[meetTimesArr.length - 1];
-	if (lastMeetTime.day === "" || lastMeetTime.start === "" || lastMeetTime.end === "") {
-	  Alert.alert("Please fill in the previous meeting time before adding a new one.");
-	  return;
+	if (meetTimesArr.length > 0) {
+		const lastMeetTime = meetTimesArr[meetTimesArr.length - 1];
+		if (lastMeetTime.day === "" || lastMeetTime.start === "" || lastMeetTime.end === "") {
+			Alert.alert("Please fill in the previous meeting time before adding a new one.");
+		return;
+		}
 	}
   
 	if (meetTimesArr.length < 5) {
@@ -47,33 +47,34 @@ const AddCourt = ({ route }) => {
     setMeetTimesArr(updatedMeetTimes);
   };
 
-	const addImage = async (imageNumber) => {
-		let _image = await ImagePicker.launchImageLibraryAsync({
-			mediaTypes: ImagePicker.MediaTypeOptions.Images,
-			allowsEditing: true,
-			aspect: [4, 3],
-			quality: 1,
-		});
-		console.log(JSON.stringify(_image));
-		if (!_image.canceled) {
-			switch (imageNumber) {
-				case 1:
-					setImage1(_image);
-          setImages([...images,_image])
-					break;
-				case 2:
-					setImage2(_image);
-          setImages([...images,_image])
-					break;
-				case 3:
-					setImage3(_image);
-          setImages([...images,_image])
-					break;
-				default:
-					break;
-			}
-		}
-	};
+  const addImage = async (imageNumber) => {
+    let _image = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+        base64: true,
+    });
+    console.log(JSON.stringify(_image));
+    if (!_image.canceled) {
+        switch (imageNumber) {
+            case 1:
+                setImage1("data:image/jpeg;base64,"+image1.assets[0].base64);
+                setImages([...images, image1])
+                break;
+            case 2:
+                setImage2("data:image/jpeg;base64,"+image2.assets[0].base64);
+                setImages([...images,image2])
+                break;
+            case 3:
+                setImage3("data:image/jpeg;base64,"+image3.assets[0].base64);
+                setImages([...images,image3])
+                break;
+            default:
+                break;
+        }
+    }
+};
 
   async function getInfo(data){
     axios({
@@ -98,39 +99,42 @@ const AddCourt = ({ route }) => {
 	// alert is day/start/end empty
 	if (isAnyEmpty) {
 		Alert.alert("Please fill in all meeting times.");
-		return;
+		return false;
 	}
+	return true;
 };
+	/* 
+	Submit form doesn't really do anything after logging the information.
+	Bug that crashes app when deleting 1st meeting entry & adding a new one.
+	*/
 	const submitForm = () => {
 		// console.log(PID, Location, Lat, Lon, Name, Times);
+
+		console.log("\nLocation:\n",Location, "\nName:\n", Name, "\nmeetTimesArr:\n", meetTimesArr, "\nPID:\n", PID, "\nLat:\n", Lat, "\nLon:\n", Lon);
+
+
 		if(!validateFields()){
+			console.log("not valid");
 			return;
 		}
+
 		fetch("http://localhost:8080/courts", {
 		method: "POST",
 		body: JSON.stringify({
 			location: Location,
 			name: Name,
+			// ensure times : day: start-end ARRAY [, ,]
 			times: meetTimesArr,
 			placesID: PID,
 			lat: Lat,
 			lon: Lon,
-      images: ["data:image/jpeg;base64,"+image1.assets[0].base64,
-      "data:image/jpeg;base64,"+image2,assets[0].base64,
-      "data:image/jpeg;base64,"+image3,assets[0].base64]
+      images: images
 		}),
 		headers: { "Content-Type": "application/json" },
 		})
 		.then((res) => res.json())
-		.then((data) => {
-			console.log(data);
-			if (data.user) {
-			navigation.navigate("Courts");
-			Alert.alert("Court Added!");
-			} else {
-			Alert.alert("Error");
-			}
-		})
+    .then(data => console.log(data))
+
 		.catch((error) => {
 			console.error("Error:", error);
 		});
@@ -174,6 +178,7 @@ const AddCourt = ({ route }) => {
           buttonTextStyle={times.dropdownButtonText}
           dropdownStyle={times.dropdown}
           rowStyle={times.dropdownRow}
+		  defaultButtonText="Day"
         />
         <SelectDropdown
           data={nums}
@@ -185,6 +190,7 @@ const AddCourt = ({ route }) => {
           buttonTextStyle={times.dropdownButtonText}
           dropdownStyle={times.dropdown}
           rowStyle={times.dropdownRow}
+		  defaultButtonText="Start"
         />
         <SelectDropdown
           data={nums}
@@ -196,6 +202,7 @@ const AddCourt = ({ route }) => {
           buttonTextStyle={times.dropdownButtonText}
           dropdownStyle={times.dropdown}
           rowStyle={times.dropdownRow}
+		  defaultButtonText="End"
         />
         <TouchableOpacity onPress={() => removeMeetTime(index)}>
           <Text style={times.removeBtn}>Remove</Text>
