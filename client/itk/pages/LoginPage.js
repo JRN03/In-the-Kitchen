@@ -1,44 +1,55 @@
-import React, {useEffect} from 'react';
-import { View, Text, StyleSheet, SafeAreaView, Image, TextInput, TouchableOpacity, Alert} from "react-native";
-import { useNavigation } from '@react-navigation/native';
+import React, { useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  Image,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { PROFILE_PIC_KEY, BIO_KEY, TOKEN, FNAME, LNAME, UNAME } from "../AsyncKeys";
-import { getItemFromCache } from '../ReadCache';
+import {
+  PROFILE_PIC_KEY,
+  BIO_KEY,
+  TOKEN,
+  FNAME,
+  LNAME,
+  UNAME,
+} from "../AsyncKeys";
+import { getItemFromCache } from "../ReadCache";
 const LoginPage = ({}) => {
-
   const navigation = useNavigation();
   const [usernme, onChangeUsrn] = React.useState(null);
   const [userpswd, onChangePswd] = React.useState(null);
 
   useEffect(() => {
-
     const checkCache = async () => {
-      try{
-  
+      try {
         const token = await getItemFromCache(TOKEN);
         await fetch("http://localhost:8080/user", {
           method: "GET",
           headers: { "Content-Type": "application/json", token: token },
-        }).then(res => {
-          if (res.status == 404 || res.status == 200) navigation.navigate("Home");
+        }).then((res) => {
+          if (res.status == 404 || res.status == 200)
+            navigation.navigate("Home");
         });
-  
-      } catch (e){
+      } catch (e) {
         console.log(e);
       }
-      
-    }
+    };
 
     checkCache();
   }, [navigation]);
-
 
   const saveUserData = async (data) => {
     try {
       await AsyncStorage.setItem(BIO_KEY, data._doc.bio);
       await AsyncStorage.setItem(
         PROFILE_PIC_KEY,
-        "data:image/jpeg;base64,"+data.imageData
+        "data:image/jpeg;base64," + data.imageData
       );
       await AsyncStorage.setItem(TOKEN, data.token);
       await AsyncStorage.setItem(FNAME, data._doc.fName);
@@ -53,41 +64,40 @@ const LoginPage = ({}) => {
     }
   };
 
-
-  const validateFields = ()=>{
-	if(usernme == null || usernme.length == 0){
-		Alert.alert("Username cannot be empty.");
-		return false;
-	}
-	if(userpswd == null || userpswd.length == 0){
-		Alert.alert("Password cannot be empty.");
-		return false;
-	}
-	return true;
-	}
-	const submitForm = () => {
-		if(!validateFields()){
-			return;
-		}
-		fetch('http://localhost:8080/auth/login', {
-				method: 'POST',
-				body: JSON.stringify({
-						username: usernme,
-						password: userpswd
-				}),
-				headers: { 'Content-Type': 'application/json' }
-		})
-				.then(res => res.json())
-				.then(data => {
-						if (data.message === "login successful") {
-								saveUserData(data);
-						} else if (data.message === "Username Not Found") {
-								Alert.alert("Username Not Found");
-						} else if (data.message === "Invalid Password") {
-								Alert.alert("Incorrect Password!");
-						}
-				});
-	};
+  const validateFields = () => {
+    if (usernme == null || usernme.length == 0) {
+      Alert.alert("Username cannot be empty.");
+      return false;
+    }
+    if (userpswd == null || userpswd.length == 0) {
+      Alert.alert("Password cannot be empty.");
+      return false;
+    }
+    return true;
+  };
+  const submitForm = () => {
+    if (!validateFields()) {
+      return;
+    }
+    fetch("http://localhost:8080/auth/login", {
+      method: "POST",
+      body: JSON.stringify({
+        username: usernme,
+        password: userpswd,
+      }),
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.message === "login successful") {
+          saveUserData(data);
+        } else if (data.message === "Username Not Found") {
+          Alert.alert("Username Not Found");
+        } else if (data.message === "Invalid Password") {
+          Alert.alert("Incorrect Password!");
+        }
+      });
+  };
 
   return (
     <SafeAreaView style={{ flex: 16, backgroundColor: "#176089" }}>
@@ -134,7 +144,7 @@ const LoginPage = ({}) => {
         placeholder="Password"
         placeholderTextColor={"maroon"}
         autoCapitalize="none"
-        secureTextEntry={false}
+        secureTextEntry={true}
         onChangeText={onChangePswd}
         value={userpswd}
       ></TextInput>
@@ -163,9 +173,8 @@ const LoginPage = ({}) => {
           Sign Up!
         </Text>
       </TouchableOpacity>
-
-		</SafeAreaView>
-	);
+    </SafeAreaView>
+  );
 };
 
 const buttonStyle = StyleSheet.create({
