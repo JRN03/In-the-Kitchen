@@ -1,13 +1,5 @@
 import * as React from "react";
-import {
-  Pressable,
-  Image,
-  Text,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-} from "react-native";
-import { PageStyles } from "../assets/Styles";
+import { Image, Text, StyleSheet, TouchableOpacity } from "react-native";
 import light from "../assets/themes/light";
 import { ListItem, Avatar } from "@rneui/themed";
 
@@ -40,6 +32,7 @@ export default ChatComponent = ({ route }) => {
     RobotoSlab_800ExtraBold,
     RobotoSlab_900Black,
   });
+
   return (
     <TouchableOpacity onPress={toMessenger} style={styles.chatContainer}>
       <Image

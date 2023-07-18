@@ -16,7 +16,6 @@ import FriendRequests from "./pages/FriendRequests";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-
   return (
     <NavigationContainer style={styles.container}>
       <Stack.Navigator>
@@ -79,7 +78,6 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {},
