@@ -9,7 +9,6 @@ export default PickImage = (props) => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
-      // quality: 1,
       base64: true,
       // maxWidth: 10,
       // maxHeight: 10,

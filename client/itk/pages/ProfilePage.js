@@ -1,41 +1,40 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  SafeAreaView,
-  Text,
-  Image,
-  StyleSheet,
-} from "react-native";
+import { View, SafeAreaView, Text, Image, StyleSheet } from "react-native";
 import AppHeader from "../components/AppHeader";
 import BioText from "../components/BioText";
 import MutualFriends from "../components/MutualFriends";
 import Navbar from "../components/Navbar";
 import { PageStyles } from "../assets/Styles";
-import { BIO_KEY, PROFILE_PIC_KEY, FNAME, LNAME,UNAME } from "../AsyncKeys";
+import { BIO_KEY, PROFILE_PIC_KEY, FNAME, LNAME, UNAME } from "../AsyncKeys";
 import { getItemFromCache } from "../ReadCache";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 // need to use state to manage if the page is ready
 // use conditional isReady state while we fetch data
 
-const ProfilePage = ({navigation,route}) => {
-  
+const ProfilePage = ({ navigation, route }) => {
   const [bio, setBio] = useState("N/A");
   const [profilePic, setProfilePic] = useState();
-  const [name,setName] = useState("");
-  const [username,setUsername] = useState("");
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+
+  const [info, setInfo] = useState({
+    pfp: null,
+    bio: "N/A",
+    username: "N/A",
+    name: "N/A",
+  });
 
   const logout = async () => {
-    try{
+    try {
       await AsyncStorage.clear();
       navigation.navigate("Login");
-    } catch(e) {
+    } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   // make sure that page is rerendered
   useEffect(() => {
-
     navigation.addListener("focus", () => {
       getCache();
     });
@@ -47,29 +46,51 @@ const ProfilePage = ({navigation,route}) => {
       const lname = await getItemFromCache(LNAME);
       const uname = await getItemFromCache(UNAME);
 
-      setProfilePic(pfp);
-      setBio(desc);
-      setName(fname+" "+lname);
-      setUsername(uname);
-    };
+      // AsyncStorage.multiGet([
+      //   PROFILE_PIC_KEY,
+      //   BIO_KEY,
+      //   FNAME,
+      //   LNAME,
+      //   UNAME,
+      // ]).then((response) => {
+      //   console.log(response[1][1]);
+      // });
 
-  },[route.name]);
+      // setProfilePic(pfp);
+      // setBio(desc);
+      // setName(fname + " " + lname);
+      // setUsername(uname);
+
+      setInfo({
+        pfp: pfp,
+        bio: desc,
+        username: uname,
+        name: fname + " " + lname,
+      });
+    };
+  }, [route.name]);
+
+  console.log("refreshed");
 
   return (
     <SafeAreaView style={PageStyles.main}>
-      <AppHeader action={logout}/>
+      <AppHeader action={logout} />
       <View style={PageStyles.contentWrap}>
         <View style={styles.container}>
           <Image
-            source={profilePic ? { uri: profilePic } : require("../assets/TempProfilePic.jpeg")}
+            source={
+              info.pfp
+                ? { uri: info.pfp }
+                : require("../assets/TempProfilePic.jpeg")
+            }
             style={{ width: 150, height: 150, borderRadius: 150 / 2 }}
           />
-          <Text style={styles.name}>{name}</Text>
-          <Text style={styles.tag}>@{username}</Text>
+          <Text style={styles.name}>{info.name}</Text>
+          <Text style={styles.tag}>@{info.username}</Text>
         </View>
-        <BioText bioText={bio} profilePic={profilePic} />
+        <BioText bioText={info.bio} profilePic={info.pfp} />
         {/* <MutualFriends/> */}
-        <Navbar route={route}/>
+        <Navbar route={route} />
       </View>
     </SafeAreaView>
   );
@@ -80,15 +101,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 30,
   },
-  name:{
+  name: {
     color: "white",
     fontSize: 30,
     marginTop: 10,
   },
   tag: {
-    color:"#cccccc",
-    fontSize: 20
-  }
+    color: "#cccccc",
+    fontSize: 20,
+  },
 });
 
 export default ProfilePage;
