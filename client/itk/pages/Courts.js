@@ -46,27 +46,62 @@ export default function Courts({navigation,route}) {
     
   }
   async function getCourtsFromSearch(lat,lon){
-    console.log(lat,lon)
+    console.log("Hello?",lat,lon)
     // console.log("QUERY", `https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat}%2C${lon}&radius=1500&query=pickleball%court&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`);
-    var secondRes = await fetch(`https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat}%2C${lon}&radius=1500&query=pickleball+courts&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`);
-    var courtsNearby = await secondRes.json();
+    // var secondRes = await fetch(`https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat}%2C${lon}&radius=1500&query=pickleball+courts&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`);
+    // var courtsNearby = await secondRes.json();
+
       // console.log("COURT length", courtsNearby.results[0]);
-    mapMarkers(courtsNearby.results)
+      const closeCourts = []
+      for(const key in courtObject.current){
+        
+        console.log("current",key)
+        var euclid = distance(courtObject.current[key].lat,lat,courtObject.current[key].lon,lon)
+        console.log(`RESULT for ${courtObject.current[key].name} DISTANCE = ${euclid}`);
+
+        if(euclid< 20){
+          console.log(courtObject.current[key]);
+          closeCourts.push(courtObject.current[key])
+        }
+      }
+      mapMarkers(closeCourts)
       
 
   }
+  function distance(lat1,lat2, lon1, lon2){
+      // function from https://www.geeksforgeeks.org/program-distance-two-points-earth/
+    lon1 =  lon1 * Math.PI / 180;
+    lon2 = lon2 * Math.PI / 180;
+    lat1 = lat1 * Math.PI / 180;
+    lat2 = lat2 * Math.PI / 180;
+
+    // Haversine formula
+    let dlon = lon2 - lon1;
+    let dlat = lat2 - lat1;
+    let a = Math.pow(Math.sin(dlat / 2), 2)
+    + Math.cos(lat1) * Math.cos(lat2)
+    * Math.pow(Math.sin(dlon / 2),2);
+
+    let c = 2 * Math.asin(Math.sqrt(a));
+
+    // Radius of earth in kilometers. Use 3956
+    // for miles
+    let r = 6371;
+
+    // calculate the result
+    return(c * r);
+}
+
   function mapMarkers(results){
     var currentCourtObject = courtObject.current
 
     setCourtTabs(results.map((item,index)=>{
-      // console.log(currentCourtObject)
+      console.log(currentCourtObject)
 
-      if(currentCourtObject.hasOwnProperty(item.place_id)){
         // console.log(curre)
         return(
-          <ParkTab key={currentCourtObject[item.place_id].name} name={currentCourtObject[item.place_id].name} onPress= { ()=>{redirectToPark(currentCourtObject[item.place_id])}}/>
+          <ParkTab key={item.name} name={item.name} onPress= { ()=>{redirectToPark(item)}}/>
          )
-      }
     }))
     // console.log(courtObject);
     //at this point we just need to make the posts and all of the courts encountered by users will auto populate in the DB
