@@ -9,14 +9,13 @@ import {
 import React, { useState } from "react";
 import light from "../assets/themes/light";
 import socket from "../utils/socket";
-// import { styles } from ".rr./utils/styles";
 
-const NewChat = ({ setVisible }) => {
+const NewChat = ({ setVisible, user_message }) => {
   const closeModal = () => setVisible(false);
   const [groupName, setGroupName] = useState("");
 
   const handleCreateRoom = () => {
-    socket.emit("createRoom", groupName);
+    user_message(groupName);
     closeModal();
   };
   return (

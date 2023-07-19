@@ -41,14 +41,17 @@ export default Messages = ({ route }) => {
   const [token, setToken] = useState("");
   const [friendData, setFriendData] = useState([]);
   const [uname, setUName] = useState("");
+  const [rooms, setRooms] = useState([]);
 
-  /*
-        TODO:
-            get back user input from NewChat.js
-            use sock.emit(join_room) to join room
-                room should be
-
-  */
+  useLayoutEffect(() => {
+    function fetchGroups() {
+      fetch("http://localhost:4000/api")
+        .then((res) => res.json())
+        .then((data) => setRooms(data))
+        .catch((err) => console.error(err));
+    }
+    fetchGroups();
+  }, []);
 
   useEffect(() => {
     const getToken = async () => {
@@ -73,26 +76,6 @@ export default Messages = ({ route }) => {
     };
     getToken();
     getFriends();
-    // console.log(friendData);
-
-    // let friendUserName = friendData.map((a) => a.username);
-
-    // console.log(friendUserName);
-
-    // console.log("refreshed");
-    // const uname = "temp";
-    // const room = "temp_room";
-    // socket.emit("join_room", { uname, room });
-
-    // socket.on("receive_message", (data) => {
-    //   console.log(data);
-    // });
-    // socket.on("chatroom_users", (data) => {
-    //   console.log(data);
-    // });
-
-    // // Remove event listener on component unmount
-    // return () => socket.off("receive_message");
   }, [socket]);
 
   const newMessage = () => {
@@ -101,9 +84,24 @@ export default Messages = ({ route }) => {
     setVisible(true);
   };
 
+  const createMessage = (value) => {
+    // console.log(value);
+    let room = uname + value;
+    socket.emit("createRoom", { uname, room });
+    socket.on("roomsList", (rooms) => {
+      setRooms(rooms);
+    });
+  };
+
+  console.log(rooms);
+
   return (
     <View>
-      {visible ? <NewChat setVisible={setVisible}></NewChat> : ""}
+      {visible ? (
+        <NewChat setVisible={setVisible} user_message={createMessage}></NewChat>
+      ) : (
+        ""
+      )}
       <SafeAreaView style={PageStyles.main}>
         <AppHeader route={route} action={newMessage} />
         <View style={PageStyles.contentWrap}>

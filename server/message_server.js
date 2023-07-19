@@ -9,6 +9,7 @@ const CHAT_BOT = "ChatBot";
 
 let chatRoom = "";
 let allUsers = [];
+let chatRooms = [];
 
 app.use(cors());
 const server = http.createServer(app);
@@ -20,38 +21,47 @@ const io = new Server(server, {
   },
 });
 
-io.on("connection", (socket) => {
+io.on("connection", async (socket) => {
   console.log(`User connected ${socket.id}`);
-  socket.on("join_room", (data) => {
+  socket.on("createRoom", (data) => {
     console.log(data);
-    const { uname, room } = data; // Data sent from client when join_room event emitted
-    console.log("room =", room);
-    socket.join(room); // Join the user to a socket room
-
-    let __createdtime__ = Date.now(); // Current timestamp
-
-    // Send message to all users currently in the room, apart from the user that just joined
-    // socket.emit("receive_message", {
-    socket.to(room).emit("receive_message", {
-      message: `${uname} has joined the chat room`,
-      username: CHAT_BOT,
-      __createdtime__,
-    });
-
-    chatRoom = room;
-    allUsers.push({ id: socket.id, uname, room });
-    const chatRoomUsers = allUsers.filter((user) => user.room === room);
-    socket.to(room).emit("chatroom_users", chatRoomUsers);
-    socket.emit("chatroom_users", chatRoomUsers);
+    const { uname, room } = data;
+    console.log(uname + " " + room);
+    socket.join(room);
+    chatRooms.unshift({ id: uname, room, messages: [] });
+    socket.emit("roomsList", chatRooms);
   });
+  // socket.on("join_room", (data) => {
+  //   console.log(data);
+  //   const { uname, room } = data; // Data sent from client when join_room event emitted
+  //   console.log("room =", room);
+  //   socket.join(room);
+  //   let __createdtime__ = Date.now(); // Current timestamp
+  //   socket.to(room).emit("receive_message", {
+  //     message: `${uname} has joined the chat room`,
+  //     username: CHAT_BOT,
+  //     __createdtime__,
+  //   });
+  //   chatRoom = room;
+  //   allUsers.push({ id: socket.id, uname, room });
+  //   const chatRoomUsers = allUsers.filter((user) => user.room === room);
+  //   socket.to(room).emit("chatroom_users", chatRoomUsers);
+  //   console.log("all users: ", allUsers);
+  // });
+  // socket.on("findRoom", (id) => {
+  //   let result = chatRooms.filter((room) => room.id == id);
+  //   // console.log(chatRooms);
+  //   socket.emit("foundRoom", result[0].messages);
+  //   // console.log("Messages Form", result[0].messages);
+  // });
   socket.on("disconnect", () => {
     socket.disconnect();
     console.log("user disconnected");
   });
 });
 
-app.get("/", (req, res) => {
-  res.send("Hello worldddd");
+app.get("/api", (req, res) => {
+  res.json(chatRooms);
 });
 
 server.listen(PORT, () => `server is running on port ${PORT}`);
