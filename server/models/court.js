@@ -11,7 +11,7 @@ const courtsSchema = new mongoose.Schema({
     },
     rating: [Number],
     times: {    // meeting times for events -- type string & will just default to "N/A"
-        type: String
+        type: [{day:String, start:String, end:String}]
     },
     placesID: {
         type: String,
@@ -24,6 +24,9 @@ const courtsSchema = new mongoose.Schema({
     lon:{
         type:Number,
         required:true
+    },
+    images: {
+        type: [String]
     }
 
 });

@@ -32,6 +32,11 @@ import {PageStyles} from assets/Styles
 
 - npm install react-native-ratings
 
+### Friends / Long Polling
+
+Since the friend requests will be frequently updated, we use long polling to consistently update the status of friend requests with live feedback. We send in a request with setInterval and useEffect every 5 seconds, however, this could be adjusted to shorter for even quicker feedback.
+>>>>>>> README.md
+
 ## Server
 
 ### Dependencies
@@ -61,6 +66,8 @@ For PUT/POST requests for courts – name, location, Google Places ID, are all r
 
 The models for data that is stored in our MongoDB are created here. That is, the information needed for relevant collections in our Database. For example, users will need a first name, last name, username, password, profile picture, and bio. Likewise, courts need to have a location, an associated name, the current rating, a unique Google Places ID, and the times people meet there.
 
+As of sprint 2, Models for user and court have been modified to store more information. The user stores friends, friend requests, and a path to his/her profile pic on the server. The courts now store an array of image paths to render on the client sides view park page.
+
 ### Routes
 
 The routes folder is where all the re-routing takes place. This may be to the /auth page or the /courts page where the necessary handling of HTTP Requests go.
@@ -81,4 +88,4 @@ We have a GET and PUT method for the user route. PUT can update information such
 
 ### Serving Images
 
-Serving images from the database would be slow and taxing. Instead, it would be best to save the images onto the server and put the file name into the database with the respective users and posts. For now we would save each image as user_image-x.png where x is an incremented number. We handle the image uploads under the user route.
+Serving images from the database would be slow and taxing. Instead, it would be best to save the images onto the server and put the file name into the database with the respective users and posts. For now we would save each image as user_image-x.png where x is an incremented number. We handle the image uploads under the user route. We store the data as base64 data to the client which renders this as the URL.

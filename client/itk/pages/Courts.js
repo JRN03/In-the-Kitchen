@@ -1,7 +1,6 @@
-import { View, StyleSheet, Text, ScrollView, SafeAreaView, Alert, processColor } from "react-native";
+import { View, StyleSheet, Text, ScrollView, SafeAreaView } from "react-native";
 import MapView, {Marker, PROVIDER_GOOGLE} from "react-native-maps";
-import Searchbar from "../components/Searchbar";
-import {React, useState, useEffect, useRef} from "react";
+import {React, useState, useEffect} from "react";
 import ParkTab from "../components/ParkTab";
 import light from "../assets/themes/light.js";
 import AppHeader from "../components/AppHeader";
@@ -99,9 +98,10 @@ export default function Courts({navigation,route}) {
     //at this point we just need to make the posts and all of the courts encountered by users will auto populate in the DB
   }
 
+  // console.log(process.env.MAPS_API);
   useEffect(() => {
     const getCourts = async () => {
-      const res = await fetch('http://localhost:8080/courts');
+      const res = await fetch('http://localhost:8080/courts/all');
       const data = await res.json();
       var master = {};
       for(var i = 0; i<data.length; i ++){
@@ -165,13 +165,12 @@ export default function Courts({navigation,route}) {
 
   return (
     <SafeAreaView style={PageStyles.main}>
-      <AppHeader/>
+      <AppHeader route={route} action={()=>navigation.navigate("AddCourt")}/>
       <View style={PageStyles.contentWrap}>
         {/* <Searchbar onSubmit={onSubmitText}/> */}
         <GooglePlacesAutocomplete
           placeholder='Search'
           styles={styles.searchWrap}
-          //onChangeText( maybe find out results from the auto fill)
           onPress={(data, details = null) => {
             // 'details' is provided when fetchDetails = true
             // console.log("data",data);

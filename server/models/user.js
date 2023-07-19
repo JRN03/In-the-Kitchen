@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose'
 
 const userSchema = new mongoose.Schema({
@@ -19,11 +20,21 @@ const userSchema = new mongoose.Schema({
         required: true,
     },
     bio:{
-        type: String
+        type: String,
+        default: "N/A"
     },
     image:{
-        type: String
+        type: String,
+        default: "TempProfilePic.jpeg"
     },
+    friends: {
+        type: [String]
+    },
+    friendRequests: {
+        type: [ObjectId],
+        defualt: []
+    }
+    
     // friends: [String] (not completed. is cursed)
 });
 

@@ -1,36 +1,24 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import light from "../assets/themes/light";
 
 const BioText = (props) => {
   const navigation = useNavigation();
-  console.log("in bio text");
-  console.log(props.imagePath);
 
   return (
     <View style={styles.container}>
       <Text style={styles.textBox}>{props.bioText}</Text>
       <TouchableOpacity
-        style={{ marginTop: 10 }}
+        style={[styles.edit, {display: props.isFriend ? "none" : "flex"}]}
         onPress={() =>
           navigation.navigate("EditProfile", {
-            oldText: props.bioText,
-            imgPath: props.imagePath,
+            bio: props.bioText,
+            profilePic: props.profilePic,
           })
         }
       >
-        <Text
-          style={{
-            fontSize: 15,
-            color: "white",
-            backgroundColor: "#1E94D7",
-            borderWidth: 1,
-            borderColor: "white",
-            borderRadius: 6,
-          }}
-        >
-          Edit Profile
-        </Text>
+        <Text style={{color:"white", fontSize:20}}>Edit Profile</Text>
       </TouchableOpacity>
     </View>
   );
@@ -56,6 +44,13 @@ const styles = StyleSheet.create({
     padding: 10,
     textAlignVertical: "center",
   },
+  edit: {
+    marginVertical: 20,
+    backgroundColor: light.secondary,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 8
+  }
 });
 
 export default BioText;
