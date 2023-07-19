@@ -12,7 +12,6 @@ export default function ParkCard(props){
     const [meetings, setMeetings] = useState();
     //props: meeting times, address, placeId, 
     const [userCurrentLocation, setUserCurrentLocation] = useState({latitude:0,longitude:0});
-
     useEffect(()=>{
         function mapMeetTimes(){
             setMeetings(props.meetTimes.map((item,index)=>{
@@ -21,7 +20,7 @@ export default function ParkCard(props){
                     <Text
                       key = {index*100}
                       style = {{fontFamily:"RobotoSlab_700Bold", fontSize: 18, textAlign : "left", color:"grey",paddingTop:5}}
-                      >{item}</Text>
+                      >{item.day + " " + item.start + " " + item.end}</Text>
                 )
                 
             }))
@@ -56,7 +55,7 @@ export default function ParkCard(props){
             {meetings}
             {/* <Text style = {{fontFamily:"RobotoSlab_700Bold", fontSize: 18, textAlign : "left", color:"grey",paddingTop:5}}>{props.meetTimes[0]}</Text> */}
             <TouchableOpacity style = {styles.button} onPress={() => Linking.openURL(`maps://app?saddr=${userCurrentLocation.lat}+${userCurrentLocation.lon}&daddr=${props.lat}+${props.lon}`)}>
-                <Text style={{fontFamily:"RobotoSlab_700Bold", fontSize: 16, color:"white"}}> Get Directions</Text>
+                <Text style={{fontFamily:"RobotoSlab_700Bold", fontSize: 16, color:"white"}}>Get Directions</Text>
             </TouchableOpacity>
 
         </View>
@@ -68,11 +67,11 @@ export default function ParkCard(props){
 const styles = StyleSheet.create({
     main:{
         width: "100%",
-        height: 200,
         borderRadius: 20,
         backgroundColor: "white",
         marginVertical: 10,
         paddingHorizontal: 20,
+        paddingVertical: 20,
         flexDirection: "column",
         alignItems: "left",
     },    
@@ -82,7 +81,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         borderRadius: 100,
         backgroundColor: "#1E94D7",
-        padding: 5,
-
+        paddingVertical: 5,
+        paddingHorizontal: 10
     },
 });

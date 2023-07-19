@@ -13,8 +13,7 @@ import * as Location from 'expo-location';
 
 
 export default function Courts({navigation,route}) {
-  const token = route.params.token;
-  // console.log(token);
+
   const onRegionChange = (region)=>{
     // console.log(region)
   }
@@ -46,7 +45,6 @@ export default function Courts({navigation,route}) {
     
   }
   async function getCourtsFromSearch(lat,lon){
-    console.log("Hello?",lat,lon)
     // console.log("QUERY", `https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat}%2C${lon}&radius=1500&query=pickleball%court&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`);
     // var secondRes = await fetch(`https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat}%2C${lon}&radius=1500&query=pickleball+courts&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`);
     // var courtsNearby = await secondRes.json();
@@ -55,12 +53,9 @@ export default function Courts({navigation,route}) {
       const closeCourts = []
       for(const key in courtObject.current){
         
-        console.log("current",key)
         var euclid = distance(courtObject.current[key].lat,lat,courtObject.current[key].lon,lon)
-        console.log(`RESULT for ${courtObject.current[key].name} DISTANCE = ${euclid}`);
 
         if(euclid< 20){
-          console.log(courtObject.current[key]);
           closeCourts.push(courtObject.current[key])
         }
       }
@@ -94,10 +89,7 @@ export default function Courts({navigation,route}) {
 
   function mapMarkers(results){
     var currentCourtObject = courtObject.current
-
     setCourtTabs(results.map((item,index)=>{
-      console.log(currentCourtObject)
-
         // console.log(curre)
         return(
           <ParkTab key={item.name} name={item.name} onPress= { ()=>{redirectToPark(item)}}/>
@@ -134,7 +126,6 @@ export default function Courts({navigation,route}) {
       }
       setCourtData(data);
       courtObject.current = master;
-      console.log("CourtObject",courtObject.current);
       // console.log("master",courtObject);
       //once all the placesIds are found, we make markers and display them
       getPermissions();
@@ -222,7 +213,7 @@ export default function Courts({navigation,route}) {
         <ScrollView style={styles.nearbyContainer}>
           {courtTabs}
         </ScrollView>
-        <Navbar route={route} token={token}/>
+        <Navbar route={route}/>
         </View>
     </SafeAreaView>
   );

@@ -31,14 +31,11 @@ import {
   RobotoSlab_900Black,
 } from "@expo-google-fonts/roboto-slab";
 
-const meetingTimes = ["Friday: 9am-12pm", "Tuesday: 9am-12pm"];
-
 // export default function ParkView({navigation,route}) {
 export default function ParkView({ navigation, route }) {
   const token = route.params.token;
 
   var { props } = route.params;
-  console.log("ParkView", props);
   const [lat, setLat] = useState(props.lat);
   const [lon, setLon] = useState(props.lon);
   const [mapLatDelta, setMapLatDelta] = useState(0.1);
@@ -64,7 +61,7 @@ export default function ParkView({ navigation, route }) {
   return (
     <SafeAreaView style={PageStyles.main}>
       <AppHeader />
-      <View style={styles.contentWrap}>
+      <ScrollView style={styles.contentWrap}>
         <View style={styles.textContainer}>
           <Text style={styles.introText}>{props.name}</Text>
         </View>
@@ -78,16 +75,15 @@ export default function ParkView({ navigation, route }) {
             alignItems: "center",
           }}
         >
-          <MyCarousel />
+          {props.images.length > 0 && <MyCarousel images={props.images} />}
         </View>
         <ParkCard
           name={props.name}
           location={props.location}
-          meetTimes={meetingTimes}
+          meetTimes={props.times}
           lat={lat}
           lon={lon}
         />
-        <Navbar route={route} token={token} />
         <Text
           onPress={() => {
             navigation.navigate("Courts", { token: token });
@@ -102,7 +98,8 @@ export default function ParkView({ navigation, route }) {
         >
           Back to Courts
         </Text>
-      </View>
+        {/* <Navbar route={route} token={token} /> */}
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -140,8 +137,8 @@ const styles = StyleSheet.create({
   },
   contentWrap: {
     width: "90%",
-    flex: 1,
-    position: "relative",
+    flexGrow: 0,
+    //position: "relative",
   },
   button: {
     // flex: 1,
