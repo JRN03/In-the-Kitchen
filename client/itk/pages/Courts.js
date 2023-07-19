@@ -1,6 +1,6 @@
 import { View, StyleSheet, Text, ScrollView, SafeAreaView } from "react-native";
 import MapView, {Marker, PROVIDER_GOOGLE} from "react-native-maps";
-import {React, useState, useEffect} from "react";
+import {React, useState, useEffect, useRef} from "react";
 import ParkTab from "../components/ParkTab";
 import light from "../assets/themes/light.js";
 import AppHeader from "../components/AppHeader";
@@ -14,7 +14,6 @@ import * as Location from 'expo-location';
 export default function Courts({navigation,route}) {
 
   const onRegionChange = (region)=>{
-    // console.log(region)
   }
   //used for loading data from the backend for courts
   const courtObject = useRef({});
@@ -29,12 +28,10 @@ export default function Courts({navigation,route}) {
   const [userCurrentLocation, setUserCurrentLocation] = useState({latitude:mapLat,longitude:mapLon});
   const initialRegion = {latitude:mapLat,longitude:mapLon,longitudeDelta:mapLonDelta, latitudeDelta:mapLatDelta}
   async function getLatLon(data){
-    // console.log("PASSED THROUGH DATA ",data);
     axios({
       method: 'get',
       url: `https://maps.googleapis.com/maps/api/place/details/json?placeid=${data.place_id}&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`,
     }).then((response) => {
-      // console.log("location",response.data.result.geometry.location);  //just to see what the location was
       //gotta set the map here
       setMapLat(response.data.result.geometry.location.lat);
       setMapLon(response.data.result.geometry.location.lng);
@@ -48,7 +45,6 @@ export default function Courts({navigation,route}) {
     // var secondRes = await fetch(`https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat}%2C${lon}&radius=1500&query=pickleball+courts&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`);
     // var courtsNearby = await secondRes.json();
 
-      // console.log("COURT length", courtsNearby.results[0]);
       const closeCourts = []
       for(const key in courtObject.current){
         
@@ -89,16 +85,13 @@ export default function Courts({navigation,route}) {
   function mapMarkers(results){
     var currentCourtObject = courtObject.current
     setCourtTabs(results.map((item,index)=>{
-        // console.log(curre)
         return(
           <ParkTab key={item.name} name={item.name} onPress= { ()=>{redirectToPark(item)}}/>
          )
     }))
-    // console.log(courtObject);
     //at this point we just need to make the posts and all of the courts encountered by users will auto populate in the DB
   }
 
-  // console.log(process.env.MAPS_API);
   useEffect(() => {
     const getCourts = async () => {
       const res = await fetch('http://localhost:8080/courts/all');
@@ -109,7 +102,6 @@ export default function Courts({navigation,route}) {
         if(current){
           master[current]=  data[i];
         }
-        // console.log(master[current]);
         setCourtMarkers(
           data.map((item,index)=>{
             return(
@@ -122,11 +114,9 @@ export default function Courts({navigation,route}) {
           )
           })
         )
-        // console.log(data[i].rating)
       }
       setCourtData(data);
       courtObject.current = master;
-      // console.log("master",courtObject);
       //once all the placesIds are found, we make markers and display them
       getPermissions();
     }
@@ -139,8 +129,6 @@ export default function Courts({navigation,route}) {
 
       let currentLocation = await Location.getCurrentPositionAsync({});
       // (currentLocation);
-      // console.log("Location:");
-      // console.log(currentLocation);
 
       setMapLat(currentLocation.coords.latitude);
       setMapLon(currentLocation.coords.longitude);
@@ -173,8 +161,6 @@ export default function Courts({navigation,route}) {
           styles={styles.searchWrap}
           onPress={(data, details = null) => {
             // 'details' is provided when fetchDetails = true
-            // console.log("data",data);
-            // console.log("details",details);
             getLatLon(data);
           }}
           // GooglePlacesSearchQuery= {[{ rankby: 'distance', type: 'restaurant' }]}

@@ -63,7 +63,6 @@ export default function FriendRequests({route,navigation}){
             })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
                 if (data.requestsIn) setRequestIncomingData(data.requestsIn); // array of objects {status, sender fName, sender lName, sender bio, sender username, sender image }
                 if (data.requestsOut) setRequestOutData(data.requestsOut); // array of objects {status, receiver fName, receiver lName, receiver bio, receiver username, receiver image }
             })
