@@ -33,7 +33,6 @@ import {
 
 // export default function ParkView({navigation,route}) {
 export default function ParkView({ navigation, route }) {
-  const token = route.params.token;
 
   var { props } = route.params;
   const [lat, setLat] = useState(props.lat);
@@ -86,7 +85,7 @@ export default function ParkView({ navigation, route }) {
         />
         <Text
           onPress={() => {
-            navigation.navigate("Courts", { token: token });
+            navigation.navigate("Courts");
           }}
           style={{
             fontSize: 15,
