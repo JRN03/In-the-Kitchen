@@ -30,9 +30,12 @@ import {PageStyles} from assets/Styles
 
 - sudo npx expo install expo-image-picker
 
+- npm install react-native-ratings
+
 ### Friends / Long Polling
 
 Since the friend requests will be frequently updated, we use long polling to consistently update the status of friend requests with live feedback. We send in a request with setInterval and useEffect every 5 seconds, however, this could be adjusted to shorter for even quicker feedback.
+>>>>>>> README.md
 
 ## Server
 

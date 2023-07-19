@@ -86,4 +86,22 @@ router.post('/', async (req,res) => {
 
 });
 
+router.put('/:places_id/rating/:score', (req,res)=>{
+    var place_id = req.params.places_id;
+    var score = req.params.score
+    Court.updateOne(
+        {placesID:place_id},
+        { $push: { rating: score } }
+    ).then((court)=>{
+        if(court){
+            console.log("new",court)
+            res.status(201).json(court);
+        }
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).json(err);
+    });
+    
+})
+
 export default router

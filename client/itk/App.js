@@ -9,6 +9,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ProfilePage from "./pages/ProfilePage";
 import EditProfile from "./pages/EditProfile";
+import ParkView from "./pages/ParkView";
 import AddCourt from "./pages/UploadCourt";
 import ViewFriend from "./pages/ViewFriend";
 import FriendRequests from "./pages/FriendRequests";
@@ -62,9 +63,14 @@ export default function App() {
         />
         <Stack.Screen
           options={{ headerShown: false }}
+          name="ParkView"
+          component={ParkView}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
           name="AddCourt"
           component={AddCourt}
-        />
+        /> 
         <Stack.Screen
           options={{ headerShown: false }}
           name="ViewFriend"

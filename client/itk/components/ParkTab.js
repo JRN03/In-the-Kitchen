@@ -1,5 +1,8 @@
 import * as React from "react"
-import {View,Text,StyleSheet, TouchableOpacity} from "react-native"
+import {View,Text,StyleSheet, TouchableOpacity, Alert} from "react-native"
+import light from "../assets/themes/light.js";
+import { useNavigation } from '@react-navigation/native';
+
 import {
     useFonts,
     RobotoSlab_100Thin,
@@ -13,7 +16,11 @@ import {
     RobotoSlab_900Black,
 } from '@expo-google-fonts/roboto-slab';
 export default function ParkTab(props) {
-
+    // function redirect(){
+    //     console.log("HELLO", props.name);
+    //     //redirect using props.fullBody
+    //     //redirect to Park page
+    // }
     let [fontsLoaded] = useFonts({
         RobotoSlab_100Thin,
         RobotoSlab_200ExtraLight,
@@ -33,7 +40,7 @@ export default function ParkTab(props) {
     return (
         <View style={styles.main}>
             <Text style={{fontFamily:"RobotoSlab_700Bold", fontSize: 18, flex: 3}}>{props.name}</Text>
-            <TouchableOpacity style={styles.button} title="View Park"><Text style={{color:"white",fontFamily:"RobotoSlab_400Regular"}}>View Park</Text></TouchableOpacity>
+            <TouchableOpacity onPress = {props.onPress} style={styles.button} title="View Park"><Text style={{color:"white",fontFamily:"RobotoSlab_400Regular"}}>View Park</Text></TouchableOpacity>
         </View>
     )
 }
