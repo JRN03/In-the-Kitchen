@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import { SafeAreaView, View, StyleSheet } from "react-native";
+import { SafeAreaView, View, StyleSheet, FlatList } from "react-native";
 import Navbar from "../components/Navbar";
 import { PageStyles } from "../assets/Styles";
 import AppHeader from "../components/AppHeader";
@@ -93,8 +93,6 @@ export default Messages = ({ route }) => {
     });
   };
 
-  console.log(rooms);
-
   return (
     <View>
       {visible ? (
@@ -105,7 +103,15 @@ export default Messages = ({ route }) => {
       <SafeAreaView style={PageStyles.main}>
         <AppHeader route={route} action={newMessage} />
         <View style={PageStyles.contentWrap}>
-          <ChatComponent></ChatComponent>
+          {rooms.length > 0 ? (
+            <FlatList
+              data={rooms}
+              renderItem={({ item }) => <ChatComponent />}
+              keyExtractor={(item) => item.id}
+            />
+          ) : (
+            <View />
+          )}
           <Navbar route={route} />
         </View>
       </SafeAreaView>
