@@ -9,9 +9,13 @@ const courtsSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    rating: [Number],
+    rating: {
+        type: [Number],
+        default: [0]
+    },
     times: {    // meeting times for events -- type string & will just default to "N/A"
-        type: [{day:String, start:String, end:String}]
+        type: [{day:String, start:String, end:String}],
+        default: []
     },
     placesID: {
         type: String,
@@ -26,7 +30,8 @@ const courtsSchema = new mongoose.Schema({
         required:true
     },
     images: {
-        type: [String]
+        type: [String],
+        default: []
     }
 
 });
