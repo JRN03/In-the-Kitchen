@@ -91,9 +91,9 @@ export default Messages = ({ route }) => {
     });
   };
 
-  console.log("rooms", rooms);
+  // console.log("rooms", rooms);
   const result = rooms.map((room) => room.messages);
-  console.log("messages =", result);
+  // console.log("messages =", result);
 
   return (
     <View>
@@ -109,7 +109,11 @@ export default Messages = ({ route }) => {
             <FlatList
               data={rooms}
               renderItem={({ item, index }) => (
-                <ChatComponent roomName={rooms[index].room} username={uname} />
+                <ChatComponent
+                  roomName={rooms[index].room}
+                  username={uname}
+                  messages={rooms[index].messages}
+                />
               )}
               keyExtractor={(item) => item.id}
             />

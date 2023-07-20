@@ -31,6 +31,7 @@ const NewMessage = ({ username, room }) => {
         timestamp: { hour, mins },
       });
     }
+    setMessage("");
   };
 
   return (
@@ -39,7 +40,7 @@ const NewMessage = ({ username, room }) => {
         style={{
           flex: 1,
           flexDirection: "row",
-          maxHeight: "10%",
+          maxHeight: "20%",
           justifyContent: "center",
         }}
       >

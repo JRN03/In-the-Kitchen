@@ -1,7 +1,14 @@
 import React from "react";
-import socket from "../utils/socket";
+import { Text } from "react-native";
 import light from "../assets/themes/light";
 
-const Message = () => {};
+const Message = ({ messages, user, time }) => {
+  //   console.log("inside message", messages[0].text);
+  return (
+    <Text style={{ color: "white" }}>
+      User: {user} Time: {time} Message: {messages}
+    </Text>
+  );
+};
 
 export default Message;
