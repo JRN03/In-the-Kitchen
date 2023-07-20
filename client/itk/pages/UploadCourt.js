@@ -57,6 +57,7 @@ export default function Courts({route}) {
         base64: true,
     });
     if (!image.canceled) {
+      console.log("uri",image.assets[0].uri)
         const newImages = [...images]
         newImages[index] = {data:image.assets[0].base64, name: image.assets[0].fileName || "NewImg.png"}
         setImages(newImages)

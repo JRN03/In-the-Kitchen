@@ -11,21 +11,16 @@ import {
   useWindowDimensions,
 } from "react-native";
 // import  Animated  from 'react-native-reanimated';
-import Carousel, { ParallaxImage } from "react-native-new-snap-carousel";
+import Carousel, { Pagination } from "react-native-new-snap-carousel";
 
-const DATA = [
-  { image: require("../assets/shaq.jpeg"), title: "SHAQ" },
-  { image: require("../assets/shaq.jpeg"), title: "SHAQ" },
-  { image: require("../assets/shaq.jpeg"), title: "SHAQ" },
-];
 const MyCarousel = (props) => {
-
+  
   const { height, width, scale, fontScale } = useWindowDimensions();
-  const [imageData,setImageData] = useState();
-
+  const [imageData,setImageData] = useState([]);
+  const [active,setActive] = useState(0);
   const carouselRef = useRef(null);
-
   useEffect(() => {
+    if (props.isNew) return;
     // for each in props.images fetch to '/images' and push that data to imageData array
     const fetchPromises = props.images.map(image => {
       return fetch(`http://localhost:8080/images/${image}`, {
@@ -48,9 +43,8 @@ const MyCarousel = (props) => {
       })
       .catch(error => {
         console.error("Failed to fetch image data for one or more images:", error);
-        setImageData([]); // or handle the error gracefully with an appropriate value
+        setImageData([]);
       });
-  
   }, []);
 
   const renderItem = ({ item, index }) => {
@@ -61,19 +55,38 @@ const MyCarousel = (props) => {
     );
   };
 
-  if (!imageData) return;
-
+  if (!imageData && !props.images) return;
   return (
+    <View style={{flex: 1}}>
     <Carousel
       ref={carouselRef}
-      data={imageData}
+      data={props.isNew ? props.images : imageData}
       renderItem={renderItem}
       sliderWidth={width}
       itemWidth={300}
       activeSlideAlignment="center"
       layout={"default"}
       contentContainerCustomStyle={styles.container}
+      onSnapToItem={(index) => setActive(index) }
     />
+    <Pagination
+      dotsLength={props.images ? props.images.length:imageData.length}
+      activeDotIndex={active}
+      containerStyle={{bottom: 0, position:'absolute', alignSelf:'center'}}
+      dotStyle={{
+          width: 10,
+          height: 10,
+          borderRadius: 5,
+          marginHorizontal: 10,
+          backgroundColor: '#ffffff',
+      }}
+      inactiveDotStyle={{
+          backgroundColor: 'white'
+      }}
+      inactiveDotOpacity={0.4}
+      inactiveDotScale={0.6}
+      />
+    </View>
   );
 };
 
@@ -87,7 +100,6 @@ const styles = StyleSheet.create({
     // borderWidth: 2,
     alignContent: "center",
     justifyContent: "center",
-    marginBottom: 10
   },
 });
 export default MyCarousel;
