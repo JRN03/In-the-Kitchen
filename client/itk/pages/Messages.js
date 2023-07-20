@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import { SafeAreaView, View, StyleSheet, FlatList } from "react-native";
+import { SafeAreaView, View, StyleSheet, FlatList, Alert } from "react-native";
 import Navbar from "../components/Navbar";
 import { PageStyles } from "../assets/Styles";
 import AppHeader from "../components/AppHeader";
@@ -96,17 +96,17 @@ export default Messages = ({ route }) => {
   };
 
   const createMessage = (friendUserName) => {
-    const friends = friendUserName.split(" ");
+    const friends = friendUserName.split(",");
     let result = friends.every((val) => friendData.includes(val));
     if (result) {
-      socket.emit("createRoom", { uname, friendUserName });
+      socket.emit("createRoom", { uname, friends });
       socket.emit("loadRooms", uname);
       socket.on("getRooms", (data) => {
         console.log("data = ", data);
         setRooms(data);
       });
     } else {
-      console.log("you don't know this person: send them a request first");
+      Alert.alert("You don't know this person: send them a request first");
     }
   };
 

@@ -38,26 +38,23 @@ const io = new Server(server, {
 io.on("connection", async (socket) => {
   console.log(`User connected ${socket.id}`);
   socket.on("createRoom", async (data) => {
-    console.log("CreateROOM",data);
-    const { uname, friendUserName } = data; // seperate incoming data
-    const ids = friendUserName.split(" "); // split friends
-    ids.push(uname); // make id array of user + friends
-    ids.sort();
-    const room = ids.join(":");
-    console.log(ids);
-    console.log(room);
-
-    // id should be array of users in room
-    // check if that id is in the array
-    // room_id should be all usernames sorted as string
-    const newChat = new Chat({room_id: room,users:[uname,friendUserName]})
+    console.log(data);
+    const { uname, friends } = data; // seperate incoming data
+    friends.push(uname);
+    friends.sort();
+    const room = friends.join(":");
+    const checkRoomExsists = (room_id) => room_id.room == room;
+    let result = chatRooms.some(checkRoomExsists);
+    const newChat = new Chat({room_id: room,users:[...friends]})
     await newChat.save();
-    console.log(newChat)
-    socket.join(room);
-    chatRooms.unshift({ id: ids, room, messages: [] });
-    console.log(chatRooms);
-    socket.emit("roomsList", chatRooms);
+    if (!result) {
+      socket.join(room);
+      chatRooms.unshift({ id: friends, room, messages: [] });
+      console.log(chatRooms);
+      socket.emit("roomsList", chatRooms);
+    }
   });
+
 
   socket.on("loadRooms", async(username) => {
     // console.log(username);

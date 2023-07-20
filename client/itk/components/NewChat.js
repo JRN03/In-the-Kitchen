@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import light from "../assets/themes/light";
-import socket from "../utils/socket";
+import Searchbar from "./Searchbar";
 
 const NewChat = ({ setVisible, user_message }) => {
   const closeModal = () => setVisible(false);
@@ -19,24 +19,24 @@ const NewChat = ({ setVisible, user_message }) => {
     closeModal();
   };
   return (
-    <Modal transparent={true} animationType="fade">
+    <Modal
+      // visible={setVisible}
+      transparent={true}
+      animationType="fade"
+    >
       <View style={styles.modalContainer}>
         <View style={styles.popupContainer}>
-          <Text style={styles.text}>Create Chat</Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Enter Friend Username"
-            onChangeText={(value) => setGroupName(value)}
+          <Searchbar
+            test={groupName}
+            placeholder={"Enter Friend Username to Chat"}
+            onChange={setGroupName}
           />
-          <View>
-            <TouchableOpacity onPress={handleCreateRoom}>
-              <Text style={styles.text}>CREATE</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ backgroundColor: "#E14D2A" }}
-              onPress={closeModal}
-            >
-              <Text style={styles.text}>CANCEL</Text>
+          <View style={styles.buttons}>
+            <TouchableOpacity style={styles.button} onPress={handleCreateRoom}>
+              <Text style={styles.add}>Chat</Text>
+            </TouchableOpacity>            
+            <TouchableOpacity style={styles.button} onPress={closeModal}>
+              <Text style={styles.close}>Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -59,6 +59,23 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderColor: "grey",
     borderWidth: 1,
+  },
+  buttons: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  button: {
+    borderRadius: 15,
+    backgroundColor: light.secondary,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  add: {
+    color: "white",
+  },
+  close: {
+    color: "white",
   },
   text: {
     color: "white",

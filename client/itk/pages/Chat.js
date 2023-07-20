@@ -17,7 +17,9 @@ const Chat = ({ route }) => {
 
   useLayoutEffect(() => {
     socket.emit("findRoom", route.params.name);
-    socket.on("foundRoom", (roomChats) => setChatMessages(roomChats));
+    socket.on("foundRoom", (roomChats) => {
+      setChatMessages(roomChats);
+    });
   }, []);
 
   useEffect(() => {
