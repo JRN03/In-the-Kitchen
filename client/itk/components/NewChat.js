@@ -25,7 +25,7 @@ const NewChat = ({ setVisible, user_message }) => {
           <Text style={styles.text}>Create Chat</Text>
           <TextInput
             style={styles.textInput}
-            placeholder="Message to Friend"
+            placeholder="Enter Friend Username"
             onChangeText={(value) => setGroupName(value)}
           />
           <View>

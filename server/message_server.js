@@ -15,6 +15,7 @@ const app = express();
 const PORT = 4000;
 
 let chatRooms = [];
+// let userChatRooms = [];
 
 app.use(cors());
 const server = http.createServer(app);
@@ -29,12 +30,31 @@ const io = new Server(server, {
 io.on("connection", async (socket) => {
   console.log(`User connected ${socket.id}`);
   socket.on("createRoom", (data) => {
-    const { uname, room } = data;
+    console.log(data);
+    const { uname, friendUserName } = data; // seperate incoming data
+    const ids = friendUserName.split(" "); // split friends
+    ids.push(uname); // make id array of user + friends
+    ids.sort();
+    const room = ids.join(":");
+
+    console.log(ids);
+    console.log(room);
+
+    // id should be array of users in room
+    // check if that id is in the array
+    // room_id should be all usernames sorted as string
     socket.join(room);
-    chatRooms.unshift({ id: uname, room, messages: [] });
+    chatRooms.unshift({ id: ids, room, messages: [] });
     console.log(chatRooms);
     socket.emit("roomsList", chatRooms);
   });
+
+  socket.on("loadRooms", (username) => {
+    // console.log(username);
+    let result = chatRooms.filter((room) => room.id.includes(username));
+    socket.emit("getRooms", result);
+  });
+
   socket.on("findRoom", (id) => {
     console.log(chatRooms);
     console.log("id ", id);

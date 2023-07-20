@@ -41,15 +41,23 @@ export default Messages = ({ route }) => {
   const [uname, setUName] = useState("");
   const [rooms, setRooms] = useState([]);
 
-  useLayoutEffect(() => {
-    function fetchGroups() {
-      fetch("http://localhost:4000/api")
-        .then((res) => res.json())
-        .then((data) => setRooms(data))
-        .catch((err) => console.error(err));
-    }
-    fetchGroups();
-  }, []);
+  // useLayroutEffect(() => {
+  // function fetchGroups() {
+  //   fetch("http://localhost:4000/api", {})
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       // console.log("my data", data[0]);
+  //       setRooms(data);
+  //     })
+  //     .catch((err) => console.error(err));
+  // }
+  // fetchGroups();
+  //   socket.emit("loadRooms", uname);
+  //   socket.on("getRooms", (data) => {
+  //     console.log("data = ", data);
+  //     setRooms(data);
+  //   });
+  // }, []);
 
   useEffect(() => {
     const getToken = async () => {
@@ -58,6 +66,11 @@ export default Messages = ({ route }) => {
       setToken(t);
       setUName(u);
       getFriends(t);
+      socket.emit("loadRooms", u);
+      socket.on("getRooms", (data) => {
+        console.log("data = ", data);
+        setRooms(data);
+      });
     };
 
     const getFriends = (t) => {
@@ -82,13 +95,21 @@ export default Messages = ({ route }) => {
     setVisible(true);
   };
 
-  const createMessage = (value) => {
-    let room = uname + value;
-    // console.log(room);
-    socket.emit("createRoom", { uname, room });
-    socket.on("roomsList", (rooms) => {
-      setRooms(rooms);
-    });
+  const createMessage = (friendUserName) => {
+    if (friendData.includes(friendUserName)) {
+      socket.emit("createRoom", { uname, friendUserName });
+      // socket.on("roomsList", (rooms) => {
+      //   console.log("rooms=", rooms);
+      //   setRooms(rooms);
+      // });
+      socket.emit("loadRooms", uname);
+      socket.on("getRooms", (data) => {
+        console.log("data = ", data);
+        setRooms(data);
+      });
+    } else {
+      console.log("you don't know this person: send them a request first");
+    }
   };
 
   // console.log("rooms", rooms);
@@ -115,7 +136,7 @@ export default Messages = ({ route }) => {
                   messages={rooms[index].messages}
                 />
               )}
-              keyExtractor={(item) => item.id}
+              keyExtractor={(rooms) => rooms.room}
             />
           )}
           <Navbar route={route} />
