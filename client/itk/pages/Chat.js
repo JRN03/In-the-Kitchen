@@ -39,12 +39,12 @@ const Chat = ({ route }) => {
           data={chatMessages}
           renderItem={({ item, index }) => (
             <Message
-              messages={chatMessages[index].text}
-              user={chatMessages[index].username}
+              messages={chatMessages[index].body}
+              user={chatMessages[index].user}
               time={chatMessages[index].time}
             />
           )}
-          keyExtractor={(item) => item.id}
+          keyExtractor={ (item,index)=>chatMessages[index].body}
         />
         {/* <Message messages={chatMessage}></Message> */}
         <NewMessage

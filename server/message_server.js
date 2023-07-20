@@ -45,9 +45,9 @@ io.on("connection", async (socket) => {
     const room = friends.join(":");
     const checkRoomExsists = (room_id) => room_id.room == room;
     let result = chatRooms.some(checkRoomExsists);
-    const newChat = new Chat({room_id: room,users:[...friends]})
-    await newChat.save();
     if (!result) {
+      const newChat = new Chat({room_id: room,users:[...friends]})
+      await newChat.save();
       socket.join(room);
       chatRooms.unshift({ id: friends, room, messages: [] });
       console.log(chatRooms);
@@ -55,10 +55,10 @@ io.on("connection", async (socket) => {
     }
   });
 
-
   socket.on("loadRooms", async(username) => {
     // console.log(username);
     let result =  await Chat.find({users:username})
+    chatRooms =result
     console.log(result);
     socket.emit("getRooms", result);
   });
@@ -66,22 +66,22 @@ io.on("connection", async (socket) => {
   socket.on("findRoom", (id) => {
     console.log(chatRooms);
     console.log("id ", id);
-    let result = chatRooms.filter((room) => room.room == id);
+    let result = chatRooms.filter((room) => room.room_id == id);
     console.log("result =", result);
     socket.emit("foundRoom", result[0].messages);
     console.log("Messages Form", result[0].messages);
   });
 
   socket.on("newMessage", (data) => {
-    console.log("NEW MESSAGE",data);
     const { room_id, message, username, timestamp } = data;
+    console.log("NEW MESSAGE",message);
     var stringTime = `${timestamp.hour}:${timestamp.mins} `
     Chat.findOneAndUpdate({room_id:room_id},
         {"$push":{messages:{body:message,time:stringTime,user:username}}}
       ).then((res)=>{
         console.log(res) // I don't think we need to really do anything here
       })
-    let result = chatRooms.filter((room) => room.room == room_id);
+    let result = chatRooms.filter((room) => room.room_id == room_id);
     console.log(result);
     const newMessage = {
       text: message,

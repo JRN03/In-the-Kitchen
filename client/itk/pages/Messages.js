@@ -134,7 +134,7 @@ export default Messages = ({ route }) => {
                   messages={rooms[index].messages}
                 />
               )}
-              keyExtractor={(rooms) => rooms.room}
+              keyExtractor={(rooms) => rooms.room_id}
             />
           )}
           <Navbar route={route} />
