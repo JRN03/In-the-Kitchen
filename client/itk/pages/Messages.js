@@ -96,10 +96,10 @@ export default Messages = ({ route }) => {
   };
 
   const createMessage = (friendUserName) => {
-    const friends = friendUserName.split(" ");
+    const friends = friendUserName.split(",");
     let result = friends.every((val) => friendData.includes(val));
     if (result) {
-      socket.emit("createRoom", { uname, friendUserName });
+      socket.emit("createRoom", { uname, friends });
       socket.emit("loadRooms", uname);
       socket.on("getRooms", (data) => {
         console.log("data = ", data);
