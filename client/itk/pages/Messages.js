@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 import { PageStyles } from "../assets/Styles";
 import AppHeader from "../components/AppHeader";
 import ChatComponent from "../components/ChatComponent";
-import io from "socket.io-client";
+import socket from "../utils/socket";
 import { UNAME, TOKEN } from "../AsyncKeys";
 import { getItemFromCache } from "../ReadCache";
 
@@ -21,8 +21,6 @@ import {
   RobotoSlab_900Black,
 } from "@expo-google-fonts/roboto-slab";
 import NewChat from "../components/NewChat";
-
-const socket = io.connect("http://localhost:4000");
 
 export default Messages = ({ route }) => {
   let [fontsLoaded] = useFonts({
@@ -79,19 +77,23 @@ export default Messages = ({ route }) => {
   }, [socket]);
 
   const newMessage = () => {
-    console.log("Create new message");
-    console.log(friendData);
+    // console.log("Create new message");
+    // console.log(friendData);
     setVisible(true);
   };
 
+  let room;
+
   const createMessage = (value) => {
-    // console.log(value);
-    let room = uname + value;
+    room = uname + value;
+    // console.log(room);
     socket.emit("createRoom", { uname, room });
     socket.on("roomsList", (rooms) => {
       setRooms(rooms);
     });
   };
+
+  console.log("rooms", rooms);
 
   return (
     <View>
@@ -103,14 +105,14 @@ export default Messages = ({ route }) => {
       <SafeAreaView style={PageStyles.main}>
         <AppHeader route={route} action={newMessage} />
         <View style={PageStyles.contentWrap}>
-          {rooms.length > 0 ? (
+          {rooms.length > 0 && (
             <FlatList
               data={rooms}
-              renderItem={({ item }) => <ChatComponent />}
+              renderItem={({ item, index }) => (
+                <ChatComponent roomName={rooms[index].room} />
+              )}
               keyExtractor={(item) => item.id}
             />
-          ) : (
-            <View />
           )}
           <Navbar route={route} />
         </View>

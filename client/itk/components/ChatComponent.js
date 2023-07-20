@@ -2,6 +2,7 @@ import * as React from "react";
 import { Image, Text, StyleSheet, TouchableOpacity } from "react-native";
 import light from "../assets/themes/light";
 import { ListItem, Avatar } from "@rneui/themed";
+import { useNavigation } from "@react-navigation/native";
 
 import {
   useFonts,
@@ -16,11 +17,8 @@ import {
   RobotoSlab_900Black,
 } from "@expo-google-fonts/roboto-slab";
 
-const toMessenger = () => {
-  console.log("To the messenger");
-};
-
-export default ChatComponent = ({ route }) => {
+export default ChatComponent = ({ route, roomName, socket }) => {
+  const navigation = useNavigation();
   let [fontsLoaded] = useFonts({
     RobotoSlab_100Thin,
     RobotoSlab_200ExtraLight,
@@ -33,13 +31,19 @@ export default ChatComponent = ({ route }) => {
     RobotoSlab_900Black,
   });
 
+  const toMessenger = () => {
+    // console.log("To the messenger");
+    navigation.navigate("Chat", { name: roomName });
+  };
+
+  // console.log("Roomname", roomName);
   return (
     <TouchableOpacity onPress={toMessenger} style={styles.chatContainer}>
       <Image
         source={require("../assets/TempProfilePic.jpeg")}
         style={styles.image}
       ></Image>
-      <Text style={styles.chat}>Name Here</Text>
+      <Text style={styles.chat}>{roomName}</Text>
       <ListItem.Chevron color="white" size={40} />
     </TouchableOpacity>
   );

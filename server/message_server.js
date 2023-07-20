@@ -21,7 +21,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:8080",
+    origin: "http://localhost:3000",
     methods: ["GET", "POST"],
   },
 });
@@ -32,7 +32,16 @@ io.on("connection", async (socket) => {
     const { uname, room } = data;
     socket.join(room);
     chatRooms.unshift({ id: uname, room, messages: [] });
+    console.log(chatRooms);
     socket.emit("roomsList", chatRooms);
+  });
+  socket.on("findRoom", (id) => {
+    console.log(chatRooms);
+    console.log("id ", id);
+    let result = chatRooms.filter((room) => room.room == id);
+    console.log("result =", result);
+    socket.emit("foundRoom", result[0].messages);
+    console.log("Messages Form", result[0].messages);
   });
   socket.on("disconnect", () => {
     socket.disconnect();

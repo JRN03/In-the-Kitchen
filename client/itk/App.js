@@ -12,6 +12,8 @@ import EditProfile from "./pages/EditProfile";
 import AddCourt from "./pages/UploadCourt";
 import ViewFriend from "./pages/ViewFriend";
 import FriendRequests from "./pages/FriendRequests";
+import Chat from "./pages/Chat";
+import light from "./assets/themes/light";
 
 const Stack = createNativeStackNavigator();
 
@@ -73,6 +75,20 @@ export default function App() {
           options={{ headerShown: false }}
           name="FriendRequests"
           component={FriendRequests}
+        />
+        <Stack.Screen
+          options={({ route }) => ({
+            title: route.params.name,
+            headerStyle: {
+              backgroundColor: light.primary,
+            },
+            headerTintColor: "white",
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
+          })}
+          name="Chat"
+          component={Chat}
         />
       </Stack.Navigator>
     </NavigationContainer>
