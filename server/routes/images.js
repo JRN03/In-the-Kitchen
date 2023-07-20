@@ -29,7 +29,12 @@ router.get("/users/:username", verify, async (req, res) => {
 
   const id = req.id;
   const user = await User.findOne({_id:id,friends:req.params.username});
-  if (!user) return res.status(400).send({message:"This user is not your friend"});
+  if (!user) {
+    const tempPath = path.join(__dirname, "resources", "TempProfilePic.jpeg");
+    const image = fs.readFileSync(tempPath);
+    const base64Image = Buffer.from(image).toString("base64");
+    return res.status(400).send({message:"This user is not your friend",imageData: base64Image});
+  }
   const friend = await User.findOne({username: req.params.username});
   if (!friend) return res.status(404).send({message:"Failed to retrieve friend"});
   const imagePath = path.join(__dirname, "resources", friend.image);
