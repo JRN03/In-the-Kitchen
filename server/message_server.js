@@ -11,6 +11,12 @@ import express from "express";
 import cors from "cors";
 import http from "http";
 import { Server } from "socket.io";
+import Chat from "./models/chat.js";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+
+dotenv.config();
+
 const app = express();
 const PORT = 4000;
 
@@ -19,6 +25,8 @@ let chatRooms = [];
 
 app.use(cors());
 const server = http.createServer(app);
+// console.log(process.env.DB_CONNECT);
+mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true });
 
 const io = new Server(server, {
   cors: {
@@ -29,29 +37,32 @@ const io = new Server(server, {
 
 io.on("connection", async (socket) => {
   console.log(`User connected ${socket.id}`);
-  socket.on("createRoom", (data) => {
-    console.log(data);
+  socket.on("createRoom", async (data) => {
+    console.log("CreateROOM",data);
     const { uname, friendUserName } = data; // seperate incoming data
     const ids = friendUserName.split(" "); // split friends
     ids.push(uname); // make id array of user + friends
     ids.sort();
     const room = ids.join(":");
-
     console.log(ids);
     console.log(room);
 
     // id should be array of users in room
     // check if that id is in the array
     // room_id should be all usernames sorted as string
+    const newChat = new Chat({room_id: room,users:[uname,friendUserName]})
+    await newChat.save();
+    console.log(newChat)
     socket.join(room);
     chatRooms.unshift({ id: ids, room, messages: [] });
     console.log(chatRooms);
     socket.emit("roomsList", chatRooms);
   });
 
-  socket.on("loadRooms", (username) => {
+  socket.on("loadRooms", async(username) => {
     // console.log(username);
-    let result = chatRooms.filter((room) => room.id.includes(username));
+    let result =  await Chat.find({users:username})
+    console.log(result);
     socket.emit("getRooms", result);
   });
 
@@ -65,9 +76,16 @@ io.on("connection", async (socket) => {
   });
 
   socket.on("newMessage", (data) => {
-    console.log(data);
+    console.log("NEW MESSAGE",data);
     const { room_id, message, username, timestamp } = data;
+    var stringTime = `${timestamp.hour}:${timestamp.mins} `
+    Chat.findOneAndUpdate({room_id:room_id},
+        {"$push":{messages:{body:message,time:stringTime,user:username}}}
+      ).then((res)=>{
+        console.log(res) // I don't think we need to really do anything here
+      })
     let result = chatRooms.filter((room) => room.room == room_id);
+    console.log(result);
     const newMessage = {
       text: message,
       username,
