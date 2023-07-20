@@ -32,11 +32,11 @@ const NewChat = ({ setVisible, user_message }) => {
             onChange={setGroupName}
           />
           <View style={styles.buttons}>
-            <TouchableOpacity style={styles.button} onPress={closeModal}>
-              <Text style={styles.close}>Cancel</Text>
-            </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={handleCreateRoom}>
               <Text style={styles.add}>Chat</Text>
+            </TouchableOpacity>            
+            <TouchableOpacity style={styles.button} onPress={closeModal}>
+              <Text style={styles.close}>Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>
