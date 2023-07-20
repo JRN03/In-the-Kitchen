@@ -15,7 +15,7 @@ const Chat = ({ route }) => {
   const [chatMessages, setChatMessages] = useState([]);
 
   useLayoutEffect(() => {
-    console.log(route.params);
+    // console.log(route.params);
     socket.emit("findRoom", route.params.name);
     socket.on("foundRoom", (roomChats) => setChatMessages(roomChats));
   }, []);
@@ -27,7 +27,10 @@ const Chat = ({ route }) => {
   return (
     <SafeAreaView style={PageStyles.main}>
       <View style={PageStyles.contentWrap}>
-        <NewMessage></NewMessage>
+        <NewMessage
+          username={route.params.username}
+          room={route.params.name}
+        ></NewMessage>
       </View>
     </SafeAreaView>
   );

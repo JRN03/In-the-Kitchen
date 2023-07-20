@@ -17,7 +17,7 @@ import {
   RobotoSlab_900Black,
 } from "@expo-google-fonts/roboto-slab";
 
-export default ChatComponent = ({ route, roomName, socket }) => {
+export default ChatComponent = ({ roomName, username }) => {
   const navigation = useNavigation();
   let [fontsLoaded] = useFonts({
     RobotoSlab_100Thin,
@@ -33,7 +33,7 @@ export default ChatComponent = ({ route, roomName, socket }) => {
 
   const toMessenger = () => {
     // console.log("To the messenger");
-    navigation.navigate("Chat", { name: roomName });
+    navigation.navigate("Chat", { name: roomName, username: username });
   };
 
   // console.log("Roomname", roomName);

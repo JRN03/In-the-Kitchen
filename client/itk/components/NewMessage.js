@@ -6,12 +6,31 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
+import socket from "../utils/socket";
 
-const NewMessage = () => {
+const NewMessage = ({ username, room }) => {
+  // console.log("new message=", username);
   const [message, setMessage] = useState("");
 
   const sendButtonHandler = () => {
-    console.log("sent: ", message);
+    const hour =
+      new Date().getHours() < 10
+        ? `0${new Date().getHours()}`
+        : `${new Date().getHours()}`;
+
+    const mins =
+      new Date().getMinutes() < 10
+        ? `0${new Date().getMinutes()}`
+        : `${new Date().getMinutes()}`;
+
+    if (message.length > 0) {
+      socket.emit("newMessage", {
+        message,
+        room_id: room,
+        username,
+        timestamp: { hour, mins },
+      });
+    }
   };
 
   return (

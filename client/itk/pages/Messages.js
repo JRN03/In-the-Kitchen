@@ -82,10 +82,8 @@ export default Messages = ({ route }) => {
     setVisible(true);
   };
 
-  let room;
-
   const createMessage = (value) => {
-    room = uname + value;
+    let room = uname + value;
     // console.log(room);
     socket.emit("createRoom", { uname, room });
     socket.on("roomsList", (rooms) => {
@@ -94,6 +92,8 @@ export default Messages = ({ route }) => {
   };
 
   console.log("rooms", rooms);
+  const result = rooms.map((room) => room.messages);
+  console.log("messages =", result);
 
   return (
     <View>
@@ -109,7 +109,7 @@ export default Messages = ({ route }) => {
             <FlatList
               data={rooms}
               renderItem={({ item, index }) => (
-                <ChatComponent roomName={rooms[index].room} />
+                <ChatComponent roomName={rooms[index].room} username={uname} />
               )}
               keyExtractor={(item) => item.id}
             />

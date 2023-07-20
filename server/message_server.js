@@ -43,6 +43,24 @@ io.on("connection", async (socket) => {
     socket.emit("foundRoom", result[0].messages);
     console.log("Messages Form", result[0].messages);
   });
+
+  socket.on("newMessage", (data) => {
+    console.log(data);
+    const { room_id, message, username, timestamp } = data;
+    let result = chatRooms.filter((room) => room.room == room_id);
+    const newMessage = {
+      text: message,
+      username,
+      time: `${timestamp.hour}:${timestamp.mins}`,
+    };
+    console.log("New Message", newMessage);
+    socket.to(result[0].name).emit("roomMessage", newMessage);
+    result[0].messages.push(newMessage);
+
+    socket.emit("roomsList", chatRooms);
+    socket.emit("foundRoom", result[0].messages);
+  });
+
   socket.on("disconnect", () => {
     socket.disconnect();
     console.log("user disconnected");
