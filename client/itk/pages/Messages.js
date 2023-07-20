@@ -129,7 +129,7 @@ export default Messages = ({ route }) => {
               data={rooms}
               renderItem={({ item, index }) => (
                 <ChatComponent
-                  roomName={rooms[index].room}
+                  roomName={rooms[index].room_id}
                   username={uname}
                   messages={rooms[index].messages}
                 />
