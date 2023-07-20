@@ -106,7 +106,7 @@ export default Messages = ({ route }) => {
         setRooms(data);
       });
     } else {
-      console.log("you don't know this person: send them a request first");
+      Alert.alert("You don't know this person: send them a request first");
     }
   };
 
