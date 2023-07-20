@@ -38,7 +38,7 @@ router.get("/users/:username", verify, async (req, res) => {
     const base64Image = Buffer.from(image).toString("base64");
     return res.status(200).send({ message: "Success",imageData: base64Image });
   } catch (error) {
-    const tempPath = path.join(__dirname, "resources", "NotFound.png");
+    const tempPath = path.join(__dirname, "resources", "TempProfilePic.jpeg");
     const image = fs.readFileSync(tempPath);
     const base64Image = Buffer.from(image).toString("base64");
     return res.status(500).send({ message: "Failed to read the image file",imageData:base64Image });

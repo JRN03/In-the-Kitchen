@@ -78,7 +78,7 @@ export default function Friends({route,navigation}){
     React.useEffect(() => {
     
         const newFriendComponents = friendData.map(data => 
-            <FriendTab key={data.username} name={data.fName+" "+data.lName} data={data}/>
+            <FriendTab key={data.username} username={data.username} name={data.fName+" "+data.lName} data={data}/>
         );
         
         setFriendComponents(newFriendComponents);
