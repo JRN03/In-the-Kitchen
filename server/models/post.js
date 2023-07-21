@@ -10,6 +10,14 @@ const postSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  images: {
+    type: [String],
+    default: []
+  },
+  date: {
+    type: String,
+    required: true
+  }
 });
 postSchema.set("timestamps", true);
 
