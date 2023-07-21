@@ -5,10 +5,7 @@ import { getItemFromCache } from "../ReadCache";
 import light from "../assets/themes/light";
 
 const Message = ({ messages, user, time, currentUser }) => {
-  console.log("current", currentUser);
-
   let chat;
-
   if (currentUser == user) {
     chat = (
       <View>

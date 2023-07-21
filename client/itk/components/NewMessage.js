@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  KeyboardAvoidingView,
 } from "react-native";
 import socket from "../utils/socket";
 
@@ -35,17 +36,18 @@ const NewMessage = ({ username, room }) => {
   };
 
   return (
-    <View style={{ flex: 1, flexDirection: "column-reverse" }}>
+    <KeyboardAvoidingView style={{ flex: 1, flexDirection: "column-reverse" }}>
       <View
         style={{
           // flex: 1,
           flexDirection: "row",
           height: 50,
           justifyContent: "center",
-          position: "absolute",
+          // position: "absolute",
         }}
       >
         <TextInput
+          autoFocus={true}
           style={styles.input}
           placeholder="Direct Message..."
           multiline={true}
@@ -58,7 +60,7 @@ const NewMessage = ({ username, room }) => {
           <Text style={{ color: "white" }}>Send</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

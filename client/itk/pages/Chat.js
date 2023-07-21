@@ -31,7 +31,16 @@ const Chat = ({ route }) => {
     console.log("message sent");
   };
 
-  // console.log("here ", chatMessages);
+  const randKey = (length) => {
+    let result = "";
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  };
 
   return (
     <SafeAreaView style={PageStyles.main}>
@@ -45,9 +54,9 @@ const Chat = ({ route }) => {
               user={chatMessages[index].user}
               time={chatMessages[index].time}
               currentUser={route.params.username}
+              key={randKey(30)}
             />
           )}
-          keyExtractor={(item, index) => chatMessages[index].body}
         />
         <NewMessage
           username={route.params.username}
