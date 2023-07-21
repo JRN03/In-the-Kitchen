@@ -36,7 +36,11 @@ const NewMessage = ({ username, room }) => {
   };
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1, flexDirection: "column-reverse" }}>
+    <KeyboardAvoidingView
+      behavior="padding"
+      style={{ flexDirection: "column-reverse" }}
+      keyboardVerticalOffset={125}
+    >
       <View
         style={{
           // flex: 1,
