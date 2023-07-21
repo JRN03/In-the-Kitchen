@@ -17,8 +17,9 @@ import {
   RobotoSlab_900Black,
 } from "@expo-google-fonts/roboto-slab";
 
-export default ChatComponent = ({ roomName, username, messages }) => {
+export default ChatComponent = ({ roomName, username, messages, pfp }) => {
   const navigation = useNavigation();
+  const [image, setImage] = React.useState();
   let [fontsLoaded] = useFonts({
     RobotoSlab_100Thin,
     RobotoSlab_200ExtraLight,
@@ -39,13 +40,34 @@ export default ChatComponent = ({ roomName, username, messages }) => {
     });
   };
 
+  // console.log("pfp", pfp);
+
+  React.useEffect(() => {
+    console.log(pfp);
+    const getImage = () => {
+      fetch(`http://localhost:8080/images/${pfp.image}`, {
+        method: "GET",
+        headers: { "Content-Type": "appllication/json" },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          // console.log(data.imageData);
+          setImage("data:image/jpeg;base64," + data.imageData);
+        })
+        .catch((e) => console.log("err", e));
+    };
+
+    getImage();
+  }, [image]);
+
+  if (!image) return;
+
+  console.log(image);
+
   // console.log("Roomname", roomName);
   return (
     <TouchableOpacity onPress={toMessenger} style={styles.chatContainer}>
-      <Image
-        source={require("../assets/TempProfilePic.jpeg")}
-        style={styles.image}
-      ></Image>
+      <Image source={{ uri: image }} style={styles.image}></Image>
       <Text style={styles.chat}>{roomName}</Text>
       <ListItem.Chevron color="white" size={40} />
     </TouchableOpacity>
@@ -72,8 +94,6 @@ const styles = StyleSheet.create({
   chat: {
     fontFamily: "RobotoSlab_400Regular",
     color: "white",
-    // borderColor: "red",
-    // borderWidth: 1,
     width: "60%",
   },
   image: {

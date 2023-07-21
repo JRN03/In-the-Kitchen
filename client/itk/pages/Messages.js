@@ -41,63 +41,57 @@ export default Messages = ({ route }) => {
   const [uname, setUName] = useState("");
   const [rooms, setRooms] = useState([]);
 
-  // useLayroutEffect(() => {
-  // function fetchGroups() {
-  //   fetch("http://localhost:4000/api", {})
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       // console.log("my data", data[0]);
-  //       setRooms(data);
-  //     })
-  //     .catch((err) => console.error(err));
-  // }
-  // fetchGroups();
-  //   socket.emit("loadRooms", uname);
-  //   socket.on("getRooms", (data) => {
-  //     console.log("data = ", data);
-  //     setRooms(data);
-  //   });
-  // }, []);
-
   useEffect(() => {
     const getToken = async () => {
       const t = await getItemFromCache(TOKEN);
       const u = await getItemFromCache(UNAME);
       setToken(t);
       setUName(u);
-      getFriends(t);
       socket.emit("loadRooms", u);
       socket.on("getRooms", (data) => {
-        // console.log("data = ", data);
         setRooms(data);
       });
     };
 
-    const getFriends = (t) => {
+    const getFriends = () => {
       fetch("http://localhost:8080/user/friends", {
         method: "GET",
-        headers: { "Content-Type": "appllication/json", token: t },
+        headers: { "Content-Type": "appllication/json", token: token },
       })
         .then((res) => (res.status == 200 ? res.json() : { friends: [] }))
         .then((data) => {
-          let friendUserName = data.friends.map((a) => a.username);
-          setFriendData(friendUserName);
+          // let currentFriends = friendData.friends.map((a) => a.username);
+          setFriendData(data);
         })
         .catch((e) => console.log("err", e));
     };
     getToken();
     getFriends();
-  }, [socket]);
+  }, [token]);
+
+  if (
+    friendData.friends === undefined ||
+    rooms === undefined ||
+    friendData.friends < 1
+  ) {
+    return (
+      <SafeAreaView style={PageStyles.main}>
+        <View style={PageStyles.contentWrap}>
+          <AppHeader route={route} action={newMessage} />
+          <Navbar route={route} />
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   const newMessage = () => {
-    // console.log("Create new message");
-    // console.log(friendData);
     setVisible(true);
   };
 
   const createMessage = (friendUserName) => {
+    let currentFriends = friendData.friends.map((a) => a.username);
     const friends = friendUserName.split(",");
-    let result = friends.every((val) => friendData.includes(val));
+    let result = friends.every((val) => currentFriends.includes(val));
     if (result) {
       socket.emit("createRoom", { uname, friends });
       socket.emit("loadRooms", uname);
@@ -110,9 +104,24 @@ export default Messages = ({ route }) => {
     }
   };
 
-  // console.log("rooms", rooms);
-  const result = rooms.map((room) => room.messages);
-  // console.log("messages =", result);
+  // console.log("\nfriend data\n", friendData.friends);
+  // console.log("\nrooms\n", rooms);
+
+  const friendPFP = (users, uname) => {
+    // console.log("friendData=", friendData);
+    let f;
+    for (const user of users) {
+      if (user !== uname) {
+        f = user;
+        break;
+      }
+    }
+    let result = friendData.friends.filter((friend) => {
+      return friend.username === f;
+    });
+    // console.log("result ===", result);
+    return result;
+  };
 
   return (
     <View>
@@ -132,6 +141,7 @@ export default Messages = ({ route }) => {
                   roomName={rooms[index].room_id}
                   username={uname}
                   messages={rooms[index].messages}
+                  pfp={friendPFP(rooms[index].users, uname)}
                 />
               )}
               keyExtractor={(rooms) => rooms.room_id}
