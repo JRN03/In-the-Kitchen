@@ -9,6 +9,7 @@ import courts from "./routes/courts.js";
 import user from "./routes/user.js";
 import image from "./routes/images.js";
 import friendRequest from "./routes/requests.js";
+import posts from "./routes/post-routes.js";
 
 const PORT = process.env.PORT || 8080;
 
@@ -30,6 +31,7 @@ app.use("/courts", courts);
 app.use("/user", user);
 app.use("/images",image);
 app.use("/friendrequests",friendRequest);
+app.use("/post", posts);
 
 const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
