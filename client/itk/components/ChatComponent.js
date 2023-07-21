@@ -32,7 +32,6 @@ export default ChatComponent = ({ roomName, username, messages }) => {
   });
 
   const toMessenger = () => {
-    // console.log("To the messenger");
     navigation.navigate("Chat", {
       name: roomName,
       username: username,

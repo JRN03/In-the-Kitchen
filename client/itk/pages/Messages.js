@@ -68,7 +68,7 @@ export default Messages = ({ route }) => {
       getFriends(t);
       socket.emit("loadRooms", u);
       socket.on("getRooms", (data) => {
-        console.log("data = ", data);
+        // console.log("data = ", data);
         setRooms(data);
       });
     };
@@ -102,7 +102,7 @@ export default Messages = ({ route }) => {
       socket.emit("createRoom", { uname, friends });
       socket.emit("loadRooms", uname);
       socket.on("getRooms", (data) => {
-        console.log("data = ", data);
+        // console.log("data = ", data);
         setRooms(data);
       });
     } else {

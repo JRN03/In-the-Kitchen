@@ -6,6 +6,7 @@ import {
   FlatList,
   Pressable,
   SafeAreaView,
+  StyleSheet,
 } from "react-native";
 import socket from "../utils/socket";
 import { PageStyles } from "../assets/Styles";
@@ -42,9 +43,10 @@ const Chat = ({ route }) => {
               messages={chatMessages[index].body}
               user={chatMessages[index].user}
               time={chatMessages[index].time}
+              currentUser={route.params.username}
             />
           )}
-          keyExtractor={ (item,index)=>chatMessages[index].body}
+          keyExtractor={(item, index) => chatMessages[index].body}
         />
         {/* <Message messages={chatMessage}></Message> */}
         <NewMessage
