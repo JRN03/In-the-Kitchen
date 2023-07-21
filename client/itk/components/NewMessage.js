@@ -38,10 +38,11 @@ const NewMessage = ({ username, room }) => {
     <View style={{ flex: 1, flexDirection: "column-reverse" }}>
       <View
         style={{
-          flex: 1,
+          // flex: 1,
           flexDirection: "row",
-          maxHeight: "20%",
+          height: 50,
           justifyContent: "center",
+          position: "absolute",
         }}
       >
         <TextInput

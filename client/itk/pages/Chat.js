@@ -37,6 +37,7 @@ const Chat = ({ route }) => {
     <SafeAreaView style={PageStyles.main}>
       <View style={PageStyles.contentWrap}>
         <FlatList
+          style={{ maxHeight: "90%" }}
           data={chatMessages}
           renderItem={({ item, index }) => (
             <Message
@@ -48,7 +49,6 @@ const Chat = ({ route }) => {
           )}
           keyExtractor={(item, index) => chatMessages[index].body}
         />
-        {/* <Message messages={chatMessage}></Message> */}
         <NewMessage
           username={route.params.username}
           room={route.params.name}
