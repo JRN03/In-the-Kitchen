@@ -15,7 +15,6 @@ export default function ParkCard(props){
     useEffect(()=>{
         function mapMeetTimes(){
             setMeetings(props.meetTimes.map((item,index)=>{
-                // console.log(item)
                 return(
                     <Text
                       key = {index*100}
@@ -28,14 +27,10 @@ export default function ParkCard(props){
         const getPermissions = async () => {
             let { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== 'granted') {
-              console.log("Please grant location permissions");
               return;
             }
       
             let currentLocation = await Location.getCurrentPositionAsync({});
-            // (currentLocation);
-            console.log("Location:");
-            console.log(currentLocation);
       
             // setMapLat(currentLocation.coords.latitude);
             // setMapLon(currentLocation.coords.longitude);

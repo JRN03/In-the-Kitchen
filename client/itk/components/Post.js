@@ -42,7 +42,8 @@ const Card = (props) => {
               <Text style={styles.dateText}>{props.date}</Text>
             </View>
           </View>
-          {props.isNew ? <TextInput multiline onChangeText={(txt) => props.setBody(txt)} style={[styles.input]}/>:<Text style={styles.descriptionText}>{props.body}</Text>}
+          {props.isNew && <TextInput multiline onChangeText={(txt) => props.setBody(txt)} style={[styles.input]}/>}
+          {props.body && <Text style={styles.descriptionText}>{props.body}</Text>}
           {(props.images && props.images.length > 0) && <Carousel isNew={props.isNew} images={props.images}/>}
           {props.isNew && 
             <View style={styles.buttonContainer}>

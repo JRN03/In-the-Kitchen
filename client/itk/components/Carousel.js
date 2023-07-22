@@ -30,7 +30,6 @@ const MyCarousel = (props) => {
       .then(res => res.json())
       .then(data => data.imageData)
       .catch(error => {
-        console.error(`Failed to fetch image data for ${image}: ${error}`);
         return null;
       });
     });
@@ -42,7 +41,6 @@ const MyCarousel = (props) => {
         setImageData(filteredImageData);
       })
       .catch(error => {
-        console.error("Failed to fetch image data for one or more images:", error);
         setImageData([]);
       });
   }, []);

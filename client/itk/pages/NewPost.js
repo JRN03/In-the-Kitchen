@@ -91,10 +91,11 @@ export default function NewPost({route,navigation}){
             date: formattedDate,
             u_id: username
         }
+        if (!body.length && !images.length) return Alert.alert("","Please write a body or upload images");
         const res = await fetch("http://localhost:8080/posts",{
             method: "POST",
             headers: {"Content-Type":"application/json",token:token},
-            body: fetchBody
+            body: JSON.stringify(fetchBody)
         });
         const data = await res.json();
         Alert.alert("",data.message);

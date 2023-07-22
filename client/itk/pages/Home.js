@@ -18,7 +18,7 @@ export default function Home({route,navigation}){
 
     // Long poll for posts and set posts
     useEffect(() => {
-        
+
         const getToken = async () => {
             token.current = await getItemFromCache(TOKEN);
         }
@@ -26,19 +26,24 @@ export default function Home({route,navigation}){
         const getPosts = () => {
             fetch("http://localhost:8080/posts",{
                 method: "GET",
-                headers: {"Content-Type":"appllication/json",token:token}
+                headers: {"Content-Type":"appllication/json",token:token.current}
             })
             .then(res => res.json())
             .then(data => {
-                setPosts(data.posts);
+                if(data.posts) setPosts(data.posts);
             })
             .catch(e => console.log('err in Home',e));
 
         }
 
-        getToken();
-        getPosts();
-        const interval = setInterval(getPosts, 120000); // Send request every 2 minutes
+        const getData = async () => {
+            if (!token.current) await getToken();
+            getPosts();
+        }
+
+        getData();
+
+        const interval = setInterval(getData, 120000); // Send request every 2 minutes
 
         return () => {
             clearInterval(interval); // Clean up the interval when component unmounts
@@ -47,8 +52,8 @@ export default function Home({route,navigation}){
     },[])
     // Will run whenever the posts are set/changed
     useEffect(() => {
-        const newPostComponents = posts.map(post => 
-            <Post key={post.u_id} id={post.u_id} body={post.body} images={post.images} date={post.date || "07/19/23"}/>
+        const newPostComponents = posts.map((post,index) => 
+            <Post key={index} id={post.u_id} body={post.body} images={post.images} date={post.date || "07/19/23"}/>
         );
         setPostComponents(newPostComponents);
     },[posts]);

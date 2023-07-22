@@ -31,7 +31,7 @@ app.use("/courts", courts);
 app.use("/user", user);
 app.use("/images",image);
 app.use("/friendrequests",friendRequest);
-app.use("/post", posts);
+app.use("/posts", posts);
 
 const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
