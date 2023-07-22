@@ -62,6 +62,7 @@ router.post("/", verify, async (req,res)=>{
 router.get("/",verify, async(req,res) => {
     const user = await User.findOne({_id:req.id});
     const posts = await Post.find().sort({'_id':-1});
+    if (!user || !posts) return res.status(404).send({message:"Content Not Found"}); 
     const filteredPosts = posts.filter(post => user.friends.includes(post.u_id) || post.u_id === user.username);
     res.status(200).send({message:"Success",posts: filteredPosts});
 });

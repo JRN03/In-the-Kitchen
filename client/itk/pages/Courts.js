@@ -86,7 +86,7 @@ export default function Courts({navigation,route}) {
     var currentCourtObject = courtObject.current
     setCourtTabs(results.map((item,index)=>{
         return(
-          <ParkTab key={item.name} name={item.name} onPress= { ()=>{redirectToPark(item)}}/>
+          <ParkTab key={item.placesID} name={item.name} onPress= { ()=>{redirectToPark(item)}}/>
          )
     }))
     //at this point we just need to make the posts and all of the courts encountered by users will auto populate in the DB

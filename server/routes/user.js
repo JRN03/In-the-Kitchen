@@ -28,7 +28,7 @@ router.get("/", verify, async (req, res) => {
       return res.status(404).send({ ...data, imageData: base64Image,message:"Failed to retrieve image" });
     }
   }
-  return res.status(404).send({ message: "ID not Found" });
+  return res.status(400).send({ message: "ID not Found" });
 });
 
 router.get("/pfp", verify, async (req, res) => {
