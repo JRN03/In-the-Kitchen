@@ -13,6 +13,7 @@ import ParkView from "./pages/ParkView";
 import AddCourt from "./pages/UploadCourt";
 import ViewFriend from "./pages/ViewFriend";
 import FriendRequests from "./pages/FriendRequests";
+import NewPost from "./pages/NewPost";
 
 const Stack = createNativeStackNavigator();
 
@@ -80,6 +81,11 @@ export default function App() {
           options={{ headerShown: false }}
           name="FriendRequests"
           component={FriendRequests}
+        />
+        <Stack.Screen
+          name="NewPost"
+          options={{ headerShown: false }}
+          component={NewPost}
         />
       </Stack.Navigator>
     </NavigationContainer>

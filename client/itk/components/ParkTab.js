@@ -16,11 +16,7 @@ import {
     RobotoSlab_900Black,
 } from '@expo-google-fonts/roboto-slab';
 export default function ParkTab(props) {
-    // function redirect(){
-    //     console.log("HELLO", props.name);
-    //     //redirect using props.fullBody
-    //     //redirect to Park page
-    // }
+
     let [fontsLoaded] = useFonts({
         RobotoSlab_100Thin,
         RobotoSlab_200ExtraLight,

@@ -59,7 +59,7 @@ export default function ParkView({ navigation, route }) {
 
   return (
     <SafeAreaView style={PageStyles.main}>
-      <AppHeader />
+      <AppHeader noAction/>
       <ScrollView style={styles.contentWrap}>
         <View style={styles.textContainer}>
           <Text style={styles.introText}>{props.name}</Text>

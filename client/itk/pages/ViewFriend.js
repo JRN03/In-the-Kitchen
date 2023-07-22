@@ -18,7 +18,7 @@ const ViewFriend = ({route}) => {
   //imageRoute is the path which will be stored in database. For the image uri, need to make get reequst to server for base64 data
   return (
     <SafeAreaView style={PageStyles.main}>
-      <AppHeader route={route}/>
+      <AppHeader route={route} noAction/>
       <View style={PageStyles.contentWrap}>
         <View style={styles.container}>
           <Image
