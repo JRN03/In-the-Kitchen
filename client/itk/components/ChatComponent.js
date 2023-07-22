@@ -43,9 +43,9 @@ export default ChatComponent = ({ roomName, username, messages, pfp }) => {
   // console.log("pfp", pfp);
 
   React.useEffect(() => {
-    console.log(pfp);
+    // console.log("pfp", pfp[0].image);
     const getImage = () => {
-      fetch(`http://localhost:8080/images/${pfp.image}`, {
+      fetch(`http://localhost:8080/images/${pfp[0].image}`, {
         method: "GET",
         headers: { "Content-Type": "appllication/json" },
       })
@@ -58,11 +58,11 @@ export default ChatComponent = ({ roomName, username, messages, pfp }) => {
     };
 
     getImage();
-  }, [image]);
+  }, []);
 
   if (!image) return;
 
-  console.log(image);
+  // console.log(image);
 
   // console.log("Roomname", roomName);
   return (
@@ -97,10 +97,10 @@ const styles = StyleSheet.create({
     width: "60%",
   },
   image: {
-    maxHeight: 50,
-    maxWidth: 50,
+    height: "80%",
+    aspectRatio: 1,
     marginRight: 25,
     marginLeft: 10,
-    borderRadius: 25,
+    borderRadius: 360,
   },
 });

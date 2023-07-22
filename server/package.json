@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "devStart": "nodemon index.js",
-    "dev": "nodemon message_server.js"
+    "dev": "nodemon message_server.js",
+    "merge": "nodemon merged-server.js"
   },
   "keywords": [],
   "author": "",

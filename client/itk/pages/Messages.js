@@ -76,8 +76,8 @@ export default Messages = ({ route }) => {
   ) {
     return (
       <SafeAreaView style={PageStyles.main}>
+        <AppHeader route={route} action={newMessage} />
         <View style={PageStyles.contentWrap}>
-          <AppHeader route={route} action={newMessage} />
           <Navbar route={route} />
         </View>
       </SafeAreaView>
@@ -125,10 +125,8 @@ export default Messages = ({ route }) => {
 
   return (
     <View>
-      {visible ? (
+      {visible && (
         <NewChat setVisible={setVisible} user_message={createMessage}></NewChat>
-      ) : (
-        ""
       )}
       <SafeAreaView style={PageStyles.main}>
         <AppHeader route={route} action={newMessage} />
