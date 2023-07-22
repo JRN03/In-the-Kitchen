@@ -1,13 +1,5 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import {
-  View,
-  TextInput,
-  Text,
-  FlatList,
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-} from "react-native";
+import { View, FlatList, SafeAreaView } from "react-native";
 import socket from "../utils/socket";
 import { PageStyles } from "../assets/Styles";
 import NewMessage from "../components/NewMessage";
@@ -27,10 +19,6 @@ const Chat = ({ route }) => {
     socket.on("foundRoom", (roomChats) => setChatMessages(roomChats));
   }, [socket]);
 
-  const sentMessageHandler = () => {
-    console.log("message sent");
-  };
-
   const randKey = (length) => {
     let result = "";
     const characters =
@@ -48,7 +36,7 @@ const Chat = ({ route }) => {
         <FlatList
           style={{ maxHeight: "90%" }}
           data={chatMessages}
-          renderItem={({ item, index }) => (
+          renderItem={({ index }) => (
             <Message
               messages={chatMessages[index].body}
               user={chatMessages[index].user}
@@ -61,7 +49,6 @@ const Chat = ({ route }) => {
         <NewMessage
           username={route.params.username}
           room={route.params.name}
-          sent={sentMessageHandler}
         ></NewMessage>
       </View>
     </SafeAreaView>

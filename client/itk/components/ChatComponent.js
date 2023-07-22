@@ -17,7 +17,7 @@ import {
   RobotoSlab_900Black,
 } from "@expo-google-fonts/roboto-slab";
 
-export default ChatComponent = ({ roomName, username, messages, pfp }) => {
+export default ChatComponent = ({ roomName, username, messages, friends }) => {
   const navigation = useNavigation();
   const [image, setImage] = React.useState();
   let [fontsLoaded] = useFonts({
@@ -41,27 +41,35 @@ export default ChatComponent = ({ roomName, username, messages, pfp }) => {
   };
 
   React.useEffect(() => {
-    // console.log("pfp", pfp[0].image);
-    const getImage = () => {
-      fetch(`http://localhost:8080/images/${pfp[0].image}`, {
-        method: "GET",
-        headers: { "Content-Type": "appllication/json" },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          // console.log(data.imageData);
-          setImage("data:image/jpeg;base64," + data.imageData);
+    // get friend username
+    const result = roomName.split(":");
+    const friendName = result.filter((f) => {
+      return f !== username;
+    });
+    // pull first friend data
+    const pfp = friends.filter((f) => {
+      return f.username === friendName[0];
+    });
+    if (friends.length > 0) {
+      const getImage = () => {
+        fetch(`http://localhost:8080/images/${pfp[0].image}`, {
+          method: "GET",
+          headers: { "Content-Type": "appllication/json" },
         })
-        .catch((e) => console.log("err", e));
-    };
-
-    getImage();
+          .then((res) => res.json())
+          .then((data) => {
+            setImage("data:image/jpeg;base64," + data.imageData);
+          })
+          .catch((e) => console.log("err", e));
+      };
+      getImage();
+    }
   }, []);
 
   if (!image) return;
 
-  let result = roomName.split(":");
-  let rname = result.filter((n) => {
+  const result = roomName.split(":");
+  const rname = result.filter((n) => {
     return n !== username;
   });
 

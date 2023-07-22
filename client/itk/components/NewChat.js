@@ -1,29 +1,24 @@
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  Modal,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, Modal, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import light from "../assets/themes/light";
 import Searchbar from "./Searchbar";
+import socket from "../utils/socket";
 
 const NewChat = ({ setVisible, user_message }) => {
   const closeModal = () => setVisible(false);
   const [groupName, setGroupName] = useState("");
 
   const handleCreateRoom = () => {
+    socket.on("roomExists", (data) => {
+      if (data !== undefined) {
+        alert(`Chat already exists`);
+      }
+    });
     user_message(groupName);
     closeModal();
   };
   return (
-    <Modal
-      // visible={setVisible}
-      transparent={true}
-      animationType="fade"
-    >
+    <Modal transparent={true} animationType="fade">
       <View style={styles.modalContainer}>
         <View style={styles.popupContainer}>
           <Searchbar
@@ -34,7 +29,7 @@ const NewChat = ({ setVisible, user_message }) => {
           <View style={styles.buttons}>
             <TouchableOpacity style={styles.button} onPress={handleCreateRoom}>
               <Text style={styles.add}>Chat</Text>
-            </TouchableOpacity>            
+            </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={closeModal}>
               <Text style={styles.close}>Cancel</Text>
             </TouchableOpacity>

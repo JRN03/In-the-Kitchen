@@ -8,11 +8,9 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import socket from "../utils/socket";
-import { Icon } from "react-native-elements";
 import { Send } from "react-native-feather";
 
 const NewMessage = ({ username, room }) => {
-  // console.log("new message=", username);
   const [message, setMessage] = useState("");
 
   const sendButtonHandler = () => {
@@ -45,14 +43,12 @@ const NewMessage = ({ username, room }) => {
     >
       <View
         style={{
-          // flex: 1,
           flexDirection: "row",
           maxHeight: 100,
           minHeight: 30,
           justifyContent: "center",
           borderTopColor: "grey",
           borderTopWidth: 2,
-          // position: "absolute",
         }}
       >
         <TextInput
@@ -68,7 +64,6 @@ const NewMessage = ({ username, room }) => {
           onPress={sendButtonHandler}
         >
           <Send color="white" style={{ marginTop: 10 }}></Send>
-          {/* <Text style={{ color: "white" }}>Send</Text> */}
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>

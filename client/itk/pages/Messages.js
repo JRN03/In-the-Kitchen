@@ -1,5 +1,12 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import { SafeAreaView, View, StyleSheet, FlatList, Alert } from "react-native";
+import {
+  SafeAreaView,
+  View,
+  StyleSheet,
+  FlatList,
+  Alert,
+  ScrollView,
+} from "react-native";
 import Navbar from "../components/Navbar";
 import { PageStyles } from "../assets/Styles";
 import AppHeader from "../components/AppHeader";
@@ -40,6 +47,7 @@ export default Messages = ({ route }) => {
   const [friendData, setFriendData] = useState([]);
   const [uname, setUName] = useState("");
   const [rooms, setRooms] = useState([]);
+  const [chatComp, setChatComp] = useState();
 
   useEffect(() => {
     const getToken = async () => {
@@ -52,7 +60,7 @@ export default Messages = ({ route }) => {
         setRooms(data);
       });
     };
-
+    getToken();
     const getFriends = () => {
       fetch("http://localhost:8080/user/friends", {
         method: "GET",
@@ -60,67 +68,44 @@ export default Messages = ({ route }) => {
       })
         .then((res) => (res.status == 200 ? res.json() : { friends: [] }))
         .then((data) => {
-          // let currentFriends = friendData.friends.map((a) => a.username);
           setFriendData(data);
         })
         .catch((e) => console.log("err", e));
     };
-    getToken();
     getFriends();
   }, [token]);
 
-  if (
-    friendData.friends === undefined ||
-    rooms === undefined ||
-    friendData.friends < 1
-  ) {
-    return (
-      <SafeAreaView style={PageStyles.main}>
-        <AppHeader route={route} action={newMessage} />
-        <View style={PageStyles.contentWrap}>
-          <Navbar route={route} />
-        </View>
-      </SafeAreaView>
-    );
-  }
+  React.useEffect(() => {
+    const newChatComp = rooms.map((data) => (
+      <ChatComponent
+        key={data.room_id}
+        roomName={data.room_id}
+        username={uname}
+        messages={data.messages}
+        friends={friendData.friends}
+      />
+    ));
+    setChatComp(newChatComp);
+  }, [friendData]);
 
   const newMessage = () => {
     setVisible(true);
   };
 
   const createMessage = (friendUserName) => {
-    let currentFriends = friendData.friends.map((a) => a.username);
+    // check if user is friends with person to message
+    const currentFriends = friendData.friends.map((a) => a.username);
     const friends = friendUserName.split(",");
-    let result = friends.every((val) => currentFriends.includes(val));
+    const result = friends.every((val) => currentFriends.includes(val));
     if (result) {
       socket.emit("createRoom", { uname, friends });
       socket.emit("loadRooms", uname);
       socket.on("getRooms", (data) => {
-        // console.log("data = ", data);
         setRooms(data);
       });
     } else {
       Alert.alert("You don't know this person: send them a request first");
     }
-  };
-
-  // console.log("\nfriend data\n", friendData.friends);
-  // console.log("\nrooms\n", rooms);
-
-  const friendPFP = (users, uname) => {
-    // console.log("friendData=", friendData);
-    let f;
-    for (const user of users) {
-      if (user !== uname) {
-        f = user;
-        break;
-      }
-    }
-    let result = friendData.friends.filter((friend) => {
-      return friend.username === f;
-    });
-    // console.log("result ===", result);
-    return result;
   };
 
   return (
@@ -131,25 +116,10 @@ export default Messages = ({ route }) => {
       <SafeAreaView style={PageStyles.main}>
         <AppHeader route={route} action={newMessage} />
         <View style={PageStyles.contentWrap}>
-          {rooms.length > 0 && (
-            <FlatList
-              data={rooms}
-              renderItem={({ item, index }) => (
-                <ChatComponent
-                  roomName={rooms[index].room_id}
-                  username={uname}
-                  messages={rooms[index].messages}
-                  pfp={friendPFP(rooms[index].users, uname)}
-                />
-              )}
-              keyExtractor={(rooms) => rooms.room_id}
-            />
-          )}
+          {rooms.length > 0 && <ScrollView>{chatComp}</ScrollView>}
           <Navbar route={route} />
         </View>
       </SafeAreaView>
     </View>
   );
 };
-
-const styles = StyleSheet.create({});

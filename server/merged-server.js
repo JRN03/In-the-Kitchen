@@ -16,7 +16,6 @@ import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
-
 import auth from "./routes/auth.js";
 import courts from "./routes/courts.js";
 import user from "./routes/user.js";
@@ -54,14 +53,14 @@ io.on("connection", async (socket) => {
     friends.push(uname);
     friends.sort();
     const room = friends.join(":");
-    try{
-        const newChat =  await Chat.create({ room_id: room, users: [...friends] });
-        console.log(newChat);
-    }catch(e){
-        console.log(e);
-        console.log("ERROR")
+    try {
+      const newChat = await Chat.create({ room_id: room, users: [...friends] });
+      console.log(newChat);
+    } catch (e) {
+      socket.emit("roomExists", friends);
+      console.log(e);
+      console.log("ERROR");
     }
-    
   });
   socket.on("loadRooms", async (username) => {
     // console.log(username);
@@ -83,7 +82,7 @@ io.on("connection", async (socket) => {
   socket.on("newMessage", (data) => {
     const { room_id, message, username, timestamp } = data;
     console.log("NEW MESSAGE", message);
-    var stringTime = `${timestamp.hour}:${timestamp.mins} `;
+    const stringTime = `${timestamp.hour}:${timestamp.mins} `;
     Chat.findOneAndUpdate(
       { room_id: room_id },
       {
@@ -94,7 +93,7 @@ io.on("connection", async (socket) => {
     ).then((res) => {
       console.log(res); // I don't think we need to really do anything here
     });
-    let result = chatRooms.filter((room) => room.room_id == room_id);
+    const result = chatRooms.filter((room) => room.room_id == room_id);
     // console.log("result", result);
     const newMessage = {
       body: message,
@@ -129,6 +128,6 @@ app.use("/friendrequests", friendRequest);
 
 server.listen(4000, () => console.log(`server is running on port ${4000}`));
 const secondServer = app.listen(PORT, () => {
-    console.log(`Second server running on port ${PORT}`);
+  console.log(`Second server running on port ${PORT}`);
 });
 secondServer.keepAliveTimeout = 65000;
