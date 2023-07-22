@@ -40,8 +40,6 @@ export default ChatComponent = ({ roomName, username, messages, pfp }) => {
     });
   };
 
-  // console.log("pfp", pfp);
-
   React.useEffect(() => {
     // console.log("pfp", pfp[0].image);
     const getImage = () => {
@@ -62,13 +60,15 @@ export default ChatComponent = ({ roomName, username, messages, pfp }) => {
 
   if (!image) return;
 
-  // console.log(image);
+  let result = roomName.split(":");
+  let rname = result.filter((n) => {
+    return n !== username;
+  });
 
-  // console.log("Roomname", roomName);
   return (
     <TouchableOpacity onPress={toMessenger} style={styles.chatContainer}>
       <Image source={{ uri: image }} style={styles.image}></Image>
-      <Text style={styles.chat}>{roomName}</Text>
+      <Text style={styles.chat}>{rname[0]}</Text>
       <ListItem.Chevron color="white" size={40} />
     </TouchableOpacity>
   );

@@ -86,6 +86,7 @@ export default function App() {
             headerTitleStyle: {
               fontWeight: "bold",
             },
+            headerShadowVisible: false,
           })}
           name="Chat"
           component={Chat}

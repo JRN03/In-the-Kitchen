@@ -8,6 +8,8 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import socket from "../utils/socket";
+import { Icon } from "react-native-elements";
+import { Send } from "react-native-feather";
 
 const NewMessage = ({ username, room }) => {
   // console.log("new message=", username);
@@ -39,14 +41,17 @@ const NewMessage = ({ username, room }) => {
     <KeyboardAvoidingView
       behavior="padding"
       style={{ flexDirection: "column-reverse" }}
-      keyboardVerticalOffset={125}
+      keyboardVerticalOffset={150}
     >
       <View
         style={{
           // flex: 1,
           flexDirection: "row",
-          height: 50,
+          maxHeight: 100,
+          minHeight: 30,
           justifyContent: "center",
+          borderTopColor: "grey",
+          borderTopWidth: 2,
           // position: "absolute",
         }}
       >
@@ -54,6 +59,7 @@ const NewMessage = ({ username, room }) => {
           autoFocus={true}
           style={styles.input}
           placeholder="Direct Message..."
+          value={message}
           multiline={true}
           onChangeText={setMessage}
         ></TextInput>
@@ -61,7 +67,8 @@ const NewMessage = ({ username, room }) => {
           style={{ justifyContent: "center" }}
           onPress={sendButtonHandler}
         >
-          <Text style={{ color: "white" }}>Send</Text>
+          <Send color="white" style={{ marginTop: 10 }}></Send>
+          {/* <Text style={{ color: "white" }}>Send</Text> */}
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
@@ -75,6 +82,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: "80%",
     marginRight: 10,
+    padding: 5,
+    marginTop: 10,
   },
   container: {},
 });
