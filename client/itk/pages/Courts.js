@@ -1,19 +1,21 @@
 import { View, StyleSheet, Text, ScrollView, SafeAreaView } from "react-native";
 import MapView, {Marker, PROVIDER_GOOGLE} from "react-native-maps";
-import {React, useState, useEffect, useRef} from "react";
+import React,{ useState, useEffect, useRef} from "react";
 import ParkTab from "../components/ParkTab";
 import light from "../assets/themes/light.js";
 import AppHeader from "../components/AppHeader";
 import Navbar from "../components/Navbar";
 import {PageStyles} from "../assets/Styles";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import * as Location from 'expo-location';
 
 
 export default function Courts({navigation,route}) {
-
+  // console.log(React);
   const onRegionChange = (region)=>{
+    getCourtsFromSearch(region.latitude,region.longitude)
   }
   //used for loading data from the backend for courts
   const courtObject = useRef({});
@@ -91,11 +93,13 @@ export default function Courts({navigation,route}) {
     }))
     //at this point we just need to make the posts and all of the courts encountered by users will auto populate in the DB
   }
-
-  useEffect(() => {
+  useFocusEffect( React.useCallback(() => {
+    // const unsubscribe = API.subscribe(userId, user => setUser(user));
+    let isActive = true;
     const getCourts = async () => {
       const res = await fetch('http://localhost:8080/courts/all');
       const data = await res.json();
+      // console.log(data);
       var master = {};
       for(var i = 0; i<data.length; i ++){
         var current = data[i].placesID
@@ -117,7 +121,6 @@ export default function Courts({navigation,route}) {
       }
       setCourtData(data);
       courtObject.current = master;
-      //once all the placesIds are found, we make markers and display them
       getPermissions();
     }
     const getPermissions = async () => {
@@ -135,12 +138,13 @@ export default function Courts({navigation,route}) {
       setUserCurrentLocation({lat:currentLocation.coords.latitude,lon:currentLocation.coords.longitude})
       getCourtsFromSearch(currentLocation.coords.latitude,currentLocation.coords.longitude);
     };
-    
+    getCourts();
 
-    getCourts()
+    return () => isActive =false;
+  }, [])
+);
 
-
-  },[])
+  
   function redirectToPark(data){
     navigation.navigate('ParkView',{props:data})
 
