@@ -36,7 +36,7 @@ export default function Review(props){
         //make post method from here
         axios({
             method: 'put',
-            url: `http://localhost:8080/courts/${props.placesID}/rating/${userRating}`,
+            url: `${process.env.EXPO_PUBLIC_ENDPOINT}/courts/${props.placesID}/rating/${userRating}`,
           }).then((response) => {
             // console.log(response.status)
             if(response.status == 201){

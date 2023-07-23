@@ -57,7 +57,7 @@ export default function FriendRequests({route,navigation}){
         };
 
         const fetchData = async () => {
-            fetch("http://localhost:8080/user/friends/requests",{
+            fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/user/friends/requests`,{
                 method: "GET",
                 headers: {"Content-Type":"appllication/json",token:token}
             })

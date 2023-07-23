@@ -21,6 +21,7 @@ import courts from "./routes/courts.js";
 import user from "./routes/user.js";
 import image from "./routes/images.js";
 import friendRequest from "./routes/requests.js";
+import posts from "./routes/post-routes.js";
 
 dotenv.config();
 
@@ -37,7 +38,7 @@ mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true });
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:8080",
+    origin: process.env.ENDPOINT,
     methods: ["GET", "POST"],
   },
 });
@@ -102,6 +103,7 @@ app.use("/courts", courts);
 app.use("/user", user);
 app.use("/images", image);
 app.use("/friendrequests", friendRequest);
+app.use("/posts",posts);
 
 server.listen(4000, () => console.log(`server is running on port ${4000}`));
 const secondServer = app.listen(PORT, () => {

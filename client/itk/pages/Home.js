@@ -15,7 +15,6 @@ export default function Home({route,navigation}){
     const [posts,setPosts] = useState([]);
 
     const [postComponents,setPostComponents] = useState();
-
     // Long poll for posts and set posts
     useEffect(() => {
 
@@ -24,7 +23,7 @@ export default function Home({route,navigation}){
         }
 
         const getPosts = () => {
-            fetch("http://localhost:8080/posts",{
+            fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/posts`,{
                 method: "GET",
                 headers: {"Content-Type":"appllication/json",token:token.current}
             })

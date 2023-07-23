@@ -37,7 +37,7 @@ export default function FriendRequestTab(props) {
 
     const accept = async () => {
         try{
-            await fetch(`http://localhost:8080/friendrequests/accept/${reqId}`, {
+            await fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/friendrequests/accept/${reqId}`, {
                 method: "PUT",
                 headers: {"Content-Type":"application/json"}
             });
@@ -49,7 +49,7 @@ export default function FriendRequestTab(props) {
 
     const decline =  async () => {
         try{
-            await fetch(`http://localhost:8080/friendrequests/decline/${reqId}`, {
+            await fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/friendrequests/decline/${reqId}`, {
                 method: "PUT",
                 headers: {"Content-Type":"application/json"}
             });
@@ -61,7 +61,7 @@ export default function FriendRequestTab(props) {
 
     const cancel =  async () => {
         try{
-            await fetch(`http://localhost:8080/friendrequests/cancel/${reqId}`, {
+            await fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/friendrequests/cancel/${reqId}`, {
                 method: "PUT",
                 headers: {"Content-Type":"application/json"}
             });
@@ -75,7 +75,7 @@ export default function FriendRequestTab(props) {
 
         const getImage = async () => {
           token.current = await getItemFromCache(TOKEN);
-          fetch(`http://localhost:8080/images/users/${props.username}`,{
+          fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/images/users/${props.username}`,{
               method: "GET",
               headers: {"Content-Type":"appllication/json",token:token.current}
           })

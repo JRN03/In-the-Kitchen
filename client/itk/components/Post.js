@@ -21,7 +21,7 @@ const Card = (props) => {
 
       const getImage = async () => {
         token.current = await getItemFromCache(TOKEN);
-        const res = await fetch(`http://localhost:8080/images/users/${props.id}`,{
+        const res = await fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/images/users/${props.id}`,{
             method: "GET",
             headers: {"Content-Type":"appllication/json", token:token.current}
         })

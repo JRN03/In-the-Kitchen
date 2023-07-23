@@ -52,7 +52,7 @@ export default ChatComponent = ({ roomName, username, messages, friends }) => {
     });
     if (friends.length > 0) {
       const getImage = () => {
-        fetch(`http://localhost:8080/images/${pfp[0].image}`, {
+        fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/images/${pfp[0].image}`, {
           method: "GET",
           headers: { "Content-Type": "appllication/json" },
         })

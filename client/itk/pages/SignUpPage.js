@@ -53,7 +53,7 @@ const SignUpPage = () => {
 		if(!validateFields()){
 			return;
 		}
-		fetch('http://localhost:8080/auth/register', {
+		fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/auth/register`, {
 		method: 'POST',
 		body: JSON.stringify({
 			fName: fname,

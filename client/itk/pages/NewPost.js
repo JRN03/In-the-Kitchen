@@ -92,7 +92,7 @@ export default function NewPost({route,navigation}){
             u_id: username
         }
         if (!body.length && !images.length) return Alert.alert("","Please write a body or upload images");
-        const res = await fetch("http://localhost:8080/posts",{
+        const res = await fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/posts`,{
             method: "POST",
             headers: {"Content-Type":"application/json",token:token},
             body: JSON.stringify(fetchBody)

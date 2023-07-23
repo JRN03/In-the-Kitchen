@@ -39,7 +39,7 @@ export default function FriendTab(props) {
 
         const getImage = async () => {
           token.current = await getItemFromCache(TOKEN);
-          fetch(`http://localhost:8080/images/users/${props.data.username}`,{
+          fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/images/users/${props.data.username}`,{
               method: "GET",
               headers: {"Content-Type":"appllication/json",token:token.current}
           })

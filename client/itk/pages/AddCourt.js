@@ -79,7 +79,7 @@ const AddCourt = ({ route }) => {
   async function getInfo(data){
     axios({
       method: 'get',
-      url: `https://maps.googleapis.com/maps/api/place/details/json?placeid=${data.place_id}&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`,
+      url: `https://maps.googleapis.com/maps/api/place/details/json?placeid=${data.place_id}&key=${process.env.EXPO_PUBLIC_API_KEY}`,
     }).then((response) => {
       setMapLat(response.data.result.geometry.location.lat);
       setMapLon(response.data.result.geometry.location.lng);
@@ -118,7 +118,7 @@ const AddCourt = ({ route }) => {
 			return;
 		}
 
-		fetch("http://localhost:8080/courts", {
+		fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/courts`, {
 		method: "POST",
 		body: JSON.stringify({
 			location: Location,
@@ -230,7 +230,7 @@ const AddCourt = ({ route }) => {
             getInfo(data);
           }}
           query={{
-            key: 'AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk',
+            key: `${process.env.EXPO_PUBLIC_API_KEY}`,
             language: "en",
           }}
           onFail={(error) => console.error(error)}

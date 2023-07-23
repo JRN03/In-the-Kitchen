@@ -47,7 +47,7 @@ const EditProfile = ({ route }) => {
       await AsyncStorage.setItem(BIO_KEY, bio);
       await AsyncStorage.setItem(PROFILE_PIC_KEY, profilePic);
   
-      await fetch("http://localhost:8080/user/pfp", {
+      await fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/user/pfp`, {
         method: "PUT",
         body: JSON.stringify({
           uri: profilePic,
@@ -55,7 +55,7 @@ const EditProfile = ({ route }) => {
         headers: { "Content-Type": "application/json", token: token },
       })
   
-      await fetch("http://localhost:8080/user/bio", {
+      await fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/user/bio`, {
         method: "PUT",
         body: JSON.stringify({
           bio: bio,
