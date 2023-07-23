@@ -48,6 +48,7 @@ export default Messages = ({ route }) => {
   const [uname, setUName] = useState("");
   const [rooms, setRooms] = useState([]);
   const [chatComp, setChatComp] = useState();
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     const getToken = async () => {
@@ -74,8 +75,7 @@ export default Messages = ({ route }) => {
     };
     getFriends();
   }, [token]);
-
-  React.useEffect(() => {
+  useEffect(() => {
     const newChatComp = rooms.map((data) => (
       <ChatComponent
         key={data.room_id}
@@ -86,7 +86,7 @@ export default Messages = ({ route }) => {
       />
     ));
     setChatComp(newChatComp);
-  }, [friendData]);
+  }, [friendData, refresh]);
 
   const newMessage = () => {
     setVisible(true);
@@ -94,7 +94,7 @@ export default Messages = ({ route }) => {
 
   const createMessage = (friendUserName) => {
     // check if user is friends with person to message
-    const currentFriends = friendData.friends.map((a) => a.username);
+    const currentFriends = friendData.friends.map((friend) => friend.username);
     const friends = friendUserName.split(",");
     const result = friends.every((val) => currentFriends.includes(val));
     if (result) {
@@ -102,6 +102,7 @@ export default Messages = ({ route }) => {
       socket.emit("loadRooms", uname);
       socket.on("getRooms", (data) => {
         setRooms(data);
+        setRefresh(!refresh);
       });
     } else {
       Alert.alert("You don't know this person: send them a request first");

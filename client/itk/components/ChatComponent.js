@@ -19,7 +19,7 @@ import {
 
 export default ChatComponent = ({ roomName, username, messages, friends }) => {
   const navigation = useNavigation();
-  const [image, setImage] = React.useState();
+  const [image, setImage] = React.useState(null);
   let [fontsLoaded] = useFonts({
     RobotoSlab_100Thin,
     RobotoSlab_200ExtraLight,
@@ -68,15 +68,10 @@ export default ChatComponent = ({ roomName, username, messages, friends }) => {
 
   if (!image) return;
 
-  const result = roomName.split(":");
-  const rname = result.filter((n) => {
-    return n !== username;
-  });
-
   return (
     <TouchableOpacity onPress={toMessenger} style={styles.chatContainer}>
       <Image source={{ uri: image }} style={styles.image}></Image>
-      <Text style={styles.chat}>{rname[0]}</Text>
+      <Text style={styles.chat}>{roomName.split(":").join(", ")}</Text>
       <ListItem.Chevron color="white" size={40} />
     </TouchableOpacity>
   );
@@ -103,6 +98,7 @@ const styles = StyleSheet.create({
     fontFamily: "RobotoSlab_400Regular",
     color: "white",
     width: "60%",
+    fontSize: 18,
   },
   image: {
     height: "80%",
