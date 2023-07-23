@@ -44,7 +44,7 @@ const NewMessage = ({ username, room }) => {
       <View
         style={{
           flexDirection: "row",
-          maxHeight: 100,
+          maxHeight: 300,
           minHeight: 30,
           justifyContent: "center",
           borderTopColor: "grey",
@@ -73,7 +73,6 @@ const NewMessage = ({ username, room }) => {
 const styles = StyleSheet.create({
   input: {
     backgroundColor: "white",
-    maxHeight: 200,
     borderRadius: 10,
     width: "80%",
     marginRight: 10,
