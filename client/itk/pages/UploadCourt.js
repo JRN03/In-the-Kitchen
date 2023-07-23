@@ -102,7 +102,7 @@ export default function Courts({route,navigation}) {
         images: newImages
     }
 
-    fetch("http://localhost:8080/courts", {
+    fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/courts`, {
         method: "POST",
         body: JSON.stringify(body),
         headers: {"Content-Type":"application/json"}
@@ -163,7 +163,7 @@ export default function Courts({route,navigation}) {
   async function getInfo(data){
     axios({
       method: 'get',
-      url: `https://maps.googleapis.com/maps/api/place/details/json?placeid=${data.place_id}&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`,
+      url: `https://maps.googleapis.com/maps/api/place/details/json?placeid=${data.place_id}&key=${process.env.EXPO_PUBLIC_API_KEY}`,
     }).then((response) => {
       setLat(response.data.result.geometry.location.lat);
       setLon(response.data.result.geometry.location.lng);
@@ -187,7 +187,7 @@ export default function Courts({route,navigation}) {
                   getInfo(data);
                 }}
                 query={{
-                  key: 'AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk',
+                  key: `${process.env.EXPO_PUBLIC_API_KEY}`,
                   language: "en",
                 }}
                 onFail={(error) => console.error(error)}

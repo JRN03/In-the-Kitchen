@@ -32,7 +32,7 @@ export default function Courts({navigation,route}) {
   async function getLatLon(data){
     axios({
       method: 'get',
-      url: `https://maps.googleapis.com/maps/api/place/details/json?placeid=${data.place_id}&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`,
+      url: `https://maps.googleapis.com/maps/api/place/details/json?placeid=${data.place_id}&key=${process.env.EXPO_PUBLIC_API_KEY}`,
     }).then((response) => {
       //gotta set the map here
       setMapLat(response.data.result.geometry.location.lat);
@@ -43,9 +43,6 @@ export default function Courts({navigation,route}) {
     
   }
   async function getCourtsFromSearch(lat,lon){
-    // console.log("QUERY", `https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat}%2C${lon}&radius=1500&query=pickleball%court&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`);
-    // var secondRes = await fetch(`https://maps.googleapis.com/maps/api/place/textsearch/json?location=${lat}%2C${lon}&radius=1500&query=pickleball+courts&key=AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk`);
-    // var courtsNearby = await secondRes.json();
 
       const closeCourts = []
       for(const key in courtObject.current){
@@ -97,7 +94,7 @@ export default function Courts({navigation,route}) {
     // const unsubscribe = API.subscribe(userId, user => setUser(user));
     let isActive = true;
     const getCourts = async () => {
-      const res = await fetch('http://localhost:8080/courts/all');
+      const res = await fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/courts/all`);
       const data = await res.json();
       // console.log(data);
       var master = {};
@@ -169,7 +166,7 @@ export default function Courts({navigation,route}) {
           }}
           // GooglePlacesSearchQuery= {[{ rankby: 'distance', type: 'restaurant' }]}
           query={{
-            key: 'AIzaSyBxU1ITfiSI_aOf0aId4B3jcQctMNlzRbk',
+            key: `${process.env.EXPO_PUBLIC_API_KEY}`,
             language: 'en',
           }}
           onFail={(error) => console.error(error)}

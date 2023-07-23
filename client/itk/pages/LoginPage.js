@@ -29,7 +29,7 @@ const LoginPage = ({}) => {
     const checkCache = async () => {
       try {
         const token = await getItemFromCache(TOKEN);
-        await fetch("http://localhost:8080/user", {
+        await fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/user`, {
           method: "GET",
           headers: { "Content-Type": "application/json", token: token },
         }).then((res) => {
@@ -79,7 +79,7 @@ const LoginPage = ({}) => {
     if (!validateFields()) {
       return;
     }
-    fetch("http://localhost:8080/auth/login", {
+    fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/auth/login`, {
       method: "POST",
       body: JSON.stringify({
         username: usernme,

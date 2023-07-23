@@ -54,7 +54,7 @@ export default function Friends({route,navigation}){
 
         const getFriends = () => {
 
-            fetch("http://localhost:8080/user/friends",{
+            fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/user/friends`,{
                 method: "GET",
                 headers: {"Content-Type":"appllication/json",token:token}
             })
