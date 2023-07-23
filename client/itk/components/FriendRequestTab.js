@@ -72,7 +72,6 @@ export default function FriendRequestTab(props) {
     }
 
     React.useEffect(() => {
-
         const getImage = async () => {
           token.current = await getItemFromCache(TOKEN);
           fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/images/users/${props.username}`,{

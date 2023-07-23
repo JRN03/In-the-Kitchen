@@ -19,7 +19,7 @@ export default function ParkCard(props){
                     <Text
                       key = {index*100}
                       style = {{fontFamily:"RobotoSlab_700Bold", fontSize: 18, textAlign : "left", color:"grey",paddingTop:5}}
-                      >{item.day + " " + item.start + " " + item.end}</Text>
+                      >{item.day + " " + item.start + "-" + item.end}</Text>
                 )
                 
             }))

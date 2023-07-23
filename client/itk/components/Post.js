@@ -16,9 +16,7 @@ const Card = (props) => {
     const imageRef = useRef();
 
     useEffect(() => {
-
       if (props.isNew) return setImage(props.pfp);
-
       const getImage = async () => {
         token.current = await getItemFromCache(TOKEN);
         const res = await fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/images/users/${props.id}`,{

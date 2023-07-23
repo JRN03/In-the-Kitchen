@@ -53,7 +53,6 @@ export default function Courts({route,navigation}) {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [4, 3],
-        quality: 1,
         base64: true,
     });
     if (!image.canceled) {
@@ -101,7 +100,7 @@ export default function Courts({route,navigation}) {
         lon: lon,
         images: newImages
     }
-
+    console.log("adding court uploadcourt.js 104");
     fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/courts`, {
         method: "POST",
         body: JSON.stringify(body),

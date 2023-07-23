@@ -52,11 +52,11 @@ export default function Friends({route,navigation}){
             setToken(t);
         };
 
-        const getFriends = () => {
-
+        const getFriends = async () => {
+            if(!token) await getToken();
             fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/user/friends`,{
                 method: "GET",
-                headers: {"Content-Type":"appllication/json",token:token}
+                headers: {"Content-Type":"application/json",token:token}
             })
             .then(res => res.status == 200 ? res.json() : {friends:[]})
             .then(data => {
@@ -65,9 +65,15 @@ export default function Friends({route,navigation}){
             .catch(e => console.log('err',e));
 
         }
+
+        const getData = async () => {
+            if (!token) await getToken();
+            getFriends();
+        }
+
         getToken();
-        getFriends();
-        const interval = setInterval(getFriends, 5000); // Send request every 5 seconds
+        getData();
+        const interval = setInterval(getData, 5000); // Send request every 5 seconds
 
         return () => {
             clearInterval(interval); // Clean up the interval when component unmounts
@@ -88,7 +94,6 @@ export default function Friends({route,navigation}){
     if (!fontsLoaded) {
         return null;
     }
-    
     if (!token) return;
 
     return (

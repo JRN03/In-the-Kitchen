@@ -108,7 +108,6 @@ export default Messages = ({ route }) => {
       Alert.alert("You don't know this person: send them a request first");
     }
   };
-
   return (
     <View>
       {visible && (

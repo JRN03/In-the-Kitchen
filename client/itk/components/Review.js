@@ -6,14 +6,12 @@ const PICKLEBALL_IMG = require('../assets/pickleball.png');
 
 
 export default function Review(props){
-    console.log(props)
     const [modalVisible, setModalVisible] = useState(false);
     const [userRating , setUserRating] = useState(3);
     const [parkRatings, setParkRating]= useState(props.ratings)
     const [parkScore, setParkScore] = useState(0);
     useEffect(()=>{
         var score = 0
-        console.log(parkRatings)
         for(var i = 0; i<parkRatings.length; i++){
             score+=props.ratings[i];
         }
@@ -23,13 +21,11 @@ export default function Review(props){
         else{
             setParkScore(0)
         }
-        console.log("SCORE",parkScore)
 
     },[parkRatings,parkScore])
 
    
     function ratingCompleted(rating) {
-        // console.log("Rating is: " + rating)
         setUserRating(rating)
     } 
     function submitReview(){

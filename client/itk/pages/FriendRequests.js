@@ -55,8 +55,8 @@ export default function FriendRequests({route,navigation}){
             const t = await getItemFromCache(TOKEN);
             setToken(t);
         };
-
         const fetchData = async () => {
+            if (!token) await getToken();
             fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/user/friends/requests`,{
                 method: "GET",
                 headers: {"Content-Type":"appllication/json",token:token}
@@ -98,7 +98,6 @@ export default function FriendRequests({route,navigation}){
     }
 
     if (!token) return;
-    
     return (
         <SafeAreaView style={PageStyles.main}>
             <AppHeader route={route} action={toggleAdd}/>

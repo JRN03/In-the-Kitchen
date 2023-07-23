@@ -47,7 +47,7 @@ export default function NewPost({route,navigation}){
     const formattedDate = `${month}/${day}/${year}`;
 
     useEffect(() => {
-
+        console.log("NEW POSTS 50");
         const loadCache = async () => {
             try {
                 const t = await getItemFromCache(TOKEN);
@@ -75,7 +75,6 @@ export default function NewPost({route,navigation}){
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [4, 3],
-            quality: 1,
             base64: true,
         });
         if (!image.canceled) {

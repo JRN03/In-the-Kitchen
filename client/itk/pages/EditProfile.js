@@ -46,7 +46,7 @@ const EditProfile = ({ route }) => {
     try {
       await AsyncStorage.setItem(BIO_KEY, bio);
       await AsyncStorage.setItem(PROFILE_PIC_KEY, profilePic);
-  
+      console.log("saving edits");
       await fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/user/pfp`, {
         method: "PUT",
         body: JSON.stringify({

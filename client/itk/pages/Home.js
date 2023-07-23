@@ -30,16 +30,16 @@ export default function Home({route,navigation}){
             .then(res => res.json())
             .then(data => {
                 if(data.posts) setPosts(data.posts);
+                // console.log(data);
             })
             .catch(e => console.log('err in Home',e));
 
         }
-
         const getData = async () => {
             if (!token.current) await getToken();
             getPosts();
         }
-
+        getToken();
         getData();
 
         const interval = setInterval(getData, 120000); // Send request every 2 minutes
@@ -56,7 +56,6 @@ export default function Home({route,navigation}){
         );
         setPostComponents(newPostComponents);
     },[posts]);
-
     return (
         <SafeAreaView style={PageStyles.main}>
             <AppHeader route={route} action={() => navigation.navigate("NewPost")}/>

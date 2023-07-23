@@ -35,7 +35,6 @@ import {
 export default function ParkView({ navigation, route }) {
 
   var { props } = route.params;
-  console.log(props);
   const [lat, setLat] = useState(props.lat);
   const [lon, setLon] = useState(props.lon);
   const [mapLatDelta, setMapLatDelta] = useState(0.1);

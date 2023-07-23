@@ -34,7 +34,6 @@ export default function FriendTab(props) {
         RobotoSlab_800ExtraBold,
         RobotoSlab_900Black,
     });
-
     React.useEffect(() => {
 
         const getImage = async () => {

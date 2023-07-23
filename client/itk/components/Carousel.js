@@ -45,6 +45,7 @@ const MyCarousel = (props) => {
       });
   }, []);
 
+  // console.log("Image data",imageData);
   const renderItem = ({ item, index }) => {
     return (
       <View style={styles.slide}>

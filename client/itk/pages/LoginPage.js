@@ -37,7 +37,7 @@ const LoginPage = ({}) => {
             navigation.navigate("Home");
         });
       } catch (e) {
-        console.log(e);
+        console.log("err in check cache login 40",e);
       }
     };
 
@@ -55,7 +55,6 @@ const LoginPage = ({}) => {
       await AsyncStorage.setItem(FNAME, data._doc.fName);
       await AsyncStorage.setItem(LNAME, data._doc.lName);
       await AsyncStorage.setItem(UNAME, data._doc.username);
-      console.log("Data saved");
     } catch (e) {
       console.log(e);
       alert("Failed to save");
