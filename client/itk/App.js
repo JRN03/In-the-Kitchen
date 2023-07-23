@@ -13,12 +13,13 @@ import ParkView from "./pages/ParkView";
 import AddCourt from "./pages/UploadCourt";
 import ViewFriend from "./pages/ViewFriend";
 import FriendRequests from "./pages/FriendRequests";
+import Chat from "./pages/Chat";
+import light from "./assets/themes/light";
 import NewPost from "./pages/NewPost";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-
   return (
     <NavigationContainer style={styles.container}>
       <Stack.Navigator>
@@ -83,6 +84,19 @@ export default function App() {
           component={FriendRequests}
         />
         <Stack.Screen
+          options={({ route }) => ({
+            title: route.params.name,
+            headerStyle: {
+              backgroundColor: light.primary,
+            },
+            headerTintColor: "white",
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
+            headerShadowVisible: false,
+          })}
+          name="Chat"
+          component={Chat}
           name="NewPost"
           options={{ headerShown: false }}
           component={NewPost}
@@ -91,7 +105,6 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {},
