@@ -14,11 +14,14 @@ import {
 } from '@expo-google-fonts/roboto-slab';
 import light from "../assets/themes/light";
 import { useNavigation } from "@react-navigation/native";
+import {getItemFromCache} from "../ReadCache"
+import {TOKEN} from "../AsyncKeys";
 
 export default function FriendTab(props) {
 
     const navigation = useNavigation();
     const [image,setImg] = React.useState();
+    const token = React.useRef();
 
     let [fontsLoaded] = useFonts({
         RobotoSlab_100Thin,
@@ -34,11 +37,11 @@ export default function FriendTab(props) {
 
     React.useEffect(() => {
 
-        const getImage = () => {
-    
-          fetch(`http://localhost:8080/images/${props.data.image}`,{
+        const getImage = async () => {
+          token.current = await getItemFromCache(TOKEN);
+          fetch(`http://localhost:8080/images/users/${props.data.username}`,{
               method: "GET",
-              headers: {"Content-Type":"appllication/json"}
+              headers: {"Content-Type":"appllication/json",token:token.current}
           })
           .then(res => res.json())
           .then(data => {

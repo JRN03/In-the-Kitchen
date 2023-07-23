@@ -34,7 +34,7 @@ router.post('/register', async (req,res) => {
         password: hashPassword
     });
 
-    const token = jwt.sign({id:user._id}, process.env.TOKEN_SECRET,{expiresIn: "60m"});
+    const token = jwt.sign({id:user._id}, process.env.TOKEN_SECRET);
 
     try {
         user.save(); //saves to database
@@ -60,7 +60,7 @@ router.post('/login',async (req,res) => {
     if(!validPassword) return res.status(404).json({message:"Invalid Password"});
 
     //Token for Authentication
-    const token = jwt.sign({id:user._id}, process.env.TOKEN_SECRET,{expiresIn: "60m"});
+    const token = jwt.sign({id:user._id}, process.env.TOKEN_SECRET);
 
     const imagePath = path.join(__dirname, "resources", user.image);
 

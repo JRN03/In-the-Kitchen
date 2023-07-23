@@ -28,7 +28,8 @@ const userSchema = new mongoose.Schema({
         default: "TempProfilePic.jpeg"
     },
     friends: {
-        type: [String]
+        type: [String],
+        default: []
     },
     friendRequests: {
         type: [ObjectId],
