@@ -33,55 +33,39 @@ let chatRooms = [];
 app.use(cors());
 app.use(bodyParser.json({ limit: "50mb" }));
 const server = http.createServer(app);
-// console.log(server)
-
-// console.log(process.env.DB_CONNECT);
 mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true });
-// console.log(mongoose)
+
 const io = new Server(server, {
   cors: {
     origin: "http://localhost:8080",
     methods: ["GET", "POST"],
   },
 });
-// console.log(io);
 io.on("connection", async (socket) => {
-  console.log(`User connected ${socket.id}`);
   socket.on("createRoom", async (data) => {
-    console.log(data);
     const { uname, friends } = data; // seperate incoming data
     friends.push(uname);
     friends.sort();
     const room = friends.join(":");
     try {
       const newChat = await Chat.create({ room_id: room, users: [...friends] });
-      console.log(newChat);
     } catch (e) {
       socket.emit("roomExists", friends);
-      console.log(e);
-      console.log("ERROR");
     }
   });
   socket.on("loadRooms", async (username) => {
-    // console.log(username);
     let result = await Chat.find({ users: username });
     chatRooms = result;
-    console.log(result);
     socket.emit("getRooms", result);
   });
 
   socket.on("findRoom", (id) => {
-    console.log(chatRooms);
-    console.log("id ", id);
     let result = chatRooms.filter((room) => room.room_id == id);
-    console.log("result =", result);
     socket.emit("foundRoom", result[0].messages);
-    console.log("Messages Form", result[0].messages);
   });
 
   socket.on("newMessage", (data) => {
     const { room_id, message, username, timestamp } = data;
-    console.log("NEW MESSAGE", message);
     const stringTime = `${timestamp.hour}:${timestamp.mins} `;
     Chat.findOneAndUpdate(
       { room_id: room_id },
@@ -94,25 +78,18 @@ io.on("connection", async (socket) => {
       console.log(res); // I don't think we need to really do anything here
     });
     const result = chatRooms.filter((room) => room.room_id == room_id);
-    // console.log("result", result);
     const newMessage = {
       body: message,
       user: username,
       time: `${timestamp.hour}:${timestamp.mins}`,
     };
-    console.log("New Message", newMessage);
-    // socket.to(result[0].name).emit("roomMessage", newMessage);
     result[0].messages.push(newMessage);
-
-    console.log("Here", result[0]);
-
     socket.emit("roomsList", chatRooms);
     socket.emit("foundRoom", result[0].messages);
   });
 
   socket.on("disconnect", () => {
     socket.disconnect();
-    console.log("user disconnected");
   });
 });
 
