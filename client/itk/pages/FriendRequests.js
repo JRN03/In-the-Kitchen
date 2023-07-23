@@ -63,7 +63,6 @@ export default function FriendRequests({route,navigation}){
             })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
                 if (data.requestsIn) setRequestIncomingData(data.requestsIn); // array of objects {status, sender fName, sender lName, sender bio, sender username, sender image }
                 if (data.requestsOut) setRequestOutData(data.requestsOut); // array of objects {status, receiver fName, receiver lName, receiver bio, receiver username, receiver image }
             })
@@ -82,11 +81,11 @@ export default function FriendRequests({route,navigation}){
     React.useEffect(() => {
 
         const newInComponents = requestIncomingData.map(data => 
-            <FriendRequestTab incoming reqId={data.reqId} key={data.username} name={data.fName+" "+data.lName} data={data}/>
+            <FriendRequestTab incoming reqId={data.reqId} key={data.username} username={data.username} name={data.fName+" "+data.lName} data={data}/>
         );
     
         const newOutComponents = requestOutData.map(data => 
-            <FriendRequestTab reqId={data.reqId} key={data.username} name={data.fName+" "+data.lName} data={data}/>
+            <FriendRequestTab reqId={data.reqId} key={data.username} username={data.username} name={data.fName+" "+data.lName} data={data}/>
         );
         
         setInComponents(newInComponents);

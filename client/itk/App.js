@@ -9,11 +9,13 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ProfilePage from "./pages/ProfilePage";
 import EditProfile from "./pages/EditProfile";
+import ParkView from "./pages/ParkView";
 import AddCourt from "./pages/UploadCourt";
 import ViewFriend from "./pages/ViewFriend";
 import FriendRequests from "./pages/FriendRequests";
 import Chat from "./pages/Chat";
 import light from "./assets/themes/light";
+import NewPost from "./pages/NewPost";
 import {
   useFonts,
   RobotoSlab_100Thin,
@@ -87,9 +89,14 @@ export default function App() {
         />
         <Stack.Screen
           options={{ headerShown: false }}
+          name="ParkView"
+          component={ParkView}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
           name="AddCourt"
           component={AddCourt}
-        />
+        /> 
         <Stack.Screen
           options={{ headerShown: false }}
           name="ViewFriend"
@@ -116,6 +123,9 @@ export default function App() {
           })}
           name="Chat"
           component={Chat}
+          name="NewPost"
+          options={{ headerShown: false }}
+          component={NewPost}
         />
       </Stack.Navigator>
     </NavigationContainer>

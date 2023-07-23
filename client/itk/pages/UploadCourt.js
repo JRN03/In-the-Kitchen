@@ -22,7 +22,7 @@ import {
 import light from "../assets/themes/light";
 import SelectDropdown from "react-native-select-dropdown";
 
-export default function Courts({route}) {
+export default function Courts({route,navigation}) {
   
   const [lat, setLat] = useState();
   const [lon, setLon] = useState();
@@ -87,7 +87,6 @@ export default function Courts({route}) {
     const newImages = images.filter(image => image.data);
 
     if (!location || !name || !pid || !lat || !lon) {
-        console.log(location,name,pid,lat,lon);
         alert("Missing Fields. Please Select a location from the dropdown");
         return;
     }
@@ -109,13 +108,13 @@ export default function Courts({route}) {
         headers: {"Content-Type":"application/json"}
     })
     .then(res => res.json())
-    .then(data => Alert.alert("",data.message));
+    .then(data => {Alert.alert("",data.message);navigation.pop()});
 
   }
 
   useEffect(() => {
         const imageObjects = images.map((image,index) => (
-            <View style={styles.imageSelectRow}>
+            <View key={index} style={styles.imageSelectRow}>
                 <TouchableOpacity style={styles.imageSelect} onPress={() => {addImage(index)}}>
                     <Text style={styles.imageText}>Select Image</Text>
                 </TouchableOpacity>
@@ -127,7 +126,7 @@ export default function Courts({route}) {
 
   useEffect(() => {
     const meetObjects = meetTimes.map((meet,index) => (
-        <View style={styles.timeForm}>
+        <View key={index} style={styles.timeForm}>
             <SelectDropdown
                 data={["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]}
                 defaultButtonText="Day"
@@ -177,7 +176,7 @@ export default function Courts({route}) {
   
   return (
     <SafeAreaView style={PageStyles.main}>
-      <AppHeader/>
+      <AppHeader noAction/>
       <View style={PageStyles.contentWrap}>
         <View style={[styles.formSection,{zIndex: 1}]}>
             <Text style={styles.formSectionTxt}>Location</Text>

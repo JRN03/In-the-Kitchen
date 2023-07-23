@@ -23,9 +23,8 @@ import light from "../assets/themes/light";
 import { useNavigation } from "@react-navigation/native";
 import { PROFILE_PIC_KEY } from "../AsyncKeys";
 import { getItemFromCache } from "../ReadCache";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const AppHeader = ({ route, action }) => {
+const AppHeader = ({ route, action, noAction }) => {
   const navigation = useNavigation();
 
   let [fontsLoaded] = useFonts({
@@ -41,7 +40,6 @@ const AppHeader = ({ route, action }) => {
   });
 
   const [profilePic, setProfilePic] = useState();
-  const [isReady, setIsReady] = useState(false);
   // make sure that page is rerendered and cache fetched again
   useEffect(() => {
     navigation.addListener("focus", () => {
@@ -51,12 +49,12 @@ const AppHeader = ({ route, action }) => {
     const getProfilePic = async () => {
       const pfp = await getItemFromCache(PROFILE_PIC_KEY);
       setProfilePic(pfp);
-      setIsReady(true);
+      //setIsReady(true);
     };
     getProfilePic();
   }, [navigation]);
 
-  if (!fontsLoaded || !isReady) {
+  if (!fontsLoaded) {
     return null;
   }
 
@@ -79,26 +77,26 @@ const AppHeader = ({ route, action }) => {
       <View style={styles.titleWrap}>
         <Text style={styles.title}>In the Kitchen</Text>
       </View>
-      <TouchableOpacity
+      {!noAction && <TouchableOpacity
         style={styles.imgWrap}
         onPress={action ? action : () => {}}
       >
         <Image
-          style={[styles.img]}
+          style={[styles.img,{height:"60%"}]}
           source={
             route
               ? require("../assets/add2.png")
               : require("../assets/logout.png")
           }
         />
-      </TouchableOpacity>
+      </TouchableOpacity>}
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   main: {
-    height: 60,
+    height: 80,
     width: "100%",
     flexDirection: "row",
     backgroundColor: light.primary,
