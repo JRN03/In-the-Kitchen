@@ -17,7 +17,12 @@ export default function Review(props){
         for(var i = 0; i<parkRatings.length; i++){
             score+=props.ratings[i];
         }
-        setParkScore((score/parkRatings.length))
+        if(parkRatings.length!= 0){
+            setParkScore((score/parkRatings.length))
+        }
+        else{
+            setParkScore(0)
+        }
         console.log("SCORE",parkScore)
 
     },[parkRatings,parkScore])

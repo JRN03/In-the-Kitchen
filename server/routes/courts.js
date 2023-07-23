@@ -73,6 +73,7 @@ router.post('/', async (req,res) => {
         name: name,
         times: times,
         placesID: placesID,
+        rating:[],
         lat: lat,
         lon: lon,
         images: imageNames,
