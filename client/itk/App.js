@@ -96,7 +96,7 @@ export default function App() {
           options={{ headerShown: false }}
           name="AddCourt"
           component={AddCourt}
-        /> 
+        />
         <Stack.Screen
           options={{ headerShown: false }}
           name="ViewFriend"
@@ -119,13 +119,9 @@ export default function App() {
               fontFamily: "RobotoSlab_600SemiBold",
               fontSize: 20,
             },
-            // headerShadowVisible: false,
           })}
           name="Chat"
           component={Chat}
-          name="NewPost"
-          options={{ headerShown: false }}
-          component={NewPost}
         />
       </Stack.Navigator>
     </NavigationContainer>
