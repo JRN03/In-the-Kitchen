@@ -53,6 +53,7 @@ const SignUpPage = () => {
 		if(!validateFields()){
 			return;
 		}
+		// console.log("Signing up");
 		fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/auth/register`, {
 		method: 'POST',
 		body: JSON.stringify({

@@ -23,6 +23,7 @@ const MyCarousel = (props) => {
     if (props.isNew) return;
     // for each in props.images fetch to '/images' and push that data to imageData array
     const fetchPromises = props.images.map(image => {
+      console.log("Fetching carousel images");
       return fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/images/${image}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" }
@@ -30,7 +31,7 @@ const MyCarousel = (props) => {
       .then(res => res.json())
       .then(data => data.imageData)
       .catch(error => {
-        return null;
+        console.log("Err in carousel image fetch",error);
       });
     });
   
