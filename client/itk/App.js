@@ -97,6 +97,8 @@ export default function App() {
           })}
           name="Chat"
           component={Chat}
+        />
+        <Stack.Screen
           name="NewPost"
           options={{ headerShown: false }}
           component={NewPost}
