@@ -33,8 +33,9 @@ For the initial relase, users will be able to create a personal profile to organ
 
 ## Product Backlog
 
-- [9] As an advanced player, I want information on other players skill levels
+- [9] As an user, I would like an easier interface to remove images in posts
 - [10] As a competitive player, I want information on upcoming tournaments in my area
-- [11] As an user, I would like more customization for the interface themes
-- [12] As an user, I would like an easier interface to remove images in posts
-- [13] As a friend of another user, I would like interactions with posts they make
+- [11] As an advanced player, I want information on other players skill levels
+- [12] As a friend of another user, I would like interactions with posts they make
+- [13] As a user, I would like notifications for recent events involving me or my friends
+- [14] As an user, I would like more customization for the interface themes
