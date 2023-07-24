@@ -58,6 +58,7 @@ export default Messages = ({ route }) => {
       setUName(u);
       socket.emit("loadRooms", u);
       socket.on("getRooms", (data) => {
+        console.log("getRooms");
         setRooms(data);
       });
     };

@@ -94,10 +94,8 @@ export default function Courts({navigation,route}) {
     // const unsubscribe = API.subscribe(userId, user => setUser(user));
     let isActive = true;
     const getCourts = async () => {
-      // console.log()
       const res = await fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/courts/all`);
       const data = await res.json();
-      // console.log(data);
       var master = {};
       for(var i = 0; i<data.length; i ++){
         var current = data[i].placesID

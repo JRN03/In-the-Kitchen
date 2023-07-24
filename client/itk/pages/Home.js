@@ -52,7 +52,7 @@ export default function Home({route,navigation}){
     // Will run whenever the posts are set/changed
     useEffect(() => {
         const newPostComponents = posts.map((post,index) => 
-            <Post key={index} id={post.u_id} body={post.body} images={post.images} date={post.date || "07/19/23"}/>
+            <Post key={post._id} id={post.u_id} body={post.body} images={post.images} date={post.date || "07/19/23"}/>
         );
         setPostComponents(newPostComponents);
     },[posts]);
