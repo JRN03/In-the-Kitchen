@@ -9,7 +9,6 @@ import AppHeader from "../components/AppHeader";
 import BioText from "../components/BioText";
 import Navbar from "../components/Navbar";
 import { PageStyles } from "../assets/Styles";
-import { useEffect, useState } from "react";
 // need to use state to manage if the page is ready
 // use conditional isReady state while we fetch data
 

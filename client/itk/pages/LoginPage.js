@@ -20,8 +20,9 @@ import {
   UNAME,
 } from "../AsyncKeys";
 import { getItemFromCache } from "../ReadCache";
-const LoginPage = ({}) => {
-  const navigation = useNavigation();
+
+const LoginPage = ({navigation}) => {
+
   const [usernme, onChangeUsrn] = React.useState(null);
   const [userpswd, onChangePswd] = React.useState(null);
 
@@ -75,6 +76,7 @@ const LoginPage = ({}) => {
     }
     return true;
   };
+  
   const submitForm = () => {
     if (!validateFields()) {
       return;

@@ -20,7 +20,7 @@ import { PROFILE_PIC_KEY, TOKEN, UNAME } from "../AsyncKeys";
 import { useEffect, useState } from "react";
 import * as ImagePicker from 'expo-image-picker'
 
-export default function NewPost({route,navigation}){
+export default function NewPost({navigation}){
 
     const [token,setToken] = useState();
     const [username,setUsername] = useState();
@@ -47,7 +47,7 @@ export default function NewPost({route,navigation}){
     const formattedDate = `${month}/${day}/${year}`;
 
     useEffect(() => {
-        console.log("NEW POSTS 50");
+        console.log("NewPosts.js line 50 load data from cache");
         const loadCache = async () => {
             try {
                 const t = await getItemFromCache(TOKEN);
@@ -110,6 +110,7 @@ export default function NewPost({route,navigation}){
                         <Text style={{color:"white",fontFamily:"RobotoSlab_400Regular"}}>Go Back</Text>
                     </TouchableOpacity>
                 </View>
+                {/* Post needs to be put in scrollview or else styling is off since we reused component*/}
                 <ScrollView scrollEnabled={false} style={styles.scroll}>
                     <Post setBody={setBody} submitPost={submitPost} addImage={addImage} pfp={pfp} id={username} images={images} date={formattedDate} isNew/>
                 </ScrollView>

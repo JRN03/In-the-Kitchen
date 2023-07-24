@@ -2,7 +2,6 @@ import AppHeader from "../components/AppHeader";
 import Navbar from "../components/Navbar";
 import {PageStyles} from "../assets/Styles";
 import { StyleSheet,SafeAreaView,View,Text,TouchableOpacity,Alert } from "react-native";
-import {launchImageLibrary} from 'react-native-image-picker';
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { useState,useEffect } from "react";
 import * as ImagePicker from "expo-image-picker";
@@ -100,7 +99,7 @@ export default function Courts({route,navigation}) {
         lon: lon,
         images: newImages
     }
-    console.log("adding court uploadcourt.js 104");
+    console.log("adding court uploadcourt.js 102");
     fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/courts`, {
         method: "POST",
         body: JSON.stringify(body),

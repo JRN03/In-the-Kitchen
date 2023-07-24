@@ -3,7 +3,6 @@ import { SafeAreaView, ScrollView, StyleSheet,Text, View, TouchableOpacity} from
 import Navbar from "../components/Navbar";
 import AppHeader from "../components/AppHeader";
 import {PageStyles} from "../assets/Styles";
-import Searchbar from "../components/Searchbar";
 import {
     useFonts,
     RobotoSlab_100Thin,

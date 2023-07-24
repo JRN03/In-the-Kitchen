@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { View, SafeAreaView, Text, Image, StyleSheet } from "react-native";
 import AppHeader from "../components/AppHeader";
 import BioText from "../components/BioText";
-import MutualFriends from "../components/MutualFriends";
 import Navbar from "../components/Navbar";
 import { PageStyles } from "../assets/Styles";
 import { BIO_KEY, PROFILE_PIC_KEY, FNAME, LNAME, UNAME } from "../AsyncKeys";
@@ -12,10 +11,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // use conditional isReady state while we fetch data
 
 const ProfilePage = ({ navigation, route }) => {
-  const [bio, setBio] = useState("N/A");
-  const [profilePic, setProfilePic] = useState();
-  const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
 
   const [info, setInfo] = useState({
     pfp: null,
@@ -46,21 +41,6 @@ const ProfilePage = ({ navigation, route }) => {
       const lname = await getItemFromCache(LNAME);
       const uname = await getItemFromCache(UNAME);
 
-      // AsyncStorage.multiGet([
-      //   PROFILE_PIC_KEY,
-      //   BIO_KEY,
-      //   FNAME,
-      //   LNAME,
-      //   UNAME,
-      // ]).then((response) => {
-      //   console.log(response[1][1]);
-      // });
-
-      // setProfilePic(pfp);
-      // setBio(desc);
-      // setName(fname + " " + lname);
-      // setUsername(uname);
-
       setInfo({
         pfp: pfp,
         bio: desc,
@@ -89,7 +69,6 @@ const ProfilePage = ({ navigation, route }) => {
           <Text style={styles.tag}>@{info.username}</Text>
         </View>
         <BioText bioText={info.bio} profilePic={info.pfp} />
-        {/* <MutualFriends/> */}
         <Navbar route={route} />
       </View>
     </SafeAreaView>

@@ -1,6 +1,6 @@
 import { View, StyleSheet, Text, ScrollView, SafeAreaView } from "react-native";
 import MapView, {Marker, PROVIDER_GOOGLE} from "react-native-maps";
-import React,{ useState, useEffect, useRef} from "react";
+import React,{ useState, useRef} from "react";
 import ParkTab from "../components/ParkTab";
 import light from "../assets/themes/light.js";
 import AppHeader from "../components/AppHeader";
@@ -20,15 +20,14 @@ export default function Courts({navigation,route}) {
   //used for loading data from the backend for courts
   const courtObject = useRef({});
   const [courtMarkers,setCourtMarkers] = useState(<Marker></Marker>);
-  const [courtData,setCourtData] = useState([]);
   const [courtTabs, setCourtTabs] = useState([])
   // used for starting and current positioning on maps
-  const [mapLatDelta,setMapLatDelta] = useState(.1);
-  const [mapLonDelta,setMapLonDelta] = useState(0.12050628662110796);
+  const mapLatDelta = .1;
+  const mapLonDelta = .1;
   const [mapLat,setMapLat] = useState(36.9741);
   const [mapLon,setMapLon] = useState(-122.0308);
-  const [userCurrentLocation, setUserCurrentLocation] = useState({latitude:mapLat,longitude:mapLon});
-  const initialRegion = {latitude:mapLat,longitude:mapLon,longitudeDelta:mapLonDelta, latitudeDelta:mapLatDelta}
+  
+  // Used for Google searchbar Autofill
   async function getLatLon(data){
     axios({
       method: 'get',
@@ -42,6 +41,8 @@ export default function Courts({navigation,route}) {
     });
     
   }
+  
+  // Updates results for nearby courts based on user location
   async function getCourtsFromSearch(lat,lon){
 
       const closeCourts = []
@@ -55,8 +56,9 @@ export default function Courts({navigation,route}) {
       }
       mapMarkers(closeCourts)
       
-
   }
+
+  // Euclidian distance algorithm
   function distance(lat1,lat2, lon1, lon2){
       // function from https://www.geeksforgeeks.org/program-distance-two-points-earth/
     lon1 =  lon1 * Math.PI / 180;
@@ -79,19 +81,18 @@ export default function Courts({navigation,route}) {
 
     // calculate the result
     return(c * r);
-}
+  }
 
   function mapMarkers(results){
-    var currentCourtObject = courtObject.current
-    setCourtTabs(results.map((item,index)=>{
+    setCourtTabs(results.map((item)=>{
         return(
           <ParkTab key={item.placesID} name={item.name} onPress= { ()=>{redirectToPark(item)}}/>
          )
     }))
     //at this point we just need to make the posts and all of the courts encountered by users will auto populate in the DB
   }
+
   useFocusEffect( React.useCallback(() => {
-    // const unsubscribe = API.subscribe(userId, user => setUser(user));
     let isActive = true;
     const getCourts = async () => {
       const res = await fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/courts/all`);
@@ -115,7 +116,6 @@ export default function Courts({navigation,route}) {
           })
         )
       }
-      setCourtData(data);
       courtObject.current = master;
       getPermissions();
     }
@@ -131,7 +131,6 @@ export default function Courts({navigation,route}) {
 
       setMapLat(currentLocation.coords.latitude);
       setMapLon(currentLocation.coords.longitude);
-      setUserCurrentLocation({lat:currentLocation.coords.latitude,lon:currentLocation.coords.longitude})
       getCourtsFromSearch(currentLocation.coords.latitude,currentLocation.coords.longitude);
     };
     getCourts();
@@ -143,13 +142,7 @@ export default function Courts({navigation,route}) {
   
   function redirectToPark(data){
     navigation.navigate('ParkView',{props:data})
-
   }
-  // setCourtTabs( courtData.map(courtInfo =>{
-  //    return(
-  //   <ParkTab key={courtInfo.name} name={courtInfo.name} onPress= { ()=>{redirectToPark(courtInfo)}}/>
-  //  )}
-  //  ));
 
   return (
     <SafeAreaView style={PageStyles.main}>
@@ -170,8 +163,7 @@ export default function Courts({navigation,route}) {
           }}
           onFail={(error) => console.error(error)}
           enablePoweredByContainer={false}
-
-    />
+        />
         {/* set display to be based on state values of Lat and Lon */}
         <MapView
         style={styles.map} 

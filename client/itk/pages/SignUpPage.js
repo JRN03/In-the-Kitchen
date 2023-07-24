@@ -2,7 +2,7 @@ import * as React from "react";
 import { View, Text, StyleSheet, SafeAreaView, TextInput, TouchableOpacity, Alert} from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { PROFILE_PIC_KEY,BIO_KEY,FNAME,LNAME,UNAME,TOKEN } from "../AsyncKeys";
-import AsyncStorage from "@react-native-async-storage/async-storage";import { PageStyles } from "../assets/Styles";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SignUpPage = () => {
 
@@ -84,7 +84,7 @@ const SignUpPage = () => {
 				<TextInput style = {textboxStyle.fname}
 					placeholder = 'First Name'
 					placeholderTextColor={'maroon'}
-					autoCapitalize='words'
+					autoCapitalize='none'
 					onChangeText={text => onChangeFname(text)}
 					// onChangeText={onChangeFname}
 					value={fname}
@@ -93,7 +93,7 @@ const SignUpPage = () => {
 				<TextInput style = {textboxStyle.lname}
 					placeholder = 'Last Name'
 					placeholderTextColor={'maroon'}
-					autoCapitalize='words'
+					autoCapitalize='none'
 					onChangeText={text => onChangeLname(text)}
 					// onChangeText={onChangeLname}
 					value={lname}
@@ -129,8 +129,8 @@ const SignUpPage = () => {
 			</TouchableOpacity> */}
 
 			<TouchableOpacity
-				onPress={() => navigation.navigate('Login')}>
-				<Text style={{color: 'white', fontSize: 17, textDecorationLine: 'underline', left: 20}}>Sign Out</Text>
+				onPress={() => navigation.pop()}>
+				<Text style={{color: 'white', fontSize: 17, textDecorationLine: 'underline', left: 20}}>Back</Text>
 			</TouchableOpacity>
 		</SafeAreaView>
 	);

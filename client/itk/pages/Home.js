@@ -1,5 +1,5 @@
 import {useState, useEffect, useRef} from "react";
-import { SafeAreaView, ScrollView, Text,View, StyleSheet } from "react-native";
+import { SafeAreaView, ScrollView,View, StyleSheet } from "react-native";
 import Navbar from "../components/Navbar";
 import {PageStyles} from "../assets/Styles";
 import AppHeader from "../components/AppHeader";
@@ -49,13 +49,15 @@ export default function Home({route,navigation}){
         };
 
     },[])
+
     // Will run whenever the posts are set/changed
     useEffect(() => {
-        const newPostComponents = posts.map((post,index) => 
+        const newPostComponents = posts.map((post) => 
             <Post key={post._id} id={post.u_id} body={post.body} images={post.images} date={post.date || "07/19/23"}/>
         );
         setPostComponents(newPostComponents);
     },[posts]);
+
     return (
         <SafeAreaView style={PageStyles.main}>
             <AppHeader route={route} action={() => navigation.navigate("NewPost")}/>

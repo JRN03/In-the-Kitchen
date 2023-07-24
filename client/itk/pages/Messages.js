@@ -1,9 +1,7 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   View,
-  StyleSheet,
-  FlatList,
   Alert,
   ScrollView,
 } from "react-native";
@@ -50,6 +48,7 @@ export default Messages = ({ route }) => {
   const [chatComp, setChatComp] = useState();
   const [refresh, setRefresh] = useState(false);
 
+  // Get list of friends to create chats with
   useEffect(() => {
     const getToken = async () => {
       const t = await getItemFromCache(TOKEN);
@@ -76,6 +75,8 @@ export default Messages = ({ route }) => {
     };
     getFriends();
   }, [token]);
+
+  // update components when a new chat is made
   useEffect(() => {
     const newChatComp = rooms.map((data) => (
       <ChatComponent
@@ -109,6 +110,9 @@ export default Messages = ({ route }) => {
       Alert.alert("You don't know this person: send them a request first");
     }
   };
+
+  if(!fontsLoaded) return;
+
   return (
     <View>
       {visible && (

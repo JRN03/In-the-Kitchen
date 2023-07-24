@@ -14,9 +14,9 @@ import { PageStyles } from "../assets/Styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BIO_KEY, TOKEN, PROFILE_PIC_KEY } from "../AsyncKeys";
 import { getItemFromCache } from "../ReadCache";
-const EditProfile = ({ route }) => {
 
-  const navigation = useNavigation();
+const EditProfile = ({ route, navigation }) => {
+
   const [bio, setBio] = useState(route.params.bio);
   const [profilePic, setProfilePic] = useState(route.params.profilePic);
   const [token, setToken] = useState(null);

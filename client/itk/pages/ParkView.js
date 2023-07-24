@@ -4,14 +4,9 @@ import {
   Text,
   ScrollView,
   SafeAreaView,
-  Alert,
-  processColor,
-  TouchableOpacity,
 } from "react-native";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import { React, useState, useEffect, useRef, Component } from "react";
+import { React, useState } from "react";
 import AppHeader from "../components/AppHeader";
-import Navbar from "../components/Navbar";
 import { PageStyles } from "../assets/Styles";
 import light from "../assets/themes/light.js";
 import ParkCard from "../components/ParkCard";
@@ -35,10 +30,6 @@ import {
 export default function ParkView({ navigation, route }) {
 
   var { props } = route.params;
-  const [lat, setLat] = useState(props.lat);
-  const [lon, setLon] = useState(props.lon);
-  const [mapLatDelta, setMapLatDelta] = useState(0.1);
-  const [mapLonDelta, setMapLonDelta] = useState(0.12050628662110796);
   let [fontsLoaded] = useFonts({
     RobotoSlab_100Thin,
     RobotoSlab_200ExtraLight,
@@ -80,8 +71,6 @@ export default function ParkView({ navigation, route }) {
           name={props.name}
           location={props.location}
           meetTimes={props.times}
-          lat={lat}
-          lon={lon}
         />
         <Text
           onPress={() => {
