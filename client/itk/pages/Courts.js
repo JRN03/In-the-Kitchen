@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, ScrollView, SafeAreaView } from "react-native";
+import { ActivityIndicator, View, StyleSheet, Text, ScrollView, SafeAreaView } from "react-native";
 import MapView, {Marker, PROVIDER_GOOGLE} from "react-native-maps";
 import React,{ useState, useRef} from "react";
 import ParkTab from "../components/ParkTab";
@@ -26,7 +26,7 @@ export default function Courts({navigation,route}) {
   const mapLonDelta = .1;
   const [mapLat,setMapLat] = useState(36.9741);
   const [mapLon,setMapLon] = useState(-122.0308);
-  
+  const [loaded,setLoaded] = useState(false);
   // Used for Google searchbar Autofill
   async function getLatLon(data){
     axios({
@@ -89,6 +89,7 @@ export default function Courts({navigation,route}) {
           <ParkTab key={item.placesID} name={item.name} onPress= { ()=>{redirectToPark(item)}}/>
          )
     }))
+    setLoaded(true);
     //at this point we just need to make the posts and all of the courts encountered by users will auto populate in the DB
   }
 
@@ -187,9 +188,14 @@ export default function Courts({navigation,route}) {
             }>
             Nearby Courts
           </Text>
+        {loaded ?
         <ScrollView style={styles.nearbyContainer}>
           {courtTabs}
-        </ScrollView>
+        </ScrollView> : 
+        <View style={{height: "32%",alignItems: "center",justifyContent:"center"}}>
+          <ActivityIndicator size={"large"}/>
+        </View>
+        }
         <Navbar route={route}/>
         </View>
     </SafeAreaView>
