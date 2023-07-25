@@ -1,5 +1,9 @@
 # In The Kitchen
 
+## Running the application
+
+To run the client application, make sure to install the dependencies and run npm start. This open an environment for the application to be run. From here, choose a device to run the application on. For IOS simulators, follow the directions here: https://docs.expo.dev/workflow/ios-simulator/. For Android, follow the instructions here: https://docs.expo.dev/workflow/android-studio-emulator/. 
+
 ## Client
 
 ### Styles and Themes
