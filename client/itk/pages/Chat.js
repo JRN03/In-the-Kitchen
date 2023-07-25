@@ -36,6 +36,8 @@ const Chat = ({ route }) => {
         <FlatList
           style={{ maxHeight: "90%" }}
           data={chatMessages}
+          inverted
+          contentContainerStyle={{ flexDirection: "column-reverse" }}
           renderItem={({ index }) => (
             <Message
               messages={chatMessages[index].body}
