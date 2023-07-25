@@ -50,8 +50,6 @@ const ProfilePage = ({ navigation, route }) => {
     };
   }, [route.name]);
 
-  console.log("refreshed");
-
   return (
     <SafeAreaView style={PageStyles.main}>
       <AppHeader action={logout} />

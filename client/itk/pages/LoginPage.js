@@ -34,7 +34,6 @@ const LoginPage = ({navigation}) => {
           method: "GET",
           headers: { "Content-Type": "application/json", token: token },
         }).then((res) => {
-          console.log("res status login",res.status)
           if (res.status == 404 || res.status == 200)
             navigation.navigate("Home");
         });

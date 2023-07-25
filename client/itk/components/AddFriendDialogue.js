@@ -10,7 +10,6 @@ export default function AddFriendDialogue({visible,onClose}){
     const [token,setToken] = React.useState();
 
     const addFriend = async () => {
-      console.log("Adding friend AddFriendDialogue 13");
         fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/user/friend/request`, {
             method: "PUT",
             body: JSON.stringify({

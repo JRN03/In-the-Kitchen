@@ -23,7 +23,7 @@ const Card = (props) => {
             method: "GET",
             headers: {"Content-Type":"appllication/json", token:token.current}
         })
-        if (res.status === 502) return console.log("502 Bad Gateway Post.js 26");
+        if (res.status === 502) return;
         const data = await res.json();
         if (data.imageData) setImage("data:image/jpeg;base64,"+data.imageData);
       }

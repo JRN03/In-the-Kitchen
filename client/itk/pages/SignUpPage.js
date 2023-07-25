@@ -23,7 +23,6 @@ const SignUpPage = () => {
 		  await AsyncStorage.setItem(FNAME, data._doc.fName);
 		  await AsyncStorage.setItem(LNAME, data._doc.lName);
 		  await AsyncStorage.setItem(UNAME, data._doc.username);
-		  console.log("Data saved");
 		} catch (e) {
 		  console.log(e);
 		  alert("Failed to save");
@@ -53,7 +52,6 @@ const SignUpPage = () => {
 		if(!validateFields()){
 			return;
 		}
-		// console.log("Signing up");
 		fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/auth/register`, {
 		method: 'POST',
 		body: JSON.stringify({

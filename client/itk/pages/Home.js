@@ -13,7 +13,6 @@ export default function Home({route,navigation}){
     const token = useRef();
 
     const [posts,setPosts] = useState([]);
-
     const [postComponents,setPostComponents] = useState();
     // Long poll for posts and set posts
     useEffect(() => {
@@ -21,7 +20,6 @@ export default function Home({route,navigation}){
         const getToken = async () => {
             token.current = await getItemFromCache(TOKEN);
         }
-
         const getPosts = () => {
             fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/posts`,{
                 method: "GET",

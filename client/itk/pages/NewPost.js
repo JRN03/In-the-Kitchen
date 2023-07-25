@@ -47,7 +47,6 @@ export default function NewPost({navigation}){
     const formattedDate = `${month}/${day}/${year}`;
 
     useEffect(() => {
-        console.log("NewPosts.js line 50 load data from cache");
         const loadCache = async () => {
             try {
                 const t = await getItemFromCache(TOKEN);
@@ -96,6 +95,7 @@ export default function NewPost({navigation}){
             headers: {"Content-Type":"application/json",token:token},
             body: JSON.stringify(fetchBody)
         });
+        if (!res) return Alert.alert("","Files too large.")
         const data = await res.json();
         Alert.alert("",data.message);
     }

@@ -74,7 +74,7 @@ export default function Review(props){
                 // review = {reviews}
                 showRating = {false}
                 isDisabled = {true}
-                style = {{flex:3,alignItems:"left",left:-25}}
+                style = {{flex:3,alignItems:"left",left:-18}}
             />
             <Pressable
                 style={[styles.button, styles.buttonOpen]}

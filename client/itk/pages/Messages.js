@@ -47,8 +47,8 @@ export default Messages = ({ route }) => {
   const [rooms, setRooms] = useState([]);
   const [chatComp, setChatComp] = useState();
   const [refresh, setRefresh] = useState(false);
-
   // Get list of friends to create chats with
+
   useEffect(() => {
     const getToken = async () => {
       const t = await getItemFromCache(TOKEN);
@@ -57,7 +57,6 @@ export default Messages = ({ route }) => {
       setUName(u);
       socket.emit("loadRooms", u);
       socket.on("getRooms", (data) => {
-        console.log("getRooms");
         setRooms(data);
       });
     };

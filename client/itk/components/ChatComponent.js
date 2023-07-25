@@ -67,7 +67,6 @@ export default ChatComponent = ({ roomName, username, messages, friends }) => {
   }, []);
 
   if (!image) return;
-
   return (
     <TouchableOpacity onPress={toMessenger} style={styles.chatContainer}>
       <Image source={{ uri: image }} style={styles.image}></Image>

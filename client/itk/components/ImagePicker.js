@@ -15,7 +15,6 @@ export default PickImage = (props) => {
       // quality: 0.7,
     });
     if (!result.canceled) {
-      console.log("pic size = ", result.assets[0].fileSize);
       setProfilePic("data:image/jpeg;base64," + result.assets[0].base64);
       props.imagePath("data:image/jpeg;base64," + result.assets[0].base64);
     } else {

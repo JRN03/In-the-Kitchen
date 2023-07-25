@@ -99,7 +99,6 @@ export default function Courts({route,navigation}) {
         lon: lon,
         images: newImages
     }
-    console.log("adding court uploadcourt.js 102");
     fetch(`${process.env.EXPO_PUBLIC_ENDPOINT}/courts`, {
         method: "POST",
         body: JSON.stringify(body),
