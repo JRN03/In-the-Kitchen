@@ -13,7 +13,7 @@ const Chat = ({ route }) => {
     socket.on("foundRoom", (roomChats) => {
       setChatMessages(roomChats);
     });
-  }, []);
+  });
 
   useEffect(() => {
     socket.on("foundRoom", (roomChats) => setChatMessages(roomChats));
