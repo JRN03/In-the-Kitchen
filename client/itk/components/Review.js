@@ -11,21 +11,27 @@ export default function Review(props){
     const [parkRatings, setParkRating]= useState(props.ratings)
     const [parkScore, setParkScore] = useState(0);
     useEffect(()=>{
-        var score = 0
-        for(var i = 0; i<parkRatings.length; i++){
-            score+=props.ratings[i];
+        const updateReview = ()=>{
+            var score = 0
+            console.log(parkRatings)
+            
+            for(var i = 0; i<parkRatings.length; i++){
+                score+=parkRatings[i];
+            }
+            if(parkRatings.length!= 0){
+                setParkScore((score/parkRatings.length))
+            }
+            else{
+                setParkScore(0)
+            }
         }
-        if(parkRatings.length!= 0){
-            setParkScore((score/parkRatings.length))
-        }
-        else{
-            setParkScore(0)
-        }
+        updateReview();
 
     },[parkRatings,parkScore])
 
    
     function ratingCompleted(rating) {
+        // console.log("Rating is: " + rating)
         setUserRating(rating)
     } 
     function submitReview(){
@@ -37,8 +43,15 @@ export default function Review(props){
             // console.log(response.status)
             if(response.status == 201){
                 Alert.alert("Your review has been added!");
+                var score = 0
                 var currentReviews = parkRatings;
                 currentReviews.push(userRating);
+                for(var i = 0; i<currentReviews.length; i++){
+                    score+=currentReviews[i];
+                }
+                if(parkRatings.length!= 0){
+                    setParkScore((score/parkRatings.length))
+                }
                 setParkRating(currentReviews);
             }else{
                 Alert.alert("There was an issue adding your review...")
@@ -74,7 +87,7 @@ export default function Review(props){
                 // review = {reviews}
                 showRating = {false}
                 isDisabled = {true}
-                style = {{flex:3,alignItems:"left",left:-18}}
+                style = {{flex:3,alignItems:"left",left:-15}}
             />
             <Pressable
                 style={[styles.button, styles.buttonOpen]}
@@ -176,5 +189,3 @@ const styles = StyleSheet.create({
       textAlign: 'center',
     },
   });
-  
-  

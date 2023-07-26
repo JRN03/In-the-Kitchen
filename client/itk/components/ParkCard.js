@@ -9,9 +9,13 @@ import * as Location from 'expo-location';
 
 
 export default function ParkCard(props){
+    console.log(props);
     const [meetings, setMeetings] = useState();
+    const lat = useRef(props.lat)
+    const lon = useRef(props.lon)
+
     //props: meeting times, address, placeId, 
-    const [userCurrentLocation, setUserCurrentLocation] = useState({latitude:0,longitude:0});
+    const [userCurrentLocation, setUserCurrentLocation] = useState({lat:props.currentLocation.latitude,lon:props.currentLocation.longitude});
     useEffect(()=>{
         function mapMeetTimes(){
             setMeetings(props.meetTimes.map((item,index)=>{
@@ -24,20 +28,20 @@ export default function ParkCard(props){
                 
             }))
         }
-        const getPermissions = async () => {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-              return;
-            }
+        // const getPermissions = async () => {
+        //     let { status } = await Location.requestForegroundPermissionsAsync();
+        //     if (status !== 'granted') {
+        //       return;
+        //     }
       
-            let currentLocation = await Location.getCurrentPositionAsync({});
-      
-            // setMapLat(currentLocation.coords.latitude);
-            // setMapLon(currentLocation.coords.longitude);
-            setUserCurrentLocation({lat:currentLocation.coords.latitude,lon:currentLocation.coords.longitude})
-        };
+        //     let currentLocation = await Location.getCurrentPositionAsync({});
+        //     console.log("CURRENTLOCATION",currentLocation);
+        //     // setMapLat(currentLocation.coords.latitude);
+        //     // setMapLon(currentLocation.coords.longitude);
+        //     // setUserCurrentLocation({lat:currentLocation.coords.latitude,lon:currentLocation.coords.longitude})
+        // };
           
-        getPermissions();
+        // getPermissions();
         mapMeetTimes()
     },[])
     
@@ -49,7 +53,7 @@ export default function ParkCard(props){
             {/* <Text style = {{}>{props.meetTimes}</Text> */}
             {meetings}
             {/* <Text style = {{fontFamily:"RobotoSlab_700Bold", fontSize: 18, textAlign : "left", color:"grey",paddingTop:5}}>{props.meetTimes[0]}</Text> */}
-            <TouchableOpacity style = {styles.button} onPress={() => Linking.openURL(`maps://app?saddr=${userCurrentLocation.lat}+${userCurrentLocation.lon}&daddr=${props.lat}+${props.lon}`)}>
+            <TouchableOpacity style = {styles.button} onPress={() => Linking.openURL(`maps://app?saddr=${userCurrentLocation.lat}+${userCurrentLocation.lon}&daddr=${lat.current}+${lon.current}`)}>
                 <Text style={{fontFamily:"RobotoSlab_700Bold", fontSize: 16, color:"white"}}>Get Directions</Text>
             </TouchableOpacity>
 

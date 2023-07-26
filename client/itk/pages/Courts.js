@@ -22,6 +22,7 @@ export default function Courts({navigation,route}) {
   const [courtMarkers,setCourtMarkers] = useState(<Marker></Marker>);
   const [courtTabs, setCourtTabs] = useState([])
   // used for starting and current positioning on maps
+  const currentLocation = useRef({})
   const mapLatDelta = .1;
   const mapLonDelta = .1;
   const [mapLat,setMapLat] = useState(36.9741);
@@ -126,13 +127,13 @@ export default function Courts({navigation,route}) {
         console.log("Please grant location permissions");
         return;
       }
-
-      let currentLocation = await Location.getCurrentPositionAsync({});
+      let temp = await Location.getCurrentPositionAsync({});
+       currentLocation.current = temp.coords
       // (currentLocation);
 
-      setMapLat(currentLocation.coords.latitude);
-      setMapLon(currentLocation.coords.longitude);
-      getCourtsFromSearch(currentLocation.coords.latitude,currentLocation.coords.longitude);
+      setMapLat(currentLocation.current.latitude);
+      setMapLon(currentLocation.current.longitude);
+      getCourtsFromSearch(currentLocation.current.latitude,currentLocation.current.longitude);
     };
     getCourts();
 
@@ -142,7 +143,8 @@ export default function Courts({navigation,route}) {
 
   
   function redirectToPark(data){
-    navigation.navigate('ParkView',{props:data})
+    const prp = {...data, currentLocation: currentLocation.current}
+    navigation.navigate('ParkView',{props:prp})
   }
 
   return (

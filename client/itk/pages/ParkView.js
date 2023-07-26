@@ -30,6 +30,7 @@ import {
 export default function ParkView({ navigation, route }) {
 
   var { props } = route.params;
+  console.log("PVIEW",props);
   let [fontsLoaded] = useFonts({
     RobotoSlab_100Thin,
     RobotoSlab_200ExtraLight,
@@ -71,6 +72,9 @@ export default function ParkView({ navigation, route }) {
           name={props.name}
           location={props.location}
           meetTimes={props.times}
+          lat = {props.lat}
+          lon = {props.lon}
+          currentLocation = {props.currentLocation}
         />
         <Text
           onPress={() => {
