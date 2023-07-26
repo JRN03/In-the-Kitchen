@@ -28,9 +28,7 @@ import {
 
 // export default function ParkView({navigation,route}) {
 export default function ParkView({ navigation, route }) {
-
   var { props } = route.params;
-  console.log("PVIEW",props);
   let [fontsLoaded] = useFonts({
     RobotoSlab_100Thin,
     RobotoSlab_200ExtraLight,

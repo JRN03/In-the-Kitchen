@@ -9,7 +9,6 @@ import * as Location from 'expo-location';
 
 
 export default function ParkCard(props){
-    console.log(props);
     const [meetings, setMeetings] = useState();
     const lat = useRef(props.lat)
     const lon = useRef(props.lon)
@@ -28,20 +27,6 @@ export default function ParkCard(props){
                 
             }))
         }
-        // const getPermissions = async () => {
-        //     let { status } = await Location.requestForegroundPermissionsAsync();
-        //     if (status !== 'granted') {
-        //       return;
-        //     }
-      
-        //     let currentLocation = await Location.getCurrentPositionAsync({});
-        //     console.log("CURRENTLOCATION",currentLocation);
-        //     // setMapLat(currentLocation.coords.latitude);
-        //     // setMapLon(currentLocation.coords.longitude);
-        //     // setUserCurrentLocation({lat:currentLocation.coords.latitude,lon:currentLocation.coords.longitude})
-        // };
-          
-        // getPermissions();
         mapMeetTimes()
     },[])
     

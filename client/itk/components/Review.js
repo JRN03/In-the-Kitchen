@@ -13,7 +13,6 @@ export default function Review(props){
     useEffect(()=>{
         const updateReview = ()=>{
             var score = 0
-            console.log(parkRatings)
             
             for(var i = 0; i<parkRatings.length; i++){
                 score+=parkRatings[i];
@@ -31,7 +30,6 @@ export default function Review(props){
 
    
     function ratingCompleted(rating) {
-        // console.log("Rating is: " + rating)
         setUserRating(rating)
     } 
     function submitReview(){
@@ -40,7 +38,6 @@ export default function Review(props){
             method: 'put',
             url: `${process.env.EXPO_PUBLIC_ENDPOINT}/courts/${props.placesID}/rating/${userRating}`,
           }).then((response) => {
-            // console.log(response.status)
             if(response.status == 201){
                 Alert.alert("Your review has been added!");
                 var score = 0
@@ -56,8 +53,6 @@ export default function Review(props){
             }else{
                 Alert.alert("There was an issue adding your review...")
             }
-            // console.log("location",response.data.result.geometry.location);  //just to see what the location was
-            //gotta set the map here
             
           });    
         
