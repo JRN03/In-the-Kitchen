@@ -26,7 +26,6 @@ import posts from "./routes/post-routes.js";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 8080;
 
 let chatRooms = [];
 // let userChatRooms = [];
@@ -50,19 +49,20 @@ io.on("connection", async (socket) => {
     const room = friends.join(":");
     try {
       const newChat = await Chat.create({ room_id: room, users: [...friends] });
+      socket.emit("getRooms",Chat.find({ users: uname }));
     } catch (e) {
-      socket.emit("roomExists", friends);
+      if (friends) socket.emit("roomExists", friends);
     }
   });
   socket.on("loadRooms", async (username) => {
     let result = await Chat.find({ users: username });
     chatRooms = result;
-    socket.emit("getRooms", result);
+    if (result) socket.emit("getRooms", result);
   });
 
   socket.on("findRoom", (id) => {
     let result = chatRooms.filter((room) => room.room_id == id);
-    socket.emit("foundRoom", result[0].messages);
+    if (result) socket.emit("foundRoom", result[0].messages);
   });
 
   socket.on("newMessage", (data) => {
@@ -85,8 +85,8 @@ io.on("connection", async (socket) => {
       time: `${timestamp.hour}:${timestamp.mins}`,
     };
     result[0].messages.push(newMessage);
-    socket.emit("roomsList", chatRooms);
-    socket.emit("foundRoom", result[0].messages);
+    if (chatRooms) socket.emit("roomsList", chatRooms);
+    if (result && result[0].messages) socket.emit("foundRoom", result[0].messages);
   });
 
   socket.on("disconnect", () => {
@@ -105,8 +105,5 @@ app.use("/images", image);
 app.use("/friendrequests", friendRequest);
 app.use("/posts",posts);
 
-server.listen(4000, () => console.log(`server is running on port ${4000}`));
-const secondServer = app.listen(PORT, () => {
-  console.log(`Second server running on port ${PORT}`);
-});
-secondServer.keepAliveTimeout = 65000;
+const listener = server.listen(4000, () => console.log(`server is running on port ${4000}`));
+listener.keepAliveTimeout = 65000;
